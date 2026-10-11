@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spatial Vault — Leaflet demo</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    html, body, #map { height: 100%; margin: 0; }
+    body { font-family: system-ui, sans-serif; }
+    .toolbar {
+      position: fixed; top: 10px; left: 10px; z-index: 1000;
+      background: rgba(255,255,255,.95); padding: 8px 12px; border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.25); font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <strong>Spatial Vault demo</strong> · drag the map, markers show
+    <span style="color:#22c55e">●</span><span style="color:#eab308">●</span><span style="color:#f97316">●</span><span style="color:#ef4444">●</span>
+    risk at the current local time slot.
+  </div>
+  <div id="map"></div>
+
+  <!-- Leaflet (CDN) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Spatial Vault client mirror + map layer -->
+  <script src="../spatial-vault.client.js"></script>
+  <script src="../spatial-vault.map.js"></script>
+
+  <script>
+    (async function () {
+      const map = L.map('map').setView([12.9716, 77.5946], 12);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors',
+      }).addTo(map);
+
+      try {
+        const result = await SpatialVaultMap.attachLayer(map, {
+          // Serve the generated assets:  npx serve dist   ->   baseUrl '/tiles'
+          // Or point this at your CDN / GitHub raw host root.
+          baseUrl: '/tiles',
+          radiusMeters: 25000,   // 25 km offline radius
+          markerStyle: 'emoji',  // try 'circle' too
+        });
+        console.log('Spatial Vault layer ready:', result.records.length, 'records, slot =', result.slot);
+      } catch (err) {
+        console.error('Spatial Vault layer failed:', err);
+        document.querySelector('.toolbar').innerHTML +=
+          '<br><span style="color:#b91c1c">Serve dist/ over HTTP (e.g. <code>npx serve dist</code>) and set baseUrl.</span>';
+      }
+    })();
+  </script>
+</body>
+</html>

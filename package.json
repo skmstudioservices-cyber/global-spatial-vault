@@ -1,15 +1,25 @@
 {
   "name": "global-spatial-vault",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Custom Data Ingestion & Spatial Partitioning Plugin: 13-char Geohash micro-precision, India Post DIGIPIN mapping, multi-niche unified grid, encrypted tile moat, and browser IndexedDB decryption.",
+  "main": "spatial-vault.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node spatial-vault.js",
+    "start": "node spatial-vault.js",
+    "test": "node spatial-vault.js"
   },
-  "keywords": [],
+  "keywords": [
+    "geohash",
+    "digipin",
+    "spatial",
+    "tiles",
+    "indexeddb",
+    "geospatial",
+    "pwa"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "latlon-geohash": "^2.0.0"
   }

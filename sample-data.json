@@ -1,0 +1,132 @@
+[
+  {
+    "id": "pot-blr-0001",
+    "category": "potholes",
+    "name": "Koramangala 80ft Rd Pit",
+    "city": "Bengaluru",
+    "country": "India",
+    "iso2": "IN",
+    "postalCode": "560034",
+    "lat": 12.9351929,
+    "lng": 77.6244807,
+    "attributes": { "depthCm": 24, "widthCm": 90, "severity": "high", "reportedBy": "drone-flt-4471" }
+  },
+  {
+    "id": "sa-del-0001",
+    "category": "safe-alleys",
+    "name": "Lodhi Garden Lane",
+    "city": "New Delhi",
+    "country": "India",
+    "iso2": "IN",
+    "postalCode": "110003",
+    "lat": 28.5930953,
+    "lng": 77.2196721,
+    "attributes": { "paved": true, "streetlighting": true, "cctv": true, "footTraffic": "high" },
+    "safeAlleysMatrix": {
+      "demographics": { "male": 88, "female": 72, "kids": 81, "family": 84 },
+      "threats": {
+        "robbery": { "level": 1, "incidents": 2, "lastReported": "2025-11-02" },
+        "theft": { "level": 2, "incidents": 7, "lastReported": "2026-01-14" },
+        "animalAttacks": { "level": 0, "incidents": 0, "lastReported": null },
+        "misbehave": { "level": 2, "incidents": 5, "lastReported": "2025-12-30" }
+      },
+      "timeSlots": {
+        "dawn": { "score": 18 },
+        "morning": { "score": 22 },
+        "noon": { "score": 30 },
+        "afternoon": { "score": 26 },
+        "evening": { "score": 48 },
+        "night": { "score": 66 },
+        "midnight": { "score": 74 }
+      }
+    }
+  },
+  {
+    "id": "ev-mum-0001",
+    "category": "ev-chargers",
+    "name": "BKC DC Fast Hub",
+    "city": "Mumbai",
+    "country": "India",
+    "iso2": "IN",
+    "postalCode": "400051",
+    "lat": 19.076,
+    "lng": 72.8777,
+    "attributes": { "kw": 150, "connector": "CCS2", "status": "online" }
+  },
+  {
+    "id": "ts-che-0001",
+    "category": "transit-stops",
+    "name": "Central Metro Gate 4",
+    "city": "Chennai",
+    "country": "India",
+    "iso2": "IN",
+    "postalCode": "600003",
+    "lat": 13.0827,
+    "lng": 80.2707,
+    "attributes": { "modes": ["metro", "bus"], "wheelchair": true }
+  },
+  {
+    "id": "ts-guw-0001",
+    "category": "transit-stops",
+    "name": "Kaziranga Forest Checkpoint",
+    "city": "Guwahati",
+    "country": "India",
+    "iso2": "IN",
+    "postalCode": "781001",
+    "lat": 26.1445,
+    "lng": 91.7362,
+    "attributes": { "terrain": "dense-forest", "solarLit": true }
+  },
+  {
+    "id": "pot-nyc-0001",
+    "category": "potholes",
+    "name": "5th Ave Utility Cut",
+    "city": "New York",
+    "country": "United States",
+    "iso2": "US",
+    "zip": "10001",
+    "lat": 40.7128,
+    "lng": -74.006,
+    "attributes": { "depthCm": 12, "widthCm": 45, "severity": "medium" }
+  },
+  {
+    "id": "sa-lon-0001",
+    "category": "safe-alleys",
+    "name": "South Bank Riverside Walk",
+    "city": "London",
+    "country": "United Kingdom",
+    "iso2": "GB",
+    "zip": "SE1 9AA",
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "safeAlleysMatrix": {
+      "demographics": { "male": 91, "female": 84, "kids": 88, "family": 87 },
+      "threats": {
+        "robbery": { "level": 1, "incidents": 4, "lastReported": "2025-10-18" },
+        "theft": { "level": 2, "incidents": 11, "lastReported": "2026-02-01" },
+        "animalAttacks": { "level": 0, "incidents": 0, "lastReported": null },
+        "misbehave": { "level": 1, "incidents": 6, "lastReported": "2026-01-09" }
+      },
+      "timeSlots": {
+        "dawn": { "score": 12 },
+        "morning": { "score": 20 },
+        "noon": { "score": 28 },
+        "afternoon": { "score": 24 },
+        "evening": { "score": 40 },
+        "night": { "score": 58 },
+        "midnight": { "score": 63 }
+      }
+    }
+  },
+  {
+    "id": "pot-sea-0001",
+    "category": "potholes",
+    "name": "Arabian Sea Survey Drop",
+    "city": "Arabian Sea",
+    "country": "Oceans",
+    "iso2": null,
+    "lat": 8.0,
+    "lng": 66.0,
+    "attributes": { "context": "oceanic", "note": "synthetic probe point" }
+  }
+]

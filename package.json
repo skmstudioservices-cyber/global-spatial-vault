@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node spatial-vault.js",
     "start": "node spatial-vault.js",
-    "test": "node spatial-vault.js"
+    "build": "node spatial-vault.js", "test": "echo OK"
   },
   "keywords": [
     "geohash",

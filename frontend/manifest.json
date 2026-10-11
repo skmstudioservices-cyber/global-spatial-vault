@@ -1,0 +1,16 @@
+{
+  "short_name": "SpatialVault",
+  "name": "Global Spatial Vault Network Directory",
+  "icons": [
+    {
+      "src": "https://flaticon.com",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/frontend/demo.html",
+  "background_color": "#0f172a",
+  "theme_color": "#4f46e5",
+  "display": "standalone",
+  "orientation": "portrait"
+}

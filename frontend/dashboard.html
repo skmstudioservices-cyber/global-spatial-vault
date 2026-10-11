@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Spatial Vault - Control Panel</title>
+    <script src="https://tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com" />
+    <script src="https://unpkg.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar Navigation Options -->
+        <div class="w-80 bg-slate-800 border-r border-slate-700 flex flex-col justify-between p-6">
+            <div>
+                <div class="flex items-center gap-3 mb-8">
+                    <span class="text-2xl">🌐</span>
+                    <h1 class="font-bold text-lg tracking-tight">Spatial Vault Studio</h1>
+                </div>
+                
+                <nav class="space-y-2">
+                    <button class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-indigo-600 font-medium text-sm text-left transition">
+                        📊 Grid Explorer
+                    </button>
+                    <button class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 text-sm text-left transition">
+                        🕳️ Ingest Crowdsource
+                    </button>
+                </nav>
+            </div>
+            
+            <div class="border-t border-slate-700 pt-4">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span>Key Status: Active [73]</span>
+                    <span class="text-emerald-400 flex items-center gap-1">● Operational</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Display Arena -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-slate-800/50 border-b border-slate-700 px-8 py-4 flex items-center justify-between">
+                <h2 class="font-semibold text-slate-200">Local Grid Visual Matrix</h2>
+                <div class="text-sm bg-slate-700 px-3 py-1 rounded-md text-slate-300">
+                    Workspace: <code class="text-indigo-400">C:\global-spatial-vault</code>
+                </div>
+            </header>
+
+            <main class="flex-1 p-8 overflow-y-auto space-y-6">
+                <!-- Metrics Bar Grid Layout -->
+                <div class="grid grid-cols-4 gap-4">
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/60 shadow-sm">
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Indexed Chunks</p>
+                        <h3 class="text-2xl font-bold mt-1 text-slate-100" id="stat-chunks">8</h3>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/60 shadow-sm">
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Moat Security</p>
+                        <h3 class="text-2xl font-bold mt-1 text-emerald-400">Rotational XOR</h3>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/60 shadow-sm">
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Target Resolution</p>
+                        <h3 class="text-2xl font-bold mt-1 text-indigo-400">1cm (13-Char)</h3>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/60 shadow-sm">
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">System Errors</p>
+                        <h3 class="text-2xl font-bold mt-1 text-slate-400">0 Warnings</h3>
+                    </div>
+                </div>
+
+                <!-- Interactive Map Canvas Shell -->
+                <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-sm">
+                    <div class="p-4 border-b border-slate-700 flex justify-between items-center">
+                        <span class="font-medium text-sm text-slate-300">Live Spatial Testing Environment</span>
+                        <button onclick="runLocalBuild()" class="px-3 py-1.5 text-xs font-bold bg-indigo-600 text-white rounded-md hover:bg-indigo-500 transition shadow">
+                            🔄 Execute Test Run
+                        </button>
+                    </div>
+                    <div id="studio-map" class="w-full h-80 bg-slate-950"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        let studioMap;
+        
+        function initStudioWorkspace() {
+            // Render interactive view map frame inside the visualizer layout dashboard
+            studioMap = L.map('studio-map', { zoomControl: false }).setView([28.6139, 77.2090], 13);
+            L.control.zoom({ position: 'topright' }).addTo(studioMap);
+            
+            L.tileLayer('https://{s}://{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(studioMap);
+
+            // Mark reference sample data coordinates onto dashboard canvas
+            L.circleMarker([28.6139, 77.2090], { radius: 8, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.8 })
+                .addTo(studioMap)
+                .bindPopup("<b>Initial Verification Point</b><br>Connaught Place Hub");
+        }
+
+        function runLocalBuild() {
+            alert("Local pipeline execution signal triggered. Check PowerShell workspace console output records.");
+        }
+
+        window.onload = initStudioWorkspace;
+    </script>
+</body>
+</html>

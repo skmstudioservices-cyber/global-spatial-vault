@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.373,
+          26.76
+        ]
+      },
+      "properties": {
+        "uid": "M4NF0WCT1B",
+        "canonical_name": "Annapurna Dhaba",
+        "category_text": "Dhaba",
+        "city": "Gorakhpur",
+        "locality": "Golghar",
+        "pincode": "273001",
+        "address": "NH-29, Golghar Bypass",
+        "lat": 26.76,
+        "lng": 83.373,
+        "digipin": "2F2JTFVG33",
+        "geohash13": "tug21pw279w9u"
+      }
+    }
+  ]
+}

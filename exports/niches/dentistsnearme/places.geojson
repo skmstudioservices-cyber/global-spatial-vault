@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.077,
+          28.448
+        ]
+      },
+      "properties": {
+        "uid": "M4NF0WCTV5",
+        "canonical_name": "Sunrise Dental Clinic",
+        "category_text": "Dental",
+        "city": "Gurugram",
+        "locality": "Sector 44",
+        "pincode": "122003",
+        "address": "Tower B, Sector 44",
+        "lat": 28.448,
+        "lng": 77.077,
+        "digipin": "2G4EKU3J22",
+        "geohash13": "ttnccfvc878f1"
+      }
+    }
+  ]
+}

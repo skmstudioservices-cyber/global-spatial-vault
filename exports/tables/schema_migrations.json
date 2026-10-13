@@ -1,0 +1,17 @@
+[
+  {
+    "version": "001",
+    "name": "001_init.sql",
+    "applied_at": "2026-10-11T12:25:45.965Z"
+  },
+  {
+    "version": "002",
+    "name": "002_import.sql",
+    "applied_at": "2026-10-11T12:28:44.918Z"
+  },
+  {
+    "version": "003",
+    "name": "003_export.sql",
+    "applied_at": "2026-10-11T12:38:57.915Z"
+  }
+]

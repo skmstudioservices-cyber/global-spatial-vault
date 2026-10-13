@@ -1,0 +1,37 @@
+{
+  "slug": "bakerynearme",
+  "domain": "bakerynearme.pages.dev",
+  "name": "Bakery Near Me",
+  "kind": "niche",
+  "niche": "bakerynearme",
+  "slugTemplate": "/bakery/{city}/{canonical_name}-{uid}",
+  "cardFields": [
+    "canonical_name",
+    "locality",
+    "city"
+  ],
+  "detailFields": [
+    "canonical_name",
+    "address",
+    "pincode",
+    "digipin"
+  ],
+  "indexFields": [
+    "uid",
+    "canonical_name",
+    "city",
+    "lat",
+    "lng"
+  ],
+  "visibleFields": [
+    "uid",
+    "canonical_name",
+    "locality",
+    "city",
+    "pincode",
+    "address",
+    "lat",
+    "lng",
+    "digipin"
+  ]
+}

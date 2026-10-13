@@ -27,7 +27,7 @@
  *    }).addTo(map);
  *
  *    SpatialVaultMap.attachLayer(map, {
- *      baseUrl: 'https://cdn.example.com/tiles',  // serves /tiles/t/d/r/1/w/tdr1w.dat
+ *      baseUrl: 'https://cdn.example.com/dist',  // dist root holding tiles/ + manifest.dat
  *      radiusMeters: 5000,
  *    });
  * ============================================================================
@@ -195,11 +195,41 @@
    * ------------------------------------------------------------------ */
 
   /**
+   * Render an array of ALREADY-DECODED records onto a Leaflet map.
+   * Returns { layer, slot, bounds, legend } so callers can clear and re-render
+   * (e.g. a dashboard when the operator changes the time slot).
+   *
+   * opts: { markerStyle, timeSlot, fitBounds, legend }
+   */
+  function renderRecords(map, records, opts) {
+    opts = opts || {};
+    if (!map) throw new Error('renderRecords: Leaflet map instance is required');
+
+    var slot = opts.timeSlot || currentTimeSlot();
+    var layer = L.layerGroup();
+    for (var i = 0; i < records.length; i++) {
+      var record = records[i];
+      var color = riskColorFor(record, slot);
+      layer.addLayer(makeMarker(record, color, opts, slot));
+    }
+    layer.addTo(map);
+
+    var bounds = null;
+    if (records.length) {
+      bounds = layer.getBounds().pad(0.2);
+      if (opts.fitBounds !== false) map.fitBounds(bounds, { padding: [30, 30] });
+    }
+    var legend = opts.legend === false ? null : addLegend(map, slot);
+
+    return { layer: layer, slot: slot, bounds: bounds, legend: legend };
+  }
+
+  /**
    * Attach the Spatial Vault layer to an existing Leaflet map.
-   * Returns { records, layer, slot, db } once tiles are loaded and rendered.
+   * Returns { records, layer, slot, bounds, legend, db } once tiles are loaded.
    *
    * opts:
-   *   baseUrl      string   CDN/static root serving /tiles/...  (default '/tiles')
+   *   baseUrl      string   dist root holding tiles/ + manifest.dat (default '')
    *   radiusMeters number   offline fetch radius                 (default 5000)
    *   prefixLen    number   tile prefix length                   (default 5)
    *   center       L.LatLng optional center; defaults to map.getCenter()
@@ -216,33 +246,32 @@
 
     var db = await sv.openDB(opts.dbName || 'spatial-vault', opts.storeName || 'tiles');
     var center = opts.center || map.getCenter();
-    var slot = opts.timeSlot || currentTimeSlot();
     var records = await sv.loadTilesAround(db, center.lat, center.lng, opts.radiusMeters || 5000, {
-      baseUrl: opts.baseUrl || '/tiles',
+      baseUrl: opts.baseUrl == null ? '' : opts.baseUrl, // dist root holding tiles/ + manifest.dat
       prefixLen: opts.prefixLen || 5,
       key: opts.key,
       store: opts.storeName || 'tiles',
+      useManifest: opts.useManifest,
+      manifestUrl: opts.manifestUrl,
+      onProgress: opts.onProgress,
     });
 
-    var layer = L.layerGroup();
-    for (var i = 0; i < records.length; i++) {
-      var record = records[i];
-      var color = riskColorFor(record, slot);
-      layer.addLayer(makeMarker(record, color, opts, slot));
-    }
-    layer.addTo(map);
-    if (opts.fitBounds !== false && records.length) {
-      map.fitBounds(layer.getBounds().pad(0.2), { padding: [30, 30] });
-    }
-    if (opts.legend !== false) addLegend(map, slot);
-
-    return { records: records, layer: layer, slot: slot, db: db };
+    var rendered = renderRecords(map, records, opts);
+    return {
+      records: records,
+      layer: rendered.layer,
+      slot: rendered.slot,
+      bounds: rendered.bounds,
+      legend: rendered.legend,
+      db: db,
+    };
   }
 
   root.SpatialVaultMap = {
     TIME_SLOTS: TIME_SLOTS,
     currentTimeSlot: currentTimeSlot,
     riskColorFor: riskColorFor,
+    renderRecords: renderRecords,
     attachLayer: attachLayer,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = root.SpatialVaultMap;

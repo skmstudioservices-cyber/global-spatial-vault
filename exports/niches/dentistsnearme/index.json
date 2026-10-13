@@ -1,0 +1,15 @@
+{
+  "niche": "dentistsnearme",
+  "generatedAt": "2026-10-13T09:42:27.881Z",
+  "count": 1,
+  "records": [
+    {
+      "uid": "M4NF0WCTV5",
+      "canonical_name": "Sunrise Dental Clinic",
+      "city": "Gurugram",
+      "lat": 28.448,
+      "lng": 77.077,
+      "category_text": "Dental"
+    }
+  ]
+}

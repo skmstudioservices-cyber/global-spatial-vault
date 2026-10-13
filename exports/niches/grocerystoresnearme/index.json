@@ -1,0 +1,15 @@
+{
+  "niche": "grocerystoresnearme",
+  "generatedAt": "2026-10-13T09:42:27.893Z",
+  "count": 1,
+  "records": [
+    {
+      "uid": "M4NF0WCT52",
+      "canonical_name": "Green Leaf Grocery",
+      "city": "Faridabad",
+      "lat": 28.38,
+      "lng": 77.3,
+      "category_text": "Grocery"
+    }
+  ]
+}

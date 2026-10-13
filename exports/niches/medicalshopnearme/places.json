@@ -1,0 +1,23 @@
+{
+  "niche": "medicalshopnearme",
+  "generatedAt": "2026-10-13T09:42:27.904Z",
+  "count": 1,
+  "records": [
+    {
+      "uid": "M4NF0WCTXK",
+      "canonical_name": "Gupta Medical Store",
+      "lat": 28.681,
+      "lng": 77.222,
+      "geohash13": "ttngjjpqgjbt5",
+      "digipin": "2G947CSJ22",
+      "pincode": "110054",
+      "address": "Shop 4, Civil Lines Market",
+      "city": "Delhi",
+      "locality": "Civil Lines",
+      "category_text": "Pharmacy",
+      "listing_code": "MED-INDL-000001",
+      "slug": "/in/delhi/gupta-medical-store-m4nf0wctxk",
+      "_slug": "/in/delhi/gupta-medical-store-m4nf0wctxk"
+    }
+  ]
+}

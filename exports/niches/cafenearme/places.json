@@ -1,0 +1,23 @@
+{
+  "niche": "cafenearme",
+  "generatedAt": "2026-10-13T09:42:27.865Z",
+  "count": 1,
+  "records": [
+    {
+      "uid": "M4NF0WCT71",
+      "canonical_name": "Cafe Bean Theory",
+      "lat": 28.582,
+      "lng": 77.05,
+      "geohash13": "ttnf974n5nup5",
+      "digipin": "2G74MGYEVV",
+      "pincode": "110075",
+      "address": "A-21, Sector 12, Dwarka",
+      "city": "New Delhi",
+      "locality": "Dwarka",
+      "category_text": "Cafe",
+      "listing_code": "CAF-INDL-000001",
+      "slug": "/in/new-delhi/cafe-bean-theory-m4nf0wct71",
+      "_slug": "/in/new-delhi/cafe-bean-theory-m4nf0wct71"
+    }
+  ]
+}

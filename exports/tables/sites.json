@@ -1,0 +1,53 @@
+[
+  {
+    "id": 1,
+    "slug": "master",
+    "domain": "example.com",
+    "name": "Master Directory",
+    "kind": "master",
+    "niches_json": null,
+    "visible_fields_json": "[\"uid\",\"canonical_name\",\"category_text\",\"city\",\"locality\",\"pincode\",\"address\",\"lat\",\"lng\",\"digipin\",\"geohash13\"]",
+    "hidden_fields_json": null,
+    "index_fields_json": "[\"uid\",\"canonical_name\",\"city\",\"lat\",\"lng\",\"category_text\"]",
+    "card_fields_json": "[\"canonical_name\",\"category_text\",\"locality\",\"city\"]",
+    "detail_fields_json": "[\"canonical_name\",\"address\",\"pincode\",\"digipin\",\"phone\",\"lat\",\"lng\",\"geohash13\"]",
+    "slug_template": "/{country_iso2}/{city}/{canonical_name}-{uid}",
+    "theme_json": null,
+    "created_at": "2026-10-11T12:38:58.298Z",
+    "updated_at": "2026-10-11T12:38:58.298Z"
+  },
+  {
+    "id": 2,
+    "slug": "tailorshopnearme",
+    "domain": "tailorshopnearme.pages.dev",
+    "name": "Tailor Shop Near Me",
+    "kind": "niche",
+    "niches_json": "[\"tailorshopnearme\"]",
+    "visible_fields_json": "[\"uid\",\"canonical_name\",\"locality\",\"city\",\"pincode\",\"address\",\"lat\",\"lng\",\"digipin\"]",
+    "hidden_fields_json": null,
+    "index_fields_json": "[\"uid\",\"canonical_name\",\"city\",\"lat\",\"lng\"]",
+    "card_fields_json": "[\"canonical_name\",\"locality\",\"city\"]",
+    "detail_fields_json": "[\"canonical_name\",\"address\",\"pincode\",\"phone\",\"digipin\"]",
+    "slug_template": "/tailor/{city}/{canonical_name}-{uid}",
+    "theme_json": null,
+    "created_at": "2026-10-11T12:38:58.298Z",
+    "updated_at": "2026-10-11T12:38:58.298Z"
+  },
+  {
+    "id": 3,
+    "slug": "bakerynearme",
+    "domain": "bakerynearme.pages.dev",
+    "name": "Bakery Near Me",
+    "kind": "niche",
+    "niches_json": "[\"bakerynearme\"]",
+    "visible_fields_json": "[\"uid\",\"canonical_name\",\"locality\",\"city\",\"pincode\",\"address\",\"lat\",\"lng\",\"digipin\"]",
+    "hidden_fields_json": null,
+    "index_fields_json": "[\"uid\",\"canonical_name\",\"city\",\"lat\",\"lng\"]",
+    "card_fields_json": "[\"canonical_name\",\"locality\",\"city\"]",
+    "detail_fields_json": "[\"canonical_name\",\"address\",\"pincode\",\"digipin\"]",
+    "slug_template": "/bakery/{city}/{canonical_name}-{uid}",
+    "theme_json": null,
+    "created_at": "2026-10-11T12:38:58.298Z",
+    "updated_at": "2026-10-11T12:38:58.298Z"
+  }
+]

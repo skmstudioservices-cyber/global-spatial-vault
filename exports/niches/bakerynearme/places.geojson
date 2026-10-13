@@ -1,0 +1,47 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.373,
+          26.76
+        ]
+      },
+      "properties": {
+        "uid": "M4NFCZ0N6R",
+        "canonical_name": "Agarwal Sweets",
+        "locality": "Golghar",
+        "city": "Gorakhpur",
+        "pincode": "273001",
+        "address": "12, \"Main\" Bazaar Road",
+        "lat": 26.76,
+        "lng": 83.373,
+        "digipin": "2F2JTFVG33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.34,
+          28.65
+        ]
+      },
+      "properties": {
+        "uid": "M4NF0WCTNK",
+        "canonical_name": "Blue Bottle Bakery",
+        "locality": "Vaishali",
+        "city": "Ghaziabad",
+        "pincode": "201010",
+        "address": "Shop 2, Vaishali",
+        "lat": 28.65,
+        "lng": 77.34,
+        "digipin": "2G8GA9HHYY"
+      }
+    }
+  ]
+}

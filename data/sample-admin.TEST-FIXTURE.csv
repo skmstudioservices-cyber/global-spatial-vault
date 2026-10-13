@@ -1,0 +1,11 @@
+code,parent_code,kind,name,country_iso2,lat,lng
+IN,,country,India,IN,22.0000,79.0000
+IN-DL,IN,state,Delhi,IN,28.6100,77.2100
+IN-UP,IN,state,Uttar Pradesh,IN,26.8500,80.9500
+IN-HR,IN,state,Haryana,IN,29.0600,76.0900
+IN-DL-DL,IN-DL,district,Delhi,IN,28.6100,77.2100
+IN-UP-GKP,IN-UP,district,Gorakhpur,IN,26.7600,83.3730
+IN-UP-GBN,IN-UP,district,Gautam Buddh Nagar,IN,28.5700,77.3500
+IN-UP-GZB,IN-UP,district,Ghaziabad,IN,28.6700,77.4300
+IN-HR-FBD,IN-HR,district,Faridabad,IN,28.3800,77.3000
+IN-HR-GRG,IN-HR,district,Gurugram,IN,28.4500,77.0300

@@ -1,0 +1,45 @@
+{
+  "slug": "master",
+  "domain": "example.com",
+  "name": "Master Directory",
+  "kind": "master",
+  "niche": "cafenearme",
+  "slugTemplate": "/{country_iso2}/{city}/{canonical_name}-{uid}",
+  "cardFields": [
+    "canonical_name",
+    "category_text",
+    "locality",
+    "city"
+  ],
+  "detailFields": [
+    "canonical_name",
+    "address",
+    "pincode",
+    "digipin",
+    "phone",
+    "lat",
+    "lng",
+    "geohash13"
+  ],
+  "indexFields": [
+    "uid",
+    "canonical_name",
+    "city",
+    "lat",
+    "lng",
+    "category_text"
+  ],
+  "visibleFields": [
+    "uid",
+    "canonical_name",
+    "category_text",
+    "city",
+    "locality",
+    "pincode",
+    "address",
+    "lat",
+    "lng",
+    "digipin",
+    "geohash13"
+  ]
+}

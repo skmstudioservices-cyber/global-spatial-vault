@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.222,
+          28.681
+        ]
+      },
+      "properties": {
+        "uid": "M4NF0WCTXK",
+        "canonical_name": "Gupta Medical Store",
+        "category_text": "Pharmacy",
+        "city": "Delhi",
+        "locality": "Civil Lines",
+        "pincode": "110054",
+        "address": "Shop 4, Civil Lines Market",
+        "lat": 28.681,
+        "lng": 77.222,
+        "digipin": "2G947CSJ22",
+        "geohash13": "ttngjjpqgjbt5"
+      }
+    }
+  ]
+}

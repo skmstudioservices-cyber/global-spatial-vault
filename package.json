@@ -7,7 +7,13 @@
   "scripts": {
     "build": "node spatial-vault.js",
     "start": "node spatial-vault.js",
-    "build": "node spatial-vault.js", "test": "echo OK"
+    "dev": "node dev-server.js",
+    "vault": "node vault/cli.js",
+    "vault:init": "node vault/cli.js init",
+    "vault:watch": "node vault/cli.js watch",
+    "vault:doctor": "node vault/cli.js doctor",
+    "test": "node spatial-vault.js && node browser-sim.test.js",
+    "test:browser": "node browser-sim.test.js"
   },
   "keywords": [
     "geohash",

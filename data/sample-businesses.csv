@@ -1,0 +1,10 @@
+Business ID,Business Name,Category,City,Area / Locality,PIN Code,Full Address,Are you the business owner?
+SKM-1001,Sharma Tailors,Tailor,New Delhi,Laxmi Nagar,110092,"12, Main Market Road, Laxmi Nagar",Yes, I own it
+SKM-1002,Gupta Medical Store,Pharmacy,Delhi,Civil Lines,110054,"Shop 4, Civil Lines Market",Yes, I own it
+SKM-1003,Cafe Bean Theory,Cafe,New Delhi,Dwarka,110075,"A-21, Sector 12, Dwarka",No, submitting for them
+SKM-1004,Sunrise Dental Clinic,Dental,Gurugram,Sector 44,122003,"Tower B, Sector 44",Yes, I own it
+SKM-1005,Annapurna Dhaba,Dhaba,Gorakhpur,Golghar,273001,"NH-29, Golghar Bypass",Yes, I own it
+SKM-1006,Rajdhani Motors,Car Repair,Noida,Sector 63,201301,"Plot 9, Sector 63",No, submitting for them
+SKM-1007,Green Leaf Grocery,Grocery,Faridabad,NIT 5,121001,"Booth 12, NIT 5",,Yes, I own it
+SKM-1008,,Restaurant,Delhi,Rohini,110085,"Sector 7, Rohini",Yes, I own it
+SKM-1009,Blue Bottle Bakery,Bakery,Ghaziabad,Vaishali,201010,"Shop 2, Vaishali",Yes, I own it

@@ -1,0 +1,23 @@
+{
+  "niche": "dhabanearme",
+  "generatedAt": "2026-10-13T09:42:27.888Z",
+  "count": 1,
+  "records": [
+    {
+      "uid": "M4NF0WCT1B",
+      "canonical_name": "Annapurna Dhaba",
+      "lat": 26.76,
+      "lng": 83.373,
+      "geohash13": "tug21pw279w9u",
+      "digipin": "2F2JTFVG33",
+      "pincode": "273001",
+      "address": "NH-29, Golghar Bypass",
+      "city": "Gorakhpur",
+      "locality": "Golghar",
+      "category_text": "Dhaba",
+      "listing_code": "DHB-INUP-000001",
+      "slug": "/in/gorakhpur/annapurna-dhaba-m4nf0wct1b",
+      "_slug": "/in/gorakhpur/annapurna-dhaba-m4nf0wct1b"
+    }
+  ]
+}

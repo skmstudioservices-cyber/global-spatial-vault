@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "skm-businesses",
+    "target_table": "places",
+    "mapping_json": "{\n  \"Business ID\": \"external_id\",\n  \"Business Name\": \"canonical_name\",\n  \"Category\": \"category_text\",\n  \"City\": \"city\",\n  \"Area / Locality\": \"locality\",\n  \"PIN Code\": \"pincode\",\n  \"Full Address\": \"address\",\n  \"Are you the business owner?\": \"owner_submitted\"\n}",
+    "options_json": "{\"delimiter\":\",\",\"format\":\"csv\"}",
+    "created_at": "2026-10-11T12:30:16.199Z",
+    "updated_at": "2026-10-11T12:30:16.199Z"
+  },
+  {
+    "id": 2,
+    "name": "skm-excel",
+    "target_table": "places",
+    "mapping_json": "{\n  \"Business ID\": \"external_id\",\n  \"Business Name\": \"canonical_name\",\n  \"Category\": \"category_text\",\n  \"City\": \"city\",\n  \"Area / Locality\": \"locality\",\n  \"PIN Code\": \"pincode\",\n  \"Full Address\": \"address\",\n  \"Are you the business owner?\": \"owner_submitted\",\n  \"Rating\": null,\n  \"Verified\": null,\n  \"Listed On\": null,\n  \"Notes\": null\n}",
+    "options_json": "{\"delimiter\":null,\"format\":\"xlsx\"}",
+    "created_at": "2026-10-11T12:35:59.132Z",
+    "updated_at": "2026-10-11T12:35:59.132Z"
+  }
+]

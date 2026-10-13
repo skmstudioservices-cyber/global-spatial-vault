@@ -1,0 +1,35 @@
+{
+  "niche": "bakerynearme",
+  "generatedAt": "2026-10-13T09:42:27.845Z",
+  "count": 2,
+  "records": [
+    {
+      "uid": "M4NFCZ0N6R",
+      "canonical_name": "Agarwal Sweets",
+      "lat": 26.76,
+      "lng": 83.373,
+      "digipin": "2F2JTFVG33",
+      "pincode": "273001",
+      "address": "12, \"Main\" Bazaar Road",
+      "city": "Gorakhpur",
+      "locality": "Golghar",
+      "listing_code": "BAK-INUP-000002",
+      "slug": "/bakery/gorakhpur/agarwal-sweets-m4nfcz0n6r",
+      "_slug": "/bakery/gorakhpur/agarwal-sweets-m4nfcz0n6r"
+    },
+    {
+      "uid": "M4NF0WCTNK",
+      "canonical_name": "Blue Bottle Bakery",
+      "lat": 28.65,
+      "lng": 77.34,
+      "digipin": "2G8GA9HHYY",
+      "pincode": "201010",
+      "address": "Shop 2, Vaishali",
+      "city": "Ghaziabad",
+      "locality": "Vaishali",
+      "listing_code": "BAK-INUP-000001",
+      "slug": "/bakery/ghaziabad/blue-bottle-bakery-m4nf0wctnk",
+      "_slug": "/bakery/ghaziabad/blue-bottle-bakery-m4nf0wctnk"
+    }
+  ]
+}

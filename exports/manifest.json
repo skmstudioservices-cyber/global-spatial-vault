@@ -1,0 +1,361 @@
+{
+  "generatedAt": "2026-10-13T09:42:27.744Z",
+  "outDir": "C:\\global-spatial-vault\\exports",
+  "formats": [
+    "schema",
+    "dump",
+    "tables",
+    "niches",
+    "geojson",
+    "tiles"
+  ],
+  "artefacts": {
+    "schema": {
+      "file": "schema.sql",
+      "objects": 50,
+      "bytes": 11512
+    },
+    "tables": {
+      "count": 22,
+      "rows": 88,
+      "files": [
+        {
+          "table": "audit_log",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 60
+        },
+        {
+          "table": "categories",
+          "rows": 8,
+          "jsonBytes": 883,
+          "csvBytes": 194
+        },
+        {
+          "table": "export_recipes",
+          "rows": 1,
+          "jsonBytes": 168,
+          "csvBytes": 109
+        },
+        {
+          "table": "import_batches",
+          "rows": 6,
+          "jsonBytes": 3091,
+          "csvBytes": 2210
+        },
+        {
+          "table": "import_mappings",
+          "rows": 2,
+          "jsonBytes": 1208,
+          "csvBytes": 970
+        },
+        {
+          "table": "niche_fields",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 75
+        },
+        {
+          "table": "niches",
+          "rows": 11,
+          "jsonBytes": 3647,
+          "csvBytes": 1356
+        },
+        {
+          "table": "place_category_map",
+          "rows": 11,
+          "jsonBytes": 1268,
+          "csvBytes": 255
+        },
+        {
+          "table": "place_hours",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 53
+        },
+        {
+          "table": "place_keywords",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 67
+        },
+        {
+          "table": "place_media",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 48
+        },
+        {
+          "table": "place_niches",
+          "rows": 11,
+          "jsonBytes": 3767,
+          "csvBytes": 1168
+        },
+        {
+          "table": "place_reviews",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 64
+        },
+        {
+          "table": "place_risk",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 36
+        },
+        {
+          "table": "places",
+          "rows": 13,
+          "jsonBytes": 17271,
+          "csvBytes": 8041
+        },
+        {
+          "table": "ref_admin",
+          "rows": 10,
+          "jsonBytes": 2409,
+          "csvBytes": 549
+        },
+        {
+          "table": "ref_pincode",
+          "rows": 9,
+          "jsonBytes": 2418,
+          "csvBytes": 987
+        },
+        {
+          "table": "risk_reports",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 63
+        },
+        {
+          "table": "saved_views",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 65
+        },
+        {
+          "table": "schema_migrations",
+          "rows": 3,
+          "jsonBytes": 319,
+          "csvBytes": 154
+        },
+        {
+          "table": "sites",
+          "rows": 3,
+          "jsonBytes": 2402,
+          "csvBytes": 1591
+        },
+        {
+          "table": "submissions",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 128
+        }
+      ]
+    },
+    "dump": {
+      "file": "dump.sql",
+      "rows": 88,
+      "bytes": 36187
+    },
+    "niches": {
+      "count": 8,
+      "records": 10,
+      "niches": [
+        {
+          "niche": "bakerynearme",
+          "site": "bakerynearme",
+          "records": 2,
+          "files": [
+            {
+              "file": "niches\\bakerynearme\\index.json",
+              "bytes": 409
+            },
+            {
+              "file": "niches\\bakerynearme\\places.json",
+              "bytes": 1002
+            },
+            {
+              "file": "niches\\bakerynearme\\places.geojson",
+              "bytes": 1003
+            },
+            {
+              "file": "niches\\bakerynearme\\site.json",
+              "bytes": 606
+            }
+          ]
+        },
+        {
+          "niche": "cafenearme",
+          "site": "master",
+          "records": 1,
+          "files": [
+            {
+              "file": "niches\\cafenearme\\index.json",
+              "bytes": 288
+            },
+            {
+              "file": "niches\\cafenearme\\places.json",
+              "bytes": 614
+            },
+            {
+              "file": "niches\\cafenearme\\places.geojson",
+              "bytes": 602
+            },
+            {
+              "file": "niches\\cafenearme\\site.json",
+              "bytes": 730
+            }
+          ]
+        },
+        {
+          "niche": "carrepairsnearme",
+          "site": "master",
+          "records": 2,
+          "files": [
+            {
+              "file": "niches\\carrepairsnearme\\index.json",
+              "bytes": 477
+            },
+            {
+              "file": "niches\\carrepairsnearme\\places.json",
+              "bytes": 1110
+            },
+            {
+              "file": "niches\\carrepairsnearme\\places.geojson",
+              "bytes": 1148
+            },
+            {
+              "file": "niches\\carrepairsnearme\\site.json",
+              "bytes": 736
+            }
+          ]
+        },
+        {
+          "niche": "dentistsnearme",
+          "site": "master",
+          "records": 1,
+          "files": [
+            {
+              "file": "niches\\dentistsnearme\\index.json",
+              "bytes": 299
+            },
+            {
+              "file": "niches\\dentistsnearme\\places.json",
+              "bytes": 631
+            },
+            {
+              "file": "niches\\dentistsnearme\\places.geojson",
+              "bytes": 608
+            },
+            {
+              "file": "niches\\dentistsnearme\\site.json",
+              "bytes": 734
+            }
+          ]
+        },
+        {
+          "niche": "dhabanearme",
+          "site": "master",
+          "records": 1,
+          "files": [
+            {
+              "file": "niches\\dhabanearme\\index.json",
+              "bytes": 289
+            },
+            {
+              "file": "niches\\dhabanearme\\places.json",
+              "bytes": 612
+            },
+            {
+              "file": "niches\\dhabanearme\\places.geojson",
+              "bytes": 601
+            },
+            {
+              "file": "niches\\dhabanearme\\site.json",
+              "bytes": 731
+            }
+          ]
+        },
+        {
+          "niche": "grocerystoresnearme",
+          "site": "master",
+          "records": 1,
+          "files": [
+            {
+              "file": "niches\\grocerystoresnearme\\index.json",
+              "bytes": 300
+            },
+            {
+              "file": "niches\\grocerystoresnearme\\places.json",
+              "bytes": 621
+            },
+            {
+              "file": "niches\\grocerystoresnearme\\places.geojson",
+              "bytes": 594
+            },
+            {
+              "file": "niches\\grocerystoresnearme\\site.json",
+              "bytes": 739
+            }
+          ]
+        },
+        {
+          "niche": "medicalshopnearme",
+          "site": "master",
+          "records": 1,
+          "files": [
+            {
+              "file": "niches\\medicalshopnearme\\index.json",
+              "bytes": 299
+            },
+            {
+              "file": "niches\\medicalshopnearme\\places.json",
+              "bytes": 631
+            },
+            {
+              "file": "niches\\medicalshopnearme\\places.geojson",
+              "bytes": 615
+            },
+            {
+              "file": "niches\\medicalshopnearme\\site.json",
+              "bytes": 737
+            }
+          ]
+        },
+        {
+          "niche": "tailorshopnearme",
+          "site": "tailorshopnearme",
+          "records": 1,
+          "files": [
+            {
+              "file": "niches\\tailorshopnearme\\index.json",
+              "bytes": 262
+            },
+            {
+              "file": "niches\\tailorshopnearme\\places.json",
+              "bytes": 571
+            },
+            {
+              "file": "niches\\tailorshopnearme\\places.geojson",
+              "bytes": 546
+            },
+            {
+              "file": "niches\\tailorshopnearme\\site.json",
+              "bytes": 636
+            }
+          ]
+        }
+      ]
+    },
+    "tiles": {
+      "recordCount": 10,
+      "tileCount": 0,
+      "tiles": []
+    }
+  },
+  "totals": {
+    "files": 79,
+    "bytes": 124932
+  }
+}

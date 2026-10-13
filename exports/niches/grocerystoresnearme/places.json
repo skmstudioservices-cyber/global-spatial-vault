@@ -1,0 +1,23 @@
+{
+  "niche": "grocerystoresnearme",
+  "generatedAt": "2026-10-13T09:42:27.894Z",
+  "count": 1,
+  "records": [
+    {
+      "uid": "M4NF0WCT52",
+      "canonical_name": "Green Leaf Grocery",
+      "lat": 28.38,
+      "lng": 77.3,
+      "geohash13": "ttncrn2jkx3wk",
+      "digipin": "2G32X3XCLL",
+      "pincode": "121001",
+      "address": "Booth 12, NIT 5",
+      "city": "Faridabad",
+      "locality": "NIT 5",
+      "category_text": "Grocery",
+      "listing_code": "GRO-INHR-000001",
+      "slug": "/in/faridabad/green-leaf-grocery-m4nf0wct52",
+      "_slug": "/in/faridabad/green-leaf-grocery-m4nf0wct52"
+    }
+  ]
+}

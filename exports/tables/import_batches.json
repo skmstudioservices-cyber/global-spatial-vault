@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "source_file": "sample-businesses.csv",
+    "mapping_json": "{\"Business ID\":\"external_id\",\"Business Name\":\"canonical_name\",\"Category\":\"category_text\",\"City\":\"city\",\"Area / Locality\":\"locality\",\"PIN Code\":\"pincode\",\"Full Address\":\"address\",\"Are you the business owner?\":\"owner_submitted\"}",
+    "rows_total": 9,
+    "rows_ok": 8,
+    "rows_failed": 1,
+    "started_at": "2026-10-11T12:29:23.205Z",
+    "finished_at": "2026-10-11T12:29:23.227Z"
+  },
+  {
+    "id": 2,
+    "source_file": "sample-businesses.csv",
+    "mapping_json": "{\"Business ID\":\"external_id\",\"Business Name\":\"canonical_name\",\"Category\":\"category_text\",\"City\":\"city\",\"Area / Locality\":\"locality\",\"PIN Code\":\"pincode\",\"Full Address\":\"address\",\"Are you the business owner?\":\"owner_submitted\"}",
+    "rows_total": 9,
+    "rows_ok": 8,
+    "rows_failed": 1,
+    "started_at": "2026-10-11T12:30:16.185Z",
+    "finished_at": "2026-10-11T12:30:16.195Z"
+  },
+  {
+    "id": 3,
+    "source_file": "sample-businesses.csv",
+    "mapping_json": "{\"Business ID\":\"external_id\",\"Business Name\":\"canonical_name\",\"Category\":\"category_text\",\"City\":\"city\",\"Area / Locality\":\"locality\",\"PIN Code\":\"pincode\",\"Full Address\":\"address\",\"Are you the business owner?\":\"owner_submitted\"}",
+    "rows_total": 9,
+    "rows_ok": 8,
+    "rows_failed": 1,
+    "started_at": "2026-10-11T12:30:16.557Z",
+    "finished_at": "2026-10-11T12:30:16.563Z"
+  },
+  {
+    "id": 4,
+    "source_file": "sample-businesses.csv",
+    "mapping_json": "{\"Business ID\":\"external_id\",\"Business Name\":\"canonical_name\",\"Category\":\"category_text\",\"City\":\"city\",\"Area / Locality\":\"locality\",\"PIN Code\":\"pincode\",\"Full Address\":\"address\",\"Are you the business owner?\":\"owner_submitted\"}",
+    "rows_total": 9,
+    "rows_ok": 8,
+    "rows_failed": 1,
+    "started_at": "2026-10-11T12:30:22.939Z",
+    "finished_at": "2026-10-11T12:30:22.946Z"
+  },
+  {
+    "id": 5,
+    "source_file": "sample-duplicates.TEST-FIXTURE.csv",
+    "mapping_json": "{\"Business ID\":\"external_id\",\"Business Name\":\"canonical_name\",\"Category\":\"category_text\",\"City\":\"city\",\"Area / Locality\":\"locality\",\"PIN Code\":\"pincode\",\"Full Address\":\"address\",\"Are you the business owner?\":\"owner_submitted\"}",
+    "rows_total": 2,
+    "rows_ok": 2,
+    "rows_failed": 0,
+    "started_at": "2026-10-11T12:32:13.802Z",
+    "finished_at": "2026-10-11T12:32:13.814Z"
+  },
+  {
+    "id": 6,
+    "source_file": "sample-businesses.xlsx",
+    "mapping_json": "{\"Business ID\":\"external_id\",\"Business Name\":\"canonical_name\",\"Category\":\"category_text\",\"City\":\"city\",\"Area / Locality\":\"locality\",\"PIN Code\":\"pincode\",\"Full Address\":\"address\",\"Are you the business owner?\":\"owner_submitted\",\"Rating\":null,\"Verified\":null,\"Listed On\":null,\"Notes\":null}",
+    "rows_total": 4,
+    "rows_ok": 3,
+    "rows_failed": 1,
+    "started_at": "2026-10-11T12:35:59.120Z",
+    "finished_at": "2026-10-11T12:35:59.130Z"
+  }
+]

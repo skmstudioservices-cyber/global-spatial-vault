@@ -41,6 +41,7 @@
   var CIPHER_KEY = 73;
   var CIPHER_MAGIC = 'SVV1';
   var BASE32 = '0123456789bcdefghjkmnpqrstuvwxyz';
+  var MANIFEST_KEY = '__manifest__'; // IndexedDB cache key for the tile manifest
 
   /* ------------------------------------------------------------------ *
    *  Low-level primitives
@@ -178,9 +179,19 @@
     return Math.min(max, Math.max(min, value));
   }
 
-  /** Convert a 5-char prefix to its nested relative URL form. */
+  /**
+   * Convert a 5-char prefix to its nested asset path, INCLUDING the top-level
+   * `tiles/` folder — identical to the server's `tileRelativeUrl()`:
+   *   'tdr1w' -> 'tiles/t/d/r/1/w/tdr1w.dat'
+   * `baseUrl` must therefore point at the dist root that CONTAINS `tiles/`.
+   */
+  function tilePathForPrefix(prefix) {
+    return 'tiles/' + prefix.split('').join('/') + '/' + prefix + '.dat';
+  }
+
+  /** @deprecated kept as an alias for backward compatibility. */
   function prefixToUrl(prefix) {
-    return prefix.split('').join('/') + '/' + prefix + '.dat';
+    return tilePathForPrefix(prefix);
   }
 
   /**
@@ -285,37 +296,126 @@
   }
 
   /**
-   * Load all tiles intersecting a circular area (lat/lng + radius in meters),
+   * Fetch + decrypt the master manifest (which lists every tile that actually
+   * exists). Cached in IndexedDB under a reserved key.
+   */
+  async function loadManifest(db, manifestUrl, key, store) {
+    var cached = await getTile(db, MANIFEST_KEY, store);
+    if (cached) return cached;
+    var manifest = await fetchTile(manifestUrl, key);
+    await saveTile(db, MANIFEST_KEY, manifest, store);
+    return manifest;
+  }
+
+  /**
+   * Load every tile intersecting a circular area (lat/lng + radius in meters),
    * decrypting on first use and caching to IndexedDB. Returns a flat array of
-   * records merged across tiles. Subsequent calls within range are served
-   * entirely from IndexedDB (offline-capable).
+   * records merged across tiles; later calls in range are served entirely from
+   * IndexedDB (offline-capable).
    *
-   * opts: { baseUrl='/tiles', prefixLen=5, key=73, store='tiles' }
+   * A missing tile (HTTP 404 = an empty grid cell) is SKIPPED, never fatal —
+   * a radius legitimately spans hundreds of cells while only a few hold data.
+   * When the encrypted manifest is reachable it narrows the request set to
+   * tiles that exist, so 25-50 km costs a handful of requests, not hundreds.
+   *
+   * opts: {
+   *   baseUrl,        // dist root containing tiles/ and manifest.dat (default '')
+   *   prefixLen = 5,
+   *   key = 73,
+   *   store = 'tiles',
+   *   useManifest = true,
+   *   manifestUrl,    // defaults to baseUrl + '/manifest.dat'
+   *   onProgress,     // optional (loaded, total, prefix)
+   * }
    */
   async function loadTilesAround(db, lat, lng, radiusMeters, opts) {
     opts = opts || {};
-    var baseUrl = (opts.baseUrl || '/tiles').replace(/\/+$/, '');
+    var baseUrl = (opts.baseUrl == null ? '' : String(opts.baseUrl)).replace(/\/+$/, '');
     var prefixLen = opts.prefixLen || 5;
     var key = opts.key === undefined ? CIPHER_KEY : opts.key;
     var store = opts.store || 'tiles';
+    var manifestUrl = opts.manifestUrl === undefined
+      ? baseUrl + '/manifest.dat'
+      : opts.manifestUrl;
 
     var dLat = radiusMeters / 111320;
     var dLng = radiusMeters / (111320 * Math.cos(lat * Math.PI / 180));
-    var prefixes = prefixesForBBox(lat - dLat, lng - dLng, lat + dLat, lng + dLng, prefixLen);
+    var candidates = prefixesForBBox(lat - dLat, lng - dLng, lat + dLat, lng + dLng, prefixLen);
+
+    // Narrow to tiles that exist, via the encrypted manifest (best-effort).
+    var available = null;
+    if (opts.useManifest !== false && manifestUrl) {
+      try {
+        var manifest = await loadManifest(db, manifestUrl, key, store);
+        if (manifest && manifest.tiles) {
+          available = {};
+          for (var m = 0; m < manifest.tiles.length; m++) {
+            available[manifest.tiles[m].prefix] = true;
+          }
+        }
+      } catch (manifestError) {
+        available = null; // manifest is an optimisation, never a requirement
+      }
+    }
 
     var records = [];
-    for (var i = 0; i < prefixes.length; i++) {
-      var prefix = prefixes[i];
+    for (var i = 0; i < candidates.length; i++) {
+      var prefix = candidates[i];
+      if (typeof opts.onProgress === 'function') opts.onProgress(i + 1, candidates.length, prefix);
+
+      if (available && !available[prefix]) continue; // known-empty cell
+
       var payload = await getTile(db, prefix, store);
       if (!payload) {
-        payload = await fetchTile(baseUrl + '/' + prefixToUrl(prefix), key);
-        await saveTile(db, prefix, payload, store);
+        try {
+          payload = await fetchTile(baseUrl + '/' + tilePathForPrefix(prefix), key);
+          await saveTile(db, prefix, payload, store);
+        } catch (fetchError) {
+          continue; // 404 empty cell or transient miss — skip, never abort
+        }
       }
       if (payload && payload.records) {
         records.push.apply(records, payload.records);
       }
     }
     return records;
+  }
+
+  /**
+   * Load and decrypt EVERY tile listed in the encrypted manifest.
+   * Ideal for dashboards, pan-global views and bulk export: one unambiguous
+   * request per real tile, with zero 404 probing.
+   *
+   * Returns { manifest, records }.
+   * opts: { baseUrl='', key=73, store='tiles', manifestUrl, onProgress }
+   */
+  async function loadAllTiles(db, opts) {
+    opts = opts || {};
+    var baseUrl = (opts.baseUrl == null ? '' : String(opts.baseUrl)).replace(/\/+$/, '');
+    var key = opts.key === undefined ? CIPHER_KEY : opts.key;
+    var store = opts.store || 'tiles';
+    var manifestUrl = opts.manifestUrl === undefined
+      ? baseUrl + '/manifest.dat'
+      : opts.manifestUrl;
+
+    var manifest = await loadManifest(db, manifestUrl, key, store);
+    var tiles = (manifest && manifest.tiles) || [];
+    var records = [];
+
+    for (var i = 0; i < tiles.length; i++) {
+      var prefix = tiles[i].prefix;
+      if (typeof opts.onProgress === 'function') opts.onProgress(i + 1, tiles.length, prefix);
+
+      var payload = await getTile(db, prefix, store);
+      if (!payload) {
+        payload = await fetchTile(baseUrl + '/' + tilePathForPrefix(prefix), key);
+        await saveTile(db, prefix, payload, store);
+      }
+      if (payload && payload.records) {
+        records.push.apply(records, payload.records);
+      }
+    }
+    return { manifest: manifest, records: records };
   }
 
   /* ------------------------------------------------------------------ *
@@ -331,13 +431,16 @@
     encodeGeohash: encodeGeohash,
     cellDegrees: cellDegrees,
     prefixesForBBox: prefixesForBBox,
+    tilePathForPrefix: tilePathForPrefix,
     prefixToUrl: prefixToUrl,
+    loadManifest: loadManifest,
     openDB: openDB,
     saveTile: saveTile,
     getTile: getTile,
     clearTiles: clearTiles,
     fetchTile: fetchTile,
     loadTilesAround: loadTilesAround,
+    loadAllTiles: loadAllTiles,
   };
 
   root.SpatialVault = API;

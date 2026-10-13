@@ -1,0 +1,101 @@
+[
+  {
+    "pincode": "110092",
+    "country_iso2": "IN",
+    "admin_id": 5,
+    "office_name": "Laxmi Nagar",
+    "lat": 28.636,
+    "lng": 77.277,
+    "geohash13": "ttnfymp2u979d",
+    "digipin": "2G87AC6EBB",
+    "source": "file:sample-pincodes.TEST-FIXTURE.csv"
+  },
+  {
+    "pincode": "110054",
+    "country_iso2": "IN",
+    "admin_id": 5,
+    "office_name": "Civil Lines",
+    "lat": 28.681,
+    "lng": 77.222,
+    "geohash13": "ttngjjpqgjbt5",
+    "digipin": "2G947CSJ22",
+    "source": "file:sample-pincodes.TEST-FIXTURE.csv"
+  },
+  {
+    "pincode": "110075",
+    "country_iso2": "IN",
+    "admin_id": 5,
+    "office_name": "Dwarka",
+    "lat": 28.582,
+    "lng": 77.05,
+    "geohash13": "ttnf974n5nup5",
+    "digipin": "2G74MGYEVV",
+    "source": "file:sample-pincodes.TEST-FIXTURE.csv"
+  },
+  {
+    "pincode": "110085",
+    "country_iso2": "IN",
+    "admin_id": 5,
+    "office_name": "Rohini",
+    "lat": 28.735,
+    "lng": 77.113,
+    "geohash13": "ttng6xpcx0hrd",
+    "digipin": "2GA6UXBZBB",
+    "source": "file:sample-pincodes.TEST-FIXTURE.csv"
+  },
+  {
+    "pincode": "122003",
+    "country_iso2": "IN",
+    "admin_id": 10,
+    "office_name": "Gurugram Sector 44",
+    "lat": 28.448,
+    "lng": 77.077,
+    "geohash13": "ttnccfvc878f1",
+    "digipin": "2G4EKU3J22",
+    "source": "file:sample-pincodes.TEST-FIXTURE.csv"
+  },
+  {
+    "pincode": "273001",
+    "country_iso2": "IN",
+    "admin_id": 6,
+    "office_name": "Gorakhpur HO",
+    "lat": 26.76,
+    "lng": 83.373,
+    "geohash13": "tug21pw279w9u",
+    "digipin": "2F2JTFVG33",
+    "source": "file:sample-pincodes.TEST-FIXTURE.csv"
+  },
+  {
+    "pincode": "201301",
+    "country_iso2": "IN",
+    "admin_id": 7,
+    "office_name": "Noida Sector 63",
+    "lat": 28.62,
+    "lng": 77.38,
+    "geohash13": "ttp4bf47sdtyn",
+    "digipin": "2G7UZTMHTT",
+    "source": "file:sample-pincodes.TEST-FIXTURE.csv"
+  },
+  {
+    "pincode": "121001",
+    "country_iso2": "IN",
+    "admin_id": 9,
+    "office_name": "Faridabad NIT",
+    "lat": 28.38,
+    "lng": 77.3,
+    "geohash13": "ttncrn2jkx3wk",
+    "digipin": "2G32X3XCLL",
+    "source": "file:sample-pincodes.TEST-FIXTURE.csv"
+  },
+  {
+    "pincode": "201010",
+    "country_iso2": "IN",
+    "admin_id": 8,
+    "office_name": "Ghaziabad Vaishali",
+    "lat": 28.65,
+    "lng": 77.34,
+    "geohash13": "ttnfzzt62e5fc",
+    "digipin": "2G8GA9HHYY",
+    "source": "file:sample-pincodes.TEST-FIXTURE.csv"
+  }
+]

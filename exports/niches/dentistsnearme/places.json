@@ -1,0 +1,23 @@
+{
+  "niche": "dentistsnearme",
+  "generatedAt": "2026-10-13T09:42:27.883Z",
+  "count": 1,
+  "records": [
+    {
+      "uid": "M4NF0WCTV5",
+      "canonical_name": "Sunrise Dental Clinic",
+      "lat": 28.448,
+      "lng": 77.077,
+      "geohash13": "ttnccfvc878f1",
+      "digipin": "2G4EKU3J22",
+      "pincode": "122003",
+      "address": "Tower B, Sector 44",
+      "city": "Gurugram",
+      "locality": "Sector 44",
+      "category_text": "Dental",
+      "listing_code": "DEN-INHR-000001",
+      "slug": "/in/gurugram/sunrise-dental-clinic-m4nf0wctv5",
+      "_slug": "/in/gurugram/sunrise-dental-clinic-m4nf0wctv5"
+    }
+  ]
+}

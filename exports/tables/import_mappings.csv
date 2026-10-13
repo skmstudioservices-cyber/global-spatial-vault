@@ -1,0 +1,25 @@
+id,name,target_table,mapping_json,options_json,created_at,updated_at
+1,skm-businesses,places,"{
+  ""Business ID"": ""external_id"",
+  ""Business Name"": ""canonical_name"",
+  ""Category"": ""category_text"",
+  ""City"": ""city"",
+  ""Area / Locality"": ""locality"",
+  ""PIN Code"": ""pincode"",
+  ""Full Address"": ""address"",
+  ""Are you the business owner?"": ""owner_submitted""
+}","{""delimiter"":"","",""format"":""csv""}",2026-10-11T12:30:16.199Z,2026-10-11T12:30:16.199Z
+2,skm-excel,places,"{
+  ""Business ID"": ""external_id"",
+  ""Business Name"": ""canonical_name"",
+  ""Category"": ""category_text"",
+  ""City"": ""city"",
+  ""Area / Locality"": ""locality"",
+  ""PIN Code"": ""pincode"",
+  ""Full Address"": ""address"",
+  ""Are you the business owner?"": ""owner_submitted"",
+  ""Rating"": null,
+  ""Verified"": null,
+  ""Listed On"": null,
+  ""Notes"": null
+}","{""delimiter"":null,""format"":""xlsx""}",2026-10-11T12:35:59.132Z,2026-10-11T12:35:59.132Z

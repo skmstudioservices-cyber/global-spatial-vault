@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.3,
+          28.38
+        ]
+      },
+      "properties": {
+        "uid": "M4NF0WCT52",
+        "canonical_name": "Green Leaf Grocery",
+        "category_text": "Grocery",
+        "city": "Faridabad",
+        "locality": "NIT 5",
+        "pincode": "121001",
+        "address": "Booth 12, NIT 5",
+        "lat": 28.38,
+        "lng": 77.3,
+        "digipin": "2G32X3XCLL",
+        "geohash13": "ttncrn2jkx3wk"
+      }
+    }
+  ]
+}

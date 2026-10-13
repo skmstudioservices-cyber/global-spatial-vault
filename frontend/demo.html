@@ -31,25 +31,52 @@
 
   <script>
     (async function () {
+      const toolbar = document.querySelector('.toolbar');
+      const fail = (msg) => { toolbar.innerHTML += '<br><span style="color:#b91c1c">' + msg + '</span>'; };
+
+      if (location.protocol === 'file:') {
+        fail('Open this page over HTTP, not <code>file://</code> — run <code>npx serve .</code>.');
+        return;
+      }
+
+      // The generated assets live in dist/. If you serve the repo root the dist
+      // root is '/dist'; if you serve dist/ itself it is ''. Probe for the
+      // encrypted manifest to pick whichever is correct.
+      async function detectBaseUrl() {
+        for (const candidate of ['/dist', '']) {
+          try {
+            const res = await fetch(candidate + '/manifest.dat', { cache: 'no-store' });
+            if (res.ok) return candidate;
+          } catch (e) { /* try the next candidate */ }
+        }
+        return null;
+      }
+
       const map = L.map('map').setView([12.9716, 77.5946], 12);
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
 
+      const baseUrl = await detectBaseUrl();
+      if (baseUrl === null) {
+        fail('Could not reach <code>manifest.dat</code>. Run <code>node spatial-vault.js</code>, then <code>npx serve .</code> and open <code>/frontend/demo.html</code>.');
+        return;
+      }
+      console.log('Spatial Vault asset root resolved to:', baseUrl || '(server root)');
+
       try {
         const result = await SpatialVaultMap.attachLayer(map, {
-          // Serve the generated assets:  npx serve dist   ->   baseUrl '/tiles'
-          // Or point this at your CDN / GitHub raw host root.
-          baseUrl: '/tiles',
-          radiusMeters: 25000,   // 25 km offline radius
-          markerStyle: 'emoji',  // try 'circle' too
+          baseUrl: baseUrl,       // dist root containing tiles/ and manifest.dat
+          radiusMeters: 25000,    // 25 km offline radius
+          markerStyle: 'emoji',   // try 'circle' too
+          onProgress: (i, n, p) => { if (i === n) console.log('scanned', n, 'candidate cells, last =', p); },
         });
         console.log('Spatial Vault layer ready:', result.records.length, 'records, slot =', result.slot);
+        fail(''); // no-op keeps the toolbar intact
       } catch (err) {
         console.error('Spatial Vault layer failed:', err);
-        document.querySelector('.toolbar').innerHTML +=
-          '<br><span style="color:#b91c1c">Serve dist/ over HTTP (e.g. <code>npx serve dist</code>) and set baseUrl.</span>';
+        fail('Layer error: ' + err.message);
       }
     })();
   </script>

@@ -1,0 +1,51 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.38,
+          28.62
+        ]
+      },
+      "properties": {
+        "uid": "M4NFCZ0Q58",
+        "canonical_name": "Noida Auto Works",
+        "category_text": "Car Repair",
+        "city": "Noida",
+        "locality": "Sector 63",
+        "pincode": "201301",
+        "address": "Plot 9 & 10, Sector 63",
+        "lat": 28.62,
+        "lng": 77.38,
+        "digipin": "2G7UZTMHTT",
+        "geohash13": "ttp4bf47sdtyn"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.38,
+          28.62
+        ]
+      },
+      "properties": {
+        "uid": "M4NF0WCTYS",
+        "canonical_name": "Rajdhani Motors",
+        "category_text": "Car Repair",
+        "city": "Noida",
+        "locality": "Sector 63",
+        "pincode": "201301",
+        "address": "Plot 9, Sector 63",
+        "lat": 28.62,
+        "lng": 77.38,
+        "digipin": "2G7UZTMHTT",
+        "geohash13": "ttp4bf47sdtyn"
+      }
+    }
+  ]
+}

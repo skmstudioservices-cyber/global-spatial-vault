@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "parent_id": null,
+    "slug": "tailor",
+    "name": "Tailor",
+    "sort_order": 0
+  },
+  {
+    "id": 2,
+    "parent_id": null,
+    "slug": "dhaba",
+    "name": "Dhaba",
+    "sort_order": 0
+  },
+  {
+    "id": 3,
+    "parent_id": null,
+    "slug": "grocery",
+    "name": "Grocery",
+    "sort_order": 0
+  },
+  {
+    "id": 4,
+    "parent_id": null,
+    "slug": "cafe",
+    "name": "Cafe",
+    "sort_order": 0
+  },
+  {
+    "id": 5,
+    "parent_id": null,
+    "slug": "bakery",
+    "name": "Bakery",
+    "sort_order": 0
+  },
+  {
+    "id": 6,
+    "parent_id": null,
+    "slug": "dental",
+    "name": "Dental",
+    "sort_order": 0
+  },
+  {
+    "id": 7,
+    "parent_id": null,
+    "slug": "pharmacy",
+    "name": "Pharmacy",
+    "sort_order": 0
+  },
+  {
+    "id": 8,
+    "parent_id": null,
+    "slug": "car-repair",
+    "name": "Car Repair",
+    "sort_order": 0
+  }
+]

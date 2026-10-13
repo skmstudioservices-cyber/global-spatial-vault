@@ -1,0 +1,9 @@
+id,parent_id,slug,name,sort_order
+1,,tailor,Tailor,0
+2,,dhaba,Dhaba,0
+3,,grocery,Grocery,0
+4,,cafe,Cafe,0
+5,,bakery,Bakery,0
+6,,dental,Dental,0
+7,,pharmacy,Pharmacy,0
+8,,car-repair,Car Repair,0

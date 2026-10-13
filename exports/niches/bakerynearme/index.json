@@ -1,0 +1,21 @@
+{
+  "niche": "bakerynearme",
+  "generatedAt": "2026-10-13T09:42:27.842Z",
+  "count": 2,
+  "records": [
+    {
+      "uid": "M4NFCZ0N6R",
+      "canonical_name": "Agarwal Sweets",
+      "city": "Gorakhpur",
+      "lat": 26.76,
+      "lng": 83.373
+    },
+    {
+      "uid": "M4NF0WCTNK",
+      "canonical_name": "Blue Bottle Bakery",
+      "city": "Ghaziabad",
+      "lat": 28.65,
+      "lng": 77.34
+    }
+  ]
+}

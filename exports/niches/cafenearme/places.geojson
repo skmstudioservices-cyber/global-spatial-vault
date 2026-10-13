@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.05,
+          28.582
+        ]
+      },
+      "properties": {
+        "uid": "M4NF0WCT71",
+        "canonical_name": "Cafe Bean Theory",
+        "category_text": "Cafe",
+        "city": "New Delhi",
+        "locality": "Dwarka",
+        "pincode": "110075",
+        "address": "A-21, Sector 12, Dwarka",
+        "lat": 28.582,
+        "lng": 77.05,
+        "digipin": "2G74MGYEVV",
+        "geohash13": "ttnf974n5nup5"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+id,parent_id,kind,code,name,country_iso2,lat,lng,geohash13,digipin,meta_json
+1,,country,IN,India,IN,22,79,,,
+2,1,state,IN-DL,Delhi,IN,28.61,77.21,,,
+3,1,state,IN-UP,Uttar Pradesh,IN,26.85,80.95,,,
+4,1,state,IN-HR,Haryana,IN,29.06,76.09,,,
+5,2,district,IN-DL-DL,Delhi,IN,28.61,77.21,,,
+6,3,district,IN-UP-GKP,Gorakhpur,IN,26.76,83.373,,,
+7,3,district,IN-UP-GBN,Gautam Buddh Nagar,IN,28.57,77.35,,,
+8,3,district,IN-UP-GZB,Ghaziabad,IN,28.67,77.43,,,
+9,4,district,IN-HR-FBD,Faridabad,IN,28.38,77.3,,,
+10,4,district,IN-HR-GRG,Gurugram,IN,28.45,77.03,,,

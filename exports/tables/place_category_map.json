@@ -1,0 +1,79 @@
+[
+  {
+    "place_uid": "M4NF0WCR1G",
+    "category_id": 1,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NF0WCT1B",
+    "category_id": 2,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NF0WCT52",
+    "category_id": 3,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NF0WCT71",
+    "category_id": 4,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NF0WCTNK",
+    "category_id": 5,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NF0WCTV5",
+    "category_id": 6,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NF0WCTXK",
+    "category_id": 7,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NF0WCTYS",
+    "category_id": 8,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NFCZ0N6R",
+    "category_id": 5,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NFCZ0Q58",
+    "category_id": 8,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  },
+  {
+    "place_uid": "M4NFCZ0QFK",
+    "category_id": 5,
+    "level": 1,
+    "is_primary": 1,
+    "weight": 0
+  }
+]

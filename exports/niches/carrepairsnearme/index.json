@@ -1,0 +1,23 @@
+{
+  "niche": "carrepairsnearme",
+  "generatedAt": "2026-10-13T09:42:27.873Z",
+  "count": 2,
+  "records": [
+    {
+      "uid": "M4NFCZ0Q58",
+      "canonical_name": "Noida Auto Works",
+      "city": "Noida",
+      "lat": 28.62,
+      "lng": 77.38,
+      "category_text": "Car Repair"
+    },
+    {
+      "uid": "M4NF0WCTYS",
+      "canonical_name": "Rajdhani Motors",
+      "city": "Noida",
+      "lat": 28.62,
+      "lng": 77.38,
+      "category_text": "Car Repair"
+    }
+  ]
+}

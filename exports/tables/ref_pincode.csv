@@ -1,0 +1,10 @@
+pincode,country_iso2,admin_id,office_name,lat,lng,geohash13,digipin,source
+110092,IN,5,Laxmi Nagar,28.636,77.277,ttnfymp2u979d,2G87AC6EBB,file:sample-pincodes.TEST-FIXTURE.csv
+110054,IN,5,Civil Lines,28.681,77.222,ttngjjpqgjbt5,2G947CSJ22,file:sample-pincodes.TEST-FIXTURE.csv
+110075,IN,5,Dwarka,28.582,77.05,ttnf974n5nup5,2G74MGYEVV,file:sample-pincodes.TEST-FIXTURE.csv
+110085,IN,5,Rohini,28.735,77.113,ttng6xpcx0hrd,2GA6UXBZBB,file:sample-pincodes.TEST-FIXTURE.csv
+122003,IN,10,Gurugram Sector 44,28.448,77.077,ttnccfvc878f1,2G4EKU3J22,file:sample-pincodes.TEST-FIXTURE.csv
+273001,IN,6,Gorakhpur HO,26.76,83.373,tug21pw279w9u,2F2JTFVG33,file:sample-pincodes.TEST-FIXTURE.csv
+201301,IN,7,Noida Sector 63,28.62,77.38,ttp4bf47sdtyn,2G7UZTMHTT,file:sample-pincodes.TEST-FIXTURE.csv
+121001,IN,9,Faridabad NIT,28.38,77.3,ttncrn2jkx3wk,2G32X3XCLL,file:sample-pincodes.TEST-FIXTURE.csv
+201010,IN,8,Ghaziabad Vaishali,28.65,77.34,ttnfzzt62e5fc,2G8GA9HHYY,file:sample-pincodes.TEST-FIXTURE.csv

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spatial Vault — Dashboard</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root {
+      --bg: #0f172a; --panel: #1e293b; --line: #334155;
+      --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 14px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+    .wrap { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+    header h1 { font-size: 20px; margin: 0; }
+    header .sub { color: var(--muted); font-size: 13px; }
+    header .ok { color: #22c55e; font-weight: 600; }
+    header .bad { color: #ef4444; font-weight: 600; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+    .card .k { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .card .v { font-size: 26px; font-weight: 700; margin-top: 4px; }
+
+    .main { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+    #map { height: 460px; border-radius: 10px; border: 1px solid var(--line); background: #111827; }
+
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+    .panel h3 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+    .side .panel + .panel { margin-top: 16px; }
+    ul.cats { list-style: none; margin: 0; padding: 0; }
+    ul.cats li { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+    ul.cats .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+    ul.cats .n { margin-left: auto; color: var(--muted); }
+    select {
+      width: 100%; background: #0f172a; color: var(--text);
+      border: 1px solid var(--line); border-radius: 6px; padding: 7px 8px; font: inherit;
+    }
+    .hint { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+
+    .tablewrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    tbody tr:hover { background: #24324a; }
+    code { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--accent); }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; color: #0b1220; font-weight: 600; }
+    .risk { display: inline-flex; align-items: center; gap: 6px; }
+    .risk .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .muted { color: var(--muted); }
+    .banner { background: #422006; border: 1px solid #a16207; color: #fde68a; padding: 10px 12px; border-radius: 8px; margin-bottom: 16px; }
+    .sv-legend { background: rgba(15,23,42,.92) !important; color: var(--text); }
+    .sv-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+    .sv-legend-title { font-weight: 700; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Global Spatial Vault</h1>
+      <span class="sub">Every decrypted tile, across every niche</span>
+      <span id="status" class="sub">loading…</span>
+    </header>
+
+    <div id="banner" class="banner" style="display:none"></div>
+
+    <section class="cards">
+      <div class="card"><div class="k">Records</div><div class="v" id="s-records">–</div></div>
+      <div class="card"><div class="k">Encrypted tiles</div><div class="v" id="s-tiles">–</div></div>
+      <div class="card"><div class="k">Categories</div><div class="v" id="s-cats">–</div></div>
+      <div class="card"><div class="k">Countries</div><div class="v" id="s-countries">–</div></div>
+    </section>
+
+    <section class="main">
+      <div id="map"></div>
+      <aside class="side">
+        <div class="panel">
+          <h3>Categories</h3>
+          <ul class="cats" id="cats"></ul>
+        </div>
+        <div class="panel">
+          <h3>Risk time slot</h3>
+          <select id="slot"></select>
+          <p class="hint">Re-colors every Safe Alleys pin and the risk column below.</p>
+        </div>
+        <div class="panel">
+          <h3>Asset root</h3>
+          <p class="hint" id="baseline">–</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel">
+      <h3>Records</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th><th>Category</th><th>City</th><th>Country</th>
+              <th>Geohash (13)</th><th>DIGIPIN</th><th>Risk now</th><th>Tile</th>
+            </tr>
+          </thead>
+          <tbody id="rows"><tr><td colspan="8" class="muted">loading…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../spatial-vault.client.js"></script>
+  <script src="../spatial-vault.map.js"></script>
+
+  <script>
+    const CAT_COLORS = {
+      'potholes': '#ef4444', 'safe-alleys': '#22c55e',
+      'ev-chargers': '#3b82f6', 'transit-stops': '#8b5cf6', 'other': '#64748b',
+    };
+    const esc = (v) => String(v == null ? '' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+    const statusEl = document.getElementById('status');
+    const banner = document.getElementById('banner');
+    const showBanner = (msg) => { banner.style.display = 'block'; banner.innerHTML = msg; };
+
+    function slotRisk(record, slot) {
+      if (!record.safeAlleysMatrix) return null;
+      return record.safeAlleysMatrix.timeSlots.find((s) => s.slot === slot) || null;
+    }
+
+    async function detectBaseUrl() {
+      for (const candidate of ['/dist', '']) {
+        try {
+          const res = await fetch(candidate + '/manifest.dat', { cache: 'no-store' });
+          if (res.ok) return candidate;
+        } catch (e) { /* next */ }
+      }
+      return null;
+    }
+
+    function renderTable(records, slot) {
+      const rows = document.getElementById('rows');
+      if (!records.length) {
+        rows.innerHTML = '<tr><td colspan="8" class="muted">no records</td></tr>';
+        return;
+      }
+      rows.innerHTML = records.map((r) => {
+        const sr = slotRisk(r, slot);
+        const risk = sr
+          ? '<span class="risk"><i class="dot" style="background:' + sr.hex + '"></i>' + esc(sr.riskLevel) + ' (' + sr.score + ')</span>'
+          : '<span class="muted">—</span>';
+        const badge = CAT_COLORS[r.category] || CAT_COLORS.other;
+        return '<tr>' +
+          '<td>' + esc(r.name) + '</td>' +
+          '<td><span class="badge" style="background:' + badge + '">' + esc(r.category) + '</span></td>' +
+          '<td>' + esc(r.city) + '</td>' +
+          '<td>' + esc(r.country) + '</td>' +
+          '<td><code>' + esc(r.precision && r.precision.geohash) + '</code></td>' +
+          '<td>' + (r.digipin ? '<code>' + esc(r.digipin) + '</code>' : '<span class="muted">—</span>') + '</td>' +
+          '<td>' + risk + '</td>' +
+          '<td><code>' + esc(r.tilePrefix) + '</code></td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    (async function () {
+      if (location.protocol === 'file:') {
+        showBanner('Open this page over HTTP, not <code>file://</code> — run <code>npx serve .</code> or <code>npm run dev</code>.');
+        statusEl.textContent = 'blocked';
+        return;
+      }
+      if (!window.SpatialVault || !window.SpatialVaultMap) {
+        showBanner('Could not load <code>spatial-vault.client.js</code> / <code>spatial-vault.map.js</code>.');
+        statusEl.textContent = 'blocked';
+        return;
+      }
+
+      const baseUrl = await detectBaseUrl();
+      if (baseUrl === null) {
+        showBanner('Could not reach <code>manifest.dat</code>. Run <code>node spatial-vault.js</code>, then serve the repo. ');
+        statusEl.textContent = 'no assets';
+        return;
+      }
+      document.getElementById('baseline').innerHTML = '<code>' + esc(baseUrl || '/') + '</code>';
+
+      const map = L.map('map', { worldCopyJump: true }).setView([20, 30], 2);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, attribution: '&copy; OpenStreetMap contributors',
+      }).addTo(map);
+
+      let state = { layer: null, legend: null, records: [], slot: SpatialVaultMap.currentTimeSlot() };
+
+      // Time-slot selector
+      const slotSel = document.getElementById('slot');
+      slotSel.innerHTML = SpatialVaultMap.TIME_SLOTS
+        .map((s) => '<option value="' + s + '"' + (s === state.slot ? ' selected' : '') + '>' + s + '</option>')
+        .join('');
+
+      function rerender(slot) {
+        state.slot = slot;
+        if (state.layer) map.removeLayer(state.layer);
+        if (state.legend) map.removeControl(state.legend);
+        const out = SpatialVaultMap.renderRecords(map, state.records, { markerStyle: 'circle', timeSlot: slot });
+        state.layer = out.layer;
+        state.legend = out.legend;
+        renderTable(state.records, slot);
+      }
+      slotSel.addEventListener('change', () => rerender(slotSel.value));
+
+      try {
+        const db = await SpatialVault.openDB('spatial-vault', 'tiles');
+        const out = await SpatialVault.loadAllTiles(db, {
+          baseUrl: baseUrl,
+          onProgress: (i, n, p) => { statusEl.textContent = 'decrypting ' + i + '/' + n + ' tiles…'; },
+        });
+        state.records = out.records;
+
+        document.getElementById('s-records').textContent = out.records.length;
+        document.getElementById('s-tiles').textContent = (out.manifest.tiles || []).length;
+
+        const byCat = {};
+        const byCountry = {};
+        out.records.forEach((r) => {
+          byCat[r.category] = (byCat[r.category] || 0) + 1;
+          byCountry[r.country] = (byCountry[r.country] || 0) + 1;
+        });
+        document.getElementById('s-cats').textContent = Object.keys(byCat).length;
+        document.getElementById('s-countries').textContent = Object.keys(byCountry).length;
+        document.getElementById('cats').innerHTML = Object.keys(byCat).sort().map((c) =>
+          '<li><i class="dot" style="background:' + (CAT_COLORS[c] || CAT_COLORS.other) + '"></i>' +
+          esc(c) + '<span class="n">' + byCat[c] + '</span></li>'
+        ).join('');
+
+        rerender(state.slot);
+        statusEl.innerHTML = '<span class="ok">● ' + out.records.length + ' records decrypted</span>';
+      } catch (err) {
+        console.error(err);
+        statusEl.innerHTML = '<span class="bad">● failed</span>';
+        showBanner('Layer error: ' + esc(err.message));
+      }
+    })();
+  </script>
+</body>
+</html>

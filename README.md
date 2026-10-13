@@ -151,14 +151,45 @@ IndexedDB tile cache. The frontend never runs a backend query — it pulls stati
   // 25 km offline radius around Bengaluru; first hit fetches + decrypts,
   // subsequent hits are served entirely from IndexedDB.
   const records = await loadTilesAround(db, 12.9716, 77.5946, 25000, {
-    baseUrl: 'https://cdn.example.com/tiles', // serves /tiles/t/d/r/1/w/tdr1w.dat
+    // `baseUrl` is the dist root that CONTAINS tiles/ and manifest.dat.
+    baseUrl: 'https://cdn.example.com/dist',
     prefixLen: 5,
   });
   records.forEach((r) => L.marker([r.lat, r.lng]).addTo(map));
 </script>
 ```
 
+**Asset root.** `baseUrl` points at the folder holding `tiles/` and
+`manifest.dat` (the `dist/` directory), so a tile resolves to
+`{baseUrl}/tiles/t/d/r/1/w/tdr1w.dat`. Serving the repo root makes it `/dist`;
+serving `dist/` itself makes it `''`.
+
+**Missing cells are normal.** A radius spans many 5-char cells while only a few
+hold data, so empty cells return `404` and are **skipped, never fatal**. When
+`manifest.dat` is reachable the loader requests only tiles that exist, so 25–50 km
+costs a handful of requests instead of hundreds.
+
 Non-module fallback: `window.SpatialVault.loadTilesAround(...)`.
+
+### Leaflet risk layer
+
+`spatial-vault.map.js` renders color-coded threat pins for the current time slot:
+
+```js
+SpatialVaultMap.attachLayer(map, { baseUrl: '/dist', radiusMeters: 25000 });
+```
+
+See `frontend/demo.html` for a runnable example (it auto-detects the asset root).
+
+### Verifying the browser path without a browser
+
+`browser-sim.test.js` serves the repo over real HTTP and exercises the exact
+client path — manifest decrypt → candidate narrowing → tile fetch → record decode:
+
+```bash
+node browser-sim.test.js
+```
+
 
 ---
 

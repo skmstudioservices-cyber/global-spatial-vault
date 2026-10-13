@@ -1,0 +1,12 @@
+id,slug,name,code_prefix,icon,theme_color,default_zoom,blurb,created_at,match_terms,listing_format
+1,tailorshopnearme,Tailor Shop Near Me,TSH,✂️,,14,,2026-10-11T12:38:58.145Z,"tailor,tailors,tailoring,darzi,stitching,boutique",
+2,medicalshopnearme,Medical Shop Near Me,MED,💊,,14,,2026-10-11T12:38:58.145Z,"pharmacy,medical store,medical shop,chemist,drugstore",
+3,cafenearme,Cafe Near Me,CAF,☕,,14,,2026-10-11T12:38:58.145Z,"cafe,cafes,coffee shop,coffee",
+4,restaurantsnearme,Restaurants Near Me,RST,🍽️,,14,,2026-10-11T12:38:58.145Z,"restaurant,restaurants,diner,dine",
+5,dhabanearme,Dhaba Near Me,DHB,🍛,,14,,2026-10-11T12:38:58.145Z,"dhaba,dhabas",
+6,dentistsnearme,Dentists Near Me,DEN,🦷,,14,,2026-10-11T12:38:58.145Z,"dental,dentist,dentists,orthodontist",
+7,carrepairsnearme,Car Repair Near Me,CAR,🔧,,14,,2026-10-11T12:38:58.145Z,"car repair,car repairs,automobile,garage,auto service",
+8,bakerynearme,Bakery Near Me,BAK,🥐,,14,,2026-10-11T12:38:58.145Z,"bakery,bakeries,bakers",
+9,grocerystoresnearme,Grocery Near Me,GRO,🛒,,14,,2026-10-11T12:38:58.145Z,"grocery,groceries,supermarket,provision store,kirana",
+10,hospitalsnearme,Hospitals Near Me,HOS,🏥,,14,,2026-10-11T12:38:58.145Z,"hospital,hospitals,nursing home,clinic",
+11,potholes,Potholes,POT,🕳️,,15,,2026-10-11T12:38:58.145Z,"pothole,potholes,road damage",

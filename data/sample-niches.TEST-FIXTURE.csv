@@ -1,0 +1,12 @@
+slug,name,code_prefix,match_terms,listing_format,icon,default_zoom
+tailorshopnearme,Tailor Shop Near Me,TSH,"tailor,tailors,tailoring,darzi,stitching,boutique",,✂️,14
+medicalshopnearme,Medical Shop Near Me,MED,"pharmacy,medical store,medical shop,chemist,drugstore",,💊,14
+cafenearme,Cafe Near Me,CAF,"cafe,cafes,coffee shop,coffee",,☕,14
+restaurantsnearme,Restaurants Near Me,RST,"restaurant,restaurants,diner,dine",,🍽️,14
+dhabanearme,Dhaba Near Me,DHB,"dhaba,dhabas",,🍛,14
+dentistsnearme,Dentists Near Me,DEN,"dental,dentist,dentists,orthodontist",,🦷,14
+carrepairsnearme,Car Repair Near Me,CAR,"car repair,car repairs,automobile,garage,auto service",,🔧,14
+bakerynearme,Bakery Near Me,BAK,"bakery,bakeries,bakers",,🥐,14
+grocerystoresnearme,Grocery Near Me,GRO,"grocery,groceries,supermarket,provision store,kirana",,🛒,14
+hospitalsnearme,Hospitals Near Me,HOS,"hospital,hospitals,nursing home,clinic",,🏥,14
+potholes,Potholes,POT,"pothole,potholes,road damage",,🕳️,15

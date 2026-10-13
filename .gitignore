@@ -1,2 +1,7 @@
 node_modules/
 dist/
+state/
+data/*
+!data/.gitkeep
+!data/*.csv
+!data/*.xlsx

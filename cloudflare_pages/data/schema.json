@@ -1,0 +1,11 @@
+{
+  "columns": [
+    {"name": "id", "type": "string", "primary": true},
+    {"name": "name", "type": "string"},
+    {"name": "category", "type": "string"},
+    {"name": "latitude", "type": "number"},
+    {"name": "longitude", "type": "number"},
+    {"name": "tags", "type": "array", "description": "Array of free‑form tags relevant to the niche"}
+  ],
+  "defaultTags": ["historic", "tourist", "restaurant", "park"]
+}

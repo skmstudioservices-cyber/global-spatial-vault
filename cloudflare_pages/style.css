@@ -1,0 +1,62 @@
+/* Basic styling for the grid and layout */
+:root {
+  --color-bg-light: #ffffff;
+  --color-bg-dark: #1a1a1a;
+  --color-bg-midnight: #0d0d0d;
+  --color-text-light: #222222;
+  --color-text-dark: #f0f0f0;
+}
+
+html[data-theme='light'] {
+  background: var(--color-bg-light);
+  color: var(--color-text-light);
+}
+html[data-theme='dark'] {
+  background: var(--color-bg-dark);
+  color: var(--color-text-dark);
+}
+html[data-theme='midnight'] {
+  background: var(--color-bg-midnight);
+  color: var(--color-text-dark);
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+header {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.05);
+}
+
+#app {
+  padding: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.grid-table th,
+.grid-table td {
+  border: 1px solid #ccc;
+  padding: 0.4rem;
+}
+.grid-table th {
+  background: rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+}
+.grid-table td[contenteditable="true"] {
+  background: rgba(255,255,0,0.1);
+  cursor: text;
+}

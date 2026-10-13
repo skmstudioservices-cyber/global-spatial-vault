@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "name": "Central Park Bakery",
+    "category": "bakery",
+    "latitude": 40.785091,
+    "longitude": -73.968285,
+    "tags": ["historic", "artisan", "coffee"]
+  },
+  {
+    "id": "2",
+    "name": "Sunny Café",
+    "category": "cafe",
+    "latitude": 40.73061,
+    "longitude": -73.935242,
+    "tags": ["outdoor", "brunch", "wifi"]
+  }
+]

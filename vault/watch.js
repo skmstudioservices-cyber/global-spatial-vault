@@ -22,6 +22,7 @@ const db = require('./lib/db');
 const enrich = require('./lib/enrich');
 const classify = require('./lib/classify');
 const exporter = require('./lib/export');
+const importer = require('./lib/importer');
 const spatial = require('../spatial-vault');
 
 const PORT = Number(process.env.VAULT_PORT) || 4317;
@@ -203,6 +204,230 @@ const server = http.createServer(async (req, res) => {
         limit,
         offset,
       });
+    }
+
+    // 5b. Schema Relations Graph (Supabase-like relational view)
+    if (pathname === '/api/schema/relations' && req.method === 'GET') {
+      const d = getDb();
+      const tableNames = d.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name`).all().map((r) => r.name);
+      const tables = [];
+      const relations = [];
+
+      for (const t of tableNames) {
+        const cols = d.prepare(`PRAGMA table_info("${t}")`).all();
+        const fks = d.prepare(`PRAGMA foreign_key_list("${t}")`).all();
+        const count = d.prepare(`SELECT count(*) as c FROM "${t}"`).get().c;
+        const pkCol = cols.find((c) => c.pk > 0)?.name || null;
+
+        tables.push({
+          name: t,
+          rowCount: count,
+          primaryKey: pkCol,
+          columns: cols.map((c) => ({
+            name: c.name,
+            type: c.type || 'TEXT',
+            notNull: !!c.notnull,
+            isPk: c.pk > 0,
+            default: c.dflt_value,
+          })),
+          foreignKeys: fks.map((fk) => ({
+            from: fk.from,
+            toTable: fk.table,
+            toColumn: fk.to,
+          })),
+        });
+
+        for (const fk of fks) {
+          relations.push({
+            fromTable: t,
+            fromColumn: fk.from,
+            toTable: fk.table,
+            toColumn: fk.to,
+          });
+        }
+      }
+
+      return sendJson(res, { ok: true, tables, relations });
+    }
+
+    // 5c. Inline Cell Edit (Excel-like single cell update)
+    if (pathname.startsWith('/api/table/') && pathname.endsWith('/cell') && req.method === 'PATCH') {
+      const tableName = decodeURIComponent(pathname.replace('/api/table/', '').replace('/cell', ''));
+      const body = await parseBody(req);
+      const { pkColumn, pkValue, column, value } = body;
+
+      if (!pkColumn || pkValue === undefined || !column) {
+        return sendJson(res, { ok: false, error: 'pkColumn, pkValue, and column are required' }, 400);
+      }
+
+      const d = getDb();
+      const valToSet = (value === '' || value === undefined) ? null : value;
+      d.prepare(`UPDATE "${tableName}" SET "${column}" = ? WHERE "${pkColumn}" = ?`).run(valToSet, pkValue);
+
+      // If updating coordinates in places table, re-derive spatial hashes
+      if (tableName === 'places' && (column === 'lat' || column === 'lng')) {
+        const p = d.prepare('SELECT lat, lng FROM places WHERE uid = ?').get(pkValue);
+        if (p && p.lat != null && p.lng != null) {
+          const lat = Number(p.lat);
+          const lng = Number(p.lng);
+          const geohash13 = spatial.encodeGeohash(lat, lng, 13);
+          const cell = geohash13.slice(0, 5);
+          const inIndia = spatial.isInIndia(lat, lng);
+          const digipin = inIndia ? spatial.computeDigipin(lat, lng) : null;
+          d.prepare(`UPDATE places SET geohash13 = ?, spatial_cell = ?, digipin = ?, geo_source = 'manual-edit' WHERE uid = ?`)
+            .run(geohash13, cell, digipin, pkValue);
+        }
+      }
+
+      try {
+        d.prepare(`INSERT INTO audit_log (actor, action, table_name, row_pk, after_json, at) VALUES ('excel-editor', 'update-cell', ?, ?, ?, ?)`)
+          .run(tableName, String(pkValue), JSON.stringify({ [column]: valToSet }), new Date().toISOString());
+      } catch (e) { /* ignore */ }
+
+      return sendJson(res, { ok: true, column, value: valToSet });
+    }
+
+    // 5d. Add New Row
+    if (pathname.startsWith('/api/table/') && pathname.endsWith('/row') && req.method === 'POST') {
+      const tableName = decodeURIComponent(pathname.replace('/api/table/', '').replace('/row', ''));
+      const body = await parseBody(req);
+      const row = body.row || {};
+      const d = getDb();
+      const now = new Date().toISOString();
+
+      if (tableName === 'places') {
+        if (!row.uid) row.uid = importer.newUid();
+        if (row.canonical_name && !row.name_norm) row.name_norm = importer.normName(row.canonical_name);
+        if (!row.status) row.status = 'active';
+        if (!row.created_at) row.created_at = now;
+        row.updated_at = now;
+        if (row.lat != null && row.lng != null) {
+          const lat = Number(row.lat);
+          const lng = Number(row.lng);
+          row.geohash13 = spatial.encodeGeohash(lat, lng, 13);
+          row.spatial_cell = row.geohash13.slice(0, 5);
+          if (spatial.isInIndia(lat, lng)) {
+            row.digipin = spatial.computeDigipin(lat, lng);
+          }
+        }
+      }
+
+      const validCols = d.prepare(`PRAGMA table_info("${tableName}")`).all().map((c) => c.name);
+      const cols = Object.keys(row).filter((k) => validCols.includes(k) && row[k] !== undefined);
+      if (!cols.length) return sendJson(res, { ok: false, error: 'No valid table columns provided in row' }, 400);
+
+      const placeholders = cols.map(() => '?').join(', ');
+      const stmt = d.prepare(`INSERT INTO "${tableName}" (${cols.map((c) => `"${c}"`).join(', ')}) VALUES (${placeholders})`);
+      const result = stmt.run(...cols.map((c) => row[c]));
+
+      return sendJson(res, { ok: true, id: result.lastInsertRowid, row });
+    }
+
+    // 5e. Delete Row
+    if (pathname.startsWith('/api/table/') && pathname.endsWith('/row') && req.method === 'DELETE') {
+      const tableName = decodeURIComponent(pathname.replace('/api/table/', '').replace('/row', ''));
+      const body = await parseBody(req);
+      const { pkColumn, pkValue } = body;
+      if (!pkColumn || pkValue === undefined) {
+        return sendJson(res, { ok: false, error: 'pkColumn and pkValue required' }, 400);
+      }
+      const d = getDb();
+      d.prepare(`DELETE FROM "${tableName}" WHERE "${pkColumn}" = ?`).run(pkValue);
+      return sendJson(res, { ok: true, deleted: pkValue });
+    }
+
+    // 5f. Batch / Paste Import (from Excel / CSV / Sheets)
+    if ((pathname.startsWith('/api/table/') && pathname.endsWith('/batch') && req.method === 'POST') ||
+        (pathname === '/api/upload-import' && req.method === 'POST')) {
+      const body = await parseBody(req);
+      let targetTable = body.table;
+      if (!targetTable && pathname.startsWith('/api/table/')) {
+        targetTable = decodeURIComponent(pathname.replace('/api/table/', '').replace('/batch', ''));
+      }
+      targetTable = targetTable || 'places';
+
+      const d = getDb();
+      const validCols = d.prepare(`PRAGMA table_info("${targetTable}")`).all().map((c) => c.name);
+      let rowsToInsert = [];
+
+      if (body.text) {
+        // Parse raw delimited text (TSV from Excel copy-paste or CSV)
+        const lines = body.text.trim().split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (lines.length > 0) {
+          const delim = lines[0].includes('\t') ? '\t' : ',';
+          const splitLine = (str) => {
+            const arr = [];
+            let cur = '';
+            let q = false;
+            for (let i = 0; i < str.length; i += 1) {
+              const ch = str[i];
+              if (ch === '"') {
+                if (q && str[i + 1] === '"') { cur += '"'; i += 1; }
+                else q = !q;
+              } else if (ch === delim && !q) {
+                arr.push(cur.trim()); cur = '';
+              } else { cur += ch; }
+            }
+            arr.push(cur.trim());
+            return arr;
+          };
+
+          const rawHeaders = splitLine(lines[0]);
+          const headers = rawHeaders.map((h) => {
+            const clean = h.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
+            return validCols.includes(clean) ? clean : (importer.SYNONYMS[clean] || h);
+          });
+
+          for (let i = 1; i < lines.length; i += 1) {
+            const vals = splitLine(lines[i]);
+            const r = {};
+            headers.forEach((h, idx) => {
+              if (validCols.includes(h)) r[h] = vals[idx] !== undefined && vals[idx] !== '' ? vals[idx] : null;
+            });
+            if (Object.keys(r).length) rowsToInsert.push(r);
+          }
+        }
+      } else if (Array.isArray(body.rows)) {
+        rowsToInsert = body.rows;
+      }
+
+      if (!rowsToInsert.length) {
+        return sendJson(res, { ok: false, error: 'No valid rows detected to import' }, 400);
+      }
+
+      d.exec('BEGIN');
+      try {
+        const now = new Date().toISOString();
+        let inserted = 0;
+        for (const row of rowsToInsert) {
+          if (targetTable === 'places') {
+            if (!row.uid) row.uid = importer.newUid();
+            if (row.canonical_name && !row.name_norm) row.name_norm = importer.normName(row.canonical_name);
+            if (!row.status) row.status = 'active';
+            if (!row.created_at) row.created_at = now;
+            row.updated_at = now;
+            if (row.lat != null && row.lng != null) {
+              const lat = Number(row.lat);
+              const lng = Number(row.lng);
+              row.geohash13 = spatial.encodeGeohash(lat, lng, 13);
+              row.spatial_cell = row.geohash13.slice(0, 5);
+              if (spatial.isInIndia(lat, lng)) row.digipin = spatial.computeDigipin(lat, lng);
+            }
+          }
+          const activeCols = Object.keys(row).filter((k) => validCols.includes(k) && row[k] !== undefined);
+          if (activeCols.length) {
+            const q = `INSERT OR REPLACE INTO "${targetTable}" (${activeCols.map((c) => `"${c}"`).join(', ')}) VALUES (${activeCols.map(() => '?').join(', ')})`;
+            d.prepare(q).run(...activeCols.map((c) => row[c]));
+            inserted += 1;
+          }
+        }
+        d.exec('COMMIT');
+        status.info(`Batch imported ${inserted} rows into ${targetTable}`);
+        return sendJson(res, { ok: true, table: targetTable, count: inserted });
+      } catch (err) {
+        try { d.exec('ROLLBACK'); } catch (e) { /* ignore */ }
+        return sendJson(res, { ok: false, error: err.message }, 500);
+      }
     }
 
     // 6. Places list (for Map Editor)

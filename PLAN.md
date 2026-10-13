@@ -244,9 +244,34 @@ Saved **export recipes** so you approve once and rerun forever.
 | **1** | Generic importer + column mapper | ✅ **done** — CSV/TSV/JSON/JSONL/GeoJSON/**XLSX**, `inspect` preview, auto-suggested + saved mappings, idempotent upsert, read-only `query` |
 | **2** | Enrichment (PIN→lat/lng cascade, geohash13, DIGIPIN, admin joins) + dedupe/merge | ✅ **done & verified** — 8/8 places resolved to a PIN centroid with geohash13, DIGIPIN and district links; duplicate groups detected and merged with stable ids |
 | **3** | Exporter: all formats + export recipes + per-site projections + encrypted tiles | ✅ **done & verified** |
-| **4** | Local web portal (tables, interactive map pin editor, column moves, moderation queue) | ✅ **done & verified** |
-| **5** | Supabase inbox pull + review/merge | pending |
-| **6** | `templates/` starter (Astro SSG + PWA + Leaflet) — optional | pending |
+| **4** | Local web portal & Studio UI (Excel grid, column lock, paste, drag-drop, relations, theme manager) | ✅ **done & verified** |
+| **5** | Supabase inbox pull (`vault pull`) + review/merge | 📋 **Next for Opus 4.6** |
+| **6** | `templates/` starter (Astro SSG + PWA + Leaflet) | 📋 **Next for Opus 4.6** |
+
+---
+
+## 5.5 Phase 5 & 6 Handover Instructions (for Claude Opus 4.6)
+
+### Phase 5: Supabase Inbox Pull (`vault pull`)
+1. **Goal**: Pull pending crowdsourced submissions from the live Supabase project (`timnrnmmmmuqmcnuaend`) into the local `submissions` table in `vault.db`.
+2. **Implementation steps**:
+   - Create `vault/lib/pull.js` which uses standard Node `https` or `fetch` to query PostgREST:
+     `GET ${SUPABASE_URL}/rest/v1/submissions?status=eq.pending`
+     Header: `apikey: ${SUPABASE_KEY}`, `Authorization: Bearer ${SUPABASE_KEY}`.
+   - Insert rows into local `submissions (id, niche_id, payload_json, submitted_by, ip_hash, status, created_at)`.
+   - Wire `vault pull` into `vault/cli.js`.
+   - Provide fallback simulation/mock if `SUPABASE_KEY` is not yet configured in environment.
+   - The Local Portal UI already has the **Submissions** tab (`/api/submissions` and `/api/submissions/:id/approve`) to review and promote them into canonical `places`!
+
+### Phase 6: Astro SSG + Leaflet PWA Starter (`templates/niche-site`)
+1. **Goal**: Stand up the card-free, zero-cost static niche directory template ready to deploy to Cloudflare Pages.
+2. **Implementation steps**:
+   - Create `templates/niche-site/` with standard Astro structure:
+     - `astro.config.mjs`
+     - `src/pages/index.astro`: reads `exports/niches/<slug>/index.json` or uses `spatial-vault.client.js` with IndexedDB tile decryption.
+     - `src/pages/[slug].astro`: renders detail page from `places.json`.
+     - Static deployment script: copies exported assets from `exports/niches/<slug>` into `public/` at build time.
+     - Deploys strictly under the 20,000 files Cloudflare Pages free tier limit.
 
 ### Phase 1 known limits
 

@@ -4,25 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Spatial Vault Studio — Cloudflare D1 & Demo Directory</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
 :root{
-  --bg:#fff;--panel:#f8f9fa;--panel-card:#ffffff;--text:#1a1d1f;--mute:#64748b;--line:#e2e8f0;
-  --green:#10b981;--greend:#059669;--green-soft:rgba(16,185,129,0.12);--red:#ef4444;--hover:#f1f5f9;
-  --header-bg:#ffffff;--sidebar-w:260px;
+  --bg:#ffffff;--panel:#f8fafc;--panel-card:#ffffff;--panel-sub:#f1f5f9;--text:#0f172a;--mute:#64748b;--line:#e2e8f0;
+  --green:#10b981;--greend:#059669;--green-soft:rgba(16,185,129,0.12);--red:#ef4444;--hover:#e2e8f0;
+  --header-bg:#ffffff;--sidebar-w:270px;--accent-blue:#3b82f6;--accent-amber:#f59e0b;
 }
 @media(prefers-color-scheme:dark){
   :root{
-    --bg:#0f172a;--panel:#1e293b;--panel-card:#1e293b;--text:#f8fafc;--mute:#94a3b8;--line:#334155;
-    --green:#10b981;--greend:#059669;--green-soft:rgba(16,185,129,0.18);--red:#f87171;--hover:#334155;
-    --header-bg:#0f172a;
+    --bg:#090d16;--panel:#0f172a;--panel-card:#1e293b;--panel-sub:#141f36;--text:#f8fafc;--mute:#94a3b8;--line:#334155;
+    --green:#10b981;--greend:#059669;--green-soft:rgba(16,185,129,0.20);--red:#f87171;--hover:#1e293b;
+    --header-bg:#090d16;--accent-blue:#60a5fa;--accent-amber:#fbbf24;
   }
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
 button,input,select,textarea{font:inherit;color:inherit}
-button{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap;transition:background .15s}
-button:hover{background:var(--hover)}
+button{background:var(--panel-card);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap;transition:background .15s, border-color .15s}
+button:hover{background:var(--hover);border-color:var(--mute)}
 button.pri{background:var(--green);border-color:var(--green);color:#042f20;font-weight:600}
 button.pri:hover{background:var(--greend);color:#fff}
 button.danger{color:var(--red)}
@@ -35,51 +36,93 @@ input,select,textarea{background:var(--bg);border:1px solid var(--line);border-r
 .drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:90}
 .drawer-backdrop.active{display:block}
 
+/* ---------- Enhanced Sidebar with Clear Visual Hierarchy ---------- */
 aside{
   width:var(--sidebar-w);flex:none;background:var(--panel);border-right:1px solid var(--line);
   display:flex;flex-direction:column;height:100%;z-index:95;transition:transform .2s ease;
 }
-aside .logo-bar{padding:16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+aside .logo-bar{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
 aside h1{font-size:15px;margin:0;font-weight:700;display:flex;gap:8px;align-items:center}
 aside h1 i{width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 8px var(--green)}
 aside .close-btn{display:none;background:none;border:none;padding:4px;font-size:18px;color:var(--mute)}
 
-.nav-section{padding:12px 14px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
-.tlist{flex:1;overflow-y:auto;padding:4px 8px}
-.titem{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:13px;margin-bottom:2px}
+/* Workspace instance card below logo */
+.workspace-box{
+  margin:10px 10px 6px;padding:9px 12px;background:var(--panel-sub);border:1px solid var(--line);
+  border-radius:8px;display:flex;align-items:center;gap:10px;
+}
+.workspace-box .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);flex:none}
+.workspace-box .ws-details{min-width:0;line-height:1.2}
+.workspace-box .ws-name{font-size:12px;font-weight:700;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.workspace-box .ws-sub{font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+
+/* Top primary navigation items */
+.top-nav{padding:4px 8px;display:grid;gap:3px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.nav-link{
+  display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:6px;cursor:pointer;
+  font-size:13px;font-weight:600;color:var(--text);transition:background .15s;
+}
+.nav-link:hover{background:var(--hover)}
+.nav-link.on{background:var(--green-soft);color:var(--green);box-shadow:inset 3px 0 var(--green)}
+.nav-link svg, .nav-link i{font-size:15px}
+
+/* Grouped nested sections with distinct containers */
+.tlist{flex:1;overflow-y:auto;padding:8px;display:grid;gap:12px}
+
+.nav-group{
+  background:var(--panel-sub);border:1px solid var(--line);border-radius:8px;padding:6px;
+}
+.group-title{
+  padding:4px 8px 6px;font-size:10px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--mute);display:flex;align-items:center;gap:6px;
+}
+.group-items{display:grid;gap:2px}
+
+.titem{
+  display:flex;justify-content:space-between;align-items:center;padding:6px 10px;
+  border-radius:6px;cursor:pointer;font-size:12.5px;transition:background .15s;
+}
 .titem:hover{background:var(--hover)}
-.titem.on{background:var(--hover);font-weight:600;box-shadow:inset 3px 0 var(--green);color:var(--green)}
-.titem span{color:var(--mute);font-size:11px;background:rgba(100,116,139,0.12);padding:2px 6px;border-radius:10px}
-.titem.on span{background:var(--green-soft);color:var(--green);font-weight:600}
+.titem.on{background:var(--panel-card);font-weight:600;box-shadow:inset 3px 0 var(--green);color:var(--green);border:1px solid var(--line)}
+.titem-name{display:flex;align-items:center;gap:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.titem-icon{font-size:14px;flex:none}
+.titem span.badge{color:var(--mute);font-size:11px;background:rgba(100,116,139,0.15);padding:1px 6px;border-radius:10px;font-weight:500}
+.titem.on span.badge{background:var(--green-soft);color:var(--green);font-weight:700}
 
 .side-foot{padding:10px;display:grid;gap:6px;border-top:1px solid var(--line);background:var(--panel)}
 
+/* ---------- Main Content View ---------- */
 main{flex:1;min-width:0;display:flex;flex-direction:column;height:100%;background:var(--bg)}
 
 .bar{
   display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--line);
-  background:var(--header-bg);overflow-x:auto;flex-wrap:wrap;
+  background:var(--header-bg);overflow-x:auto;flex-wrap:wrap;z-index:10;
 }
-.bar h2{margin:0 8px 0 0;font-size:16px;font-weight:700;white-space:nowrap}
+.bar h2{margin:0 8px 0 0;font-size:16px;font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:8px}
 .menu-btn{display:none;padding:6px 10px;font-size:16px}
 .sp{flex:1}
 
 .wrap{flex:1;overflow:auto;position:relative}
+
+/* Table styles */
 table{border-collapse:collapse;min-width:100%;font-size:13px}
 th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:0;text-align:left;white-space:nowrap}
 th{position:sticky;top:0;background:var(--panel);padding:9px 12px;font-weight:600;cursor:pointer;z-index:2;color:var(--text)}
 th small{color:var(--mute);font-weight:400;margin-left:4px}
 td input[type=text],td input[type=number],td input[type=date]{border:0;border-radius:0;width:100%;min-width:130px;background:transparent;padding:8px 12px}
 td input:focus{background:var(--hover);outline-offset:-2px}
-td.c{text-align:center;padding:0 10px}
+td.c{text-align:center;padding:0 8px}
 td.id{color:var(--mute);padding:8px 12px;font-size:11px;font-family:monospace}
+td .btn-map{padding:3px 8px;font-size:11px;border-radius:4px;border:1px solid var(--line);background:var(--panel)}
+td .btn-map:hover{background:var(--green-soft);border-color:var(--green);color:var(--green)}
 
 .empty{padding:60px 20px;text-align:center;color:var(--mute)}
 .empty b{display:block;color:var(--text);font-size:16px;margin-bottom:6px}
 
 .status{padding:8px 16px;border-top:1px solid var(--line);color:var(--mute);font-size:12px;display:flex;justify-content:space-between;background:var(--panel)}
 
-dialog{border:1px solid var(--line);border-radius:12px;background:var(--panel-card);color:var(--text);padding:22px;width:min(520px,94vw);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+/* Dialogs */
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--panel-card);color:var(--text);padding:22px;width:min(540px,94vw);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
 dialog::backdrop{background:rgba(0,0,0,.6)}
 dialog h3{margin:0 0 10px;font-size:18px}
 dialog label{display:block;margin:12px 0 4px;font-weight:600;font-size:13px}
@@ -89,6 +132,7 @@ dialog p{color:var(--mute);margin:6px 0;font-size:13px}
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0f172a;color:#f8fafc;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 14px rgba(0,0,0,0.3);z-index:100;border:1px solid #334155}
 
+/* Dashboard Home */
 .home{padding:20px;max-width:1200px;margin:0 auto;width:100%}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
 .stat{background:var(--panel-card);border:1px solid var(--line);border-radius:10px;padding:16px;color:var(--mute)}
@@ -97,13 +141,33 @@ dialog p{color:var(--mute);margin:6px 0;font-size:13px}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
 .card{background:var(--panel-card);border:1px solid var(--line);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .15s, transform .1s}
 .card:hover{border-color:var(--green);transform:translateY(-1px)}
-.card b{display:block;font-size:15px;color:var(--text)}
-.card span{color:var(--mute);font-size:12px}
+.card b{display:flex;align-items:center;justify-content:space-between;font-size:15px;color:var(--text)}
+.card span.desc{color:var(--mute);font-size:12px;margin-top:4px;display:block}
 .meter{height:6px;background:var(--line);border-radius:3px;margin-top:12px;overflow:hidden}
 .meter i{display:block;height:100%;background:var(--green);border-radius:3px}
+.tag-badge{font-size:10px;text-transform:uppercase;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--green-soft);color:var(--green)}
 
-/* Badge tags for quick status in cards */
-.tag-badge{display:inline-block;font-size:10px;text-transform:uppercase;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--green-soft);color:var(--green);margin-left:6px}
+/* ---------- Leaflet Map Explorer View ---------- */
+#map-container{width:100%;height:100%;position:relative}
+#leaflet-map{width:100%;height:100%}
+.map-floating-bar{
+  position:absolute;top:12px;left:12px;right:12px;z-index:1000;
+  background:var(--panel-card);padding:10px 14px;border-radius:8px;
+  border:1px solid var(--line);box-shadow:0 4px 16px rgba(0,0,0,0.25);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.map-chip{
+  background:var(--panel);border:1px solid var(--line);border-radius:6px;
+  padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;
+}
+.map-chip:hover, .map-chip.active{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+
+/* Custom Leaflet popup design */
+.leaflet-popup-content{font-family:inherit;font-size:13px;line-height:1.4;margin:12px 14px}
+.popup-title{font-size:15px;font-weight:700;margin-bottom:4px;color:#0f172a}
+.popup-pill{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;background:#e2e8f0;margin-bottom:6px}
+.popup-meta{font-size:12px;color:#475569;margin:3px 0}
+.popup-btn{margin-top:8px;padding:4px 8px;font-size:11px;background:#10b981;color:#fff;border-radius:4px;text-decoration:none;display:inline-block;cursor:pointer}
 
 /* Responsive queries */
 @media(max-width:768px){
@@ -122,6 +186,7 @@ dialog p{color:var(--mute);margin:6px 0;font-size:13px}
 <div id="app"></div>
 <dialog id="dlg"></dialog>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -136,13 +201,6 @@ function el(tag, attrs = {}, ...kids) {
 }
 function toast(msg) { const t = el('div', { class: 'toast' }, msg); document.body.append(t); setTimeout(() => t.remove(), 2800); }
 
-/* ---------- data & state ---------- */
-const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
-let db = read('mybase_db', { tables: {} }), view = 'home';
-let gh = read('mybase_gh', { owner: '', repo: '', branch: 'main', path: 'data/mybase.json', token: '' });
-let cur = Object.keys(db.tables)[0] || 'businesses', search = '', scol = '', sort = null, mobileNavOpen = false;
-const save = () => localStorage.setItem('mybase_db', JSON.stringify(db));
-
 /* ---------- Column Types & Parser ---------- */
 const TYPES = ['text', 'number', 'boolean', 'date'];
 function parseCols(s) {
@@ -151,6 +209,14 @@ function parseCols(s) {
     return { name: n.replace(/\s+/g, '_'), type: TYPES.includes(ty) ? ty : 'text' };
   });
 }
+
+/* ---------- data & state ---------- */
+const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
+let db = read('mybase_db', { tables: {} }), view = 'home';
+let gh = read('mybase_gh', { owner: '', repo: '', branch: 'main', path: 'data/mybase.json', token: '' });
+let cur = 'businesses', search = '', scol = '', sort = null, mobileNavOpen = false;
+let activeMapFilter = 'all', mapTargetItem = null;
+const save = () => localStorage.setItem('mybase_db', JSON.stringify(db));
 
 /* ---------- Real Demo Data Seeder ---------- */
 function getRealSeedData() {
@@ -313,7 +379,7 @@ function ensureStarter() {
 }
 
 function resetAllTables() {
-  if (confirm('This will reload all demo repo, Cloudflare pincode, and crowdsourcing tables with real data. Continue?')) {
+  if (confirm('Reload all tables with authentic real Indian data?')) {
     db.tables = getRealSeedData();
     cur = 'businesses';
     save();
@@ -322,10 +388,26 @@ function resetAllTables() {
   }
 }
 
-// Auto-seed if tables are empty
 if (!Object.keys(db.tables).length || !db.tables.businesses) {
   ensureStarter();
 }
+
+/* ---------- Table meta icon helpers ---------- */
+const TABLE_ICONS = {
+  businesses: '🏢',
+  reviews: '⭐',
+  leads: '💼',
+  places: '📍',
+  cities: '🏙️',
+  niches: '📂',
+  crowdsourced_hazards: '🚨',
+  amenity_contributions: '🚰',
+  submissions: '📥',
+  ref_pincode: '📮',
+  villages: '🏡',
+  village_amenities: '🛠️',
+  states: '🗺️'
+};
 
 /* ---------- layout & responsive navigation ---------- */
 function toggleMobileNav(force) {
@@ -338,40 +420,70 @@ function toggleMobileNav(force) {
 
 function render() {
   const list = el('div', { class: 'tlist' });
-  list.append(el('div', { class: 'titem' + (view === 'home' ? ' on' : ''), onclick: () => { view = 'home'; toggleMobileNav(false); render(); } }, '📊 Dashboard Overview'));
-  
-  // Categorized table list
+
+  // Group definitions
   const groups = [
-    { label: 'Directory & Business', names: ['businesses', 'reviews', 'leads', 'places', 'cities', 'niches'] },
-    { label: 'Crowdsourcing Data', names: ['crowdsourced_hazards', 'amenity_contributions', 'submissions'] },
-    { label: 'Cloudflare Pincode DB', names: ['ref_pincode', 'villages', 'village_amenities', 'states'] }
+    {
+      label: 'Directory & Business',
+      icon: '📂',
+      names: ['businesses', 'reviews', 'leads', 'places', 'cities', 'niches']
+    },
+    {
+      label: 'Crowdsourcing Hub',
+      icon: '🚨',
+      names: ['crowdsourced_hazards', 'amenity_contributions', 'submissions']
+    },
+    {
+      label: 'Cloudflare Pincode DB',
+      icon: '📮',
+      names: ['ref_pincode', 'villages', 'village_amenities', 'states']
+    }
   ];
 
   const assigned = new Set();
   groups.forEach(g => {
     const present = g.names.filter(n => db.tables[n]);
     if (present.length) {
-      list.append(el('div', { class: 'nav-section' }, g.label));
+      const gBox = el('div', { class: 'nav-group' });
+      gBox.append(el('div', { class: 'group-title' }, el('span', {}, g.icon), el('span', {}, g.label)));
+      const itemsWrap = el('div', { class: 'group-items' });
+
       present.forEach(n => {
         assigned.add(n);
-        list.append(el('div', {
+        const icon = TABLE_ICONS[n] || '📄';
+        itemsWrap.append(el('div', {
           class: 'titem' + (view === 'table' && n === cur ? ' on' : ''),
           onclick: () => { view = 'table'; cur = n; search = ''; scol = ''; sort = null; toggleMobileNav(false); render(); }
-        }, n, el('span', {}, String(db.tables[n].rows.length))));
+        },
+          el('div', { class: 'titem-name' },
+            el('span', { class: 'titem-icon' }, icon),
+            el('span', {}, n)
+          ),
+          el('span', { class: 'badge' }, String(db.tables[n].rows.length))
+        ));
       });
+      gBox.append(itemsWrap);
+      list.append(gBox);
     }
   });
 
-  // Any other custom tables created by user
+  // Custom user tables
   const other = Object.keys(db.tables).filter(n => !assigned.has(n));
   if (other.length) {
-    list.append(el('div', { class: 'nav-section' }, 'Custom Tables'));
+    const gBox = el('div', { class: 'nav-group' });
+    gBox.append(el('div', { class: 'group-title' }, el('span', {}, '⚡'), el('span', {}, 'Custom Tables')));
+    const itemsWrap = el('div', { class: 'group-items' });
     other.forEach(n => {
-      list.append(el('div', {
+      itemsWrap.append(el('div', {
         class: 'titem' + (view === 'table' && n === cur ? ' on' : ''),
         onclick: () => { view = 'table'; cur = n; search = ''; scol = ''; sort = null; toggleMobileNav(false); render(); }
-      }, n, el('span', {}, String(db.tables[n].rows.length))));
+      },
+        el('div', { class: 'titem-name' }, el('span', { class: 'titem-icon' }, '📄'), el('span', {}, n)),
+        el('span', { class: 'badge' }, String(db.tables[n].rows.length))
+      ));
     });
+    gBox.append(itemsWrap);
+    list.append(gBox);
   }
 
   const backdrop = el('div', { class: 'drawer-backdrop' + (mobileNavOpen ? ' active' : ''), onclick: () => toggleMobileNav(false) });
@@ -381,9 +493,26 @@ function render() {
       el('h1', {}, el('i'), 'Spatial Vault Studio'),
       el('button', { class: 'close-btn', onclick: () => toggleMobileNav(false) }, '✕')
     ),
+    el('div', { class: 'workspace-box' },
+      el('span', { class: 'pulse-dot' }),
+      el('div', { class: 'ws-details' },
+        el('span', { class: 'ws-name' }, 'Global Spatial Vault'),
+        el('span', { class: 'ws-sub' }, 'Cloudflare D1 & Directory')
+      )
+    ),
+    el('div', { class: 'top-nav' },
+      el('div', {
+        class: 'nav-link' + (view === 'home' ? ' on' : ''),
+        onclick: () => { view = 'home'; toggleMobileNav(false); render(); }
+      }, el('span', {}, '📊'), 'Dashboard Overview'),
+      el('div', {
+        class: 'nav-link' + (view === 'map' ? ' on' : ''),
+        onclick: () => { view = 'map'; toggleMobileNav(false); render(); }
+      }, el('span', {}, '🗺️'), 'OSM Leaflet Map Explorer')
+    ),
     list,
     el('div', { class: 'side-foot' },
-      el('button', { class: 'pri', onclick: newTableDlg }, '+ New table'),
+      el('button', { class: 'pri', onclick: newTableDlg }, '+ New Table'),
       el('button', { onclick: relDlg }, '🔗 Relations Schema'),
       el('button', { onclick: inboxDlg }, '📥 Submissions Inbox'),
       el('button', { onclick: exportNiches }, '📦 Export Niches'),
@@ -398,9 +527,12 @@ function render() {
 
 function drawMain() {
   const main = $('#main'); main.replaceChildren();
-  if (view === 'home' || !cur || !db.tables[cur]) return drawHome(main);
+  if (view === 'home') return drawHome(main);
+  if (view === 'map') return drawMap(main);
+  if (!cur || !db.tables[cur]) return drawHome(main);
   
   const t = db.tables[cur];
+  const icon = TABLE_ICONS[cur] || '📄';
   const sel = el('select', { onchange: e => { scol = e.target.value; drawRows(); } }, el('option', { value: '' }, 'All columns'), t.cols.map(c => el('option', { value: c.name }, c.name)));
   sel.value = scol;
   const box = el('input', { type: 'search', placeholder: 'Search ' + cur + '...', value: search, oninput: e => { search = e.target.value.toLowerCase(); drawRows(); } });
@@ -409,7 +541,7 @@ function drawMain() {
   main.append(
     el('div', { class: 'bar' },
       el('button', { class: 'menu-btn', onclick: () => toggleMobileNav(true) }, '☰'),
-      el('h2', {}, cur),
+      el('h2', {}, icon + ' ' + cur),
       box, sel, el('span', { class: 'sp' }),
       el('button', { class: 'pri', onclick: addRow }, '+ Add row'),
       el('button', { onclick: addCol }, '+ Column'),
@@ -417,6 +549,7 @@ function drawMain() {
       el('button', { onclick: exportCSV }, 'Export CSV'),
       el('button', { onclick: pasteDlg }, 'Paste'),
       el('button', { onclick: clean }, 'Tidy'),
+      el('button', { onclick: () => { view = 'map'; activeMapFilter = cur; render(); } }, '🗺️ View Table on Map'),
       ...(cur === 'places' || cur === 'businesses' ? [el('button', { onclick: enrich }, 'Find coords'), el('button', { onclick: pinDlg }, '📍 Pin fixer')] : []),
       ...(cur === 'submissions' ? [el('button', { class: 'pri', onclick: promote }, 'Promote approved')] : []),
       el('button', { class: 'danger', onclick: delTable }, 'Delete')
@@ -438,8 +571,11 @@ function visibleRows() {
 function drawRows() {
   const t = db.tables[cur], wrap = $('#wrap'), rows = visibleRows();
   if (!t) return;
+  const isGeoTable = t.cols.some(c => c.name === 'lat');
+
   const head = el('tr', {},
-    el('th', { style: 'cursor:default;width:60px' }, 'id'),
+    el('th', { style: 'cursor:default;width:55px' }, 'id'),
+    ...(isGeoTable ? [el('th', { style: 'cursor:default;width:60px' }, 'Map')] : []),
     t.cols.map(c => el('th', { onclick: () => { sort = sort && sort.c === c.name ? { c: c.name, d: -sort.d } : { c: c.name, d: 1 }; drawRows(); } },
       c.name, el('small', {}, c.type + (sort && sort.c === c.name ? (sort.d > 0 ? ' ▲' : ' ▼') : ''))
     )),
@@ -448,6 +584,20 @@ function drawRows() {
   
   const body = rows.map(r => el('tr', {},
     el('td', { class: 'id' }, String(r.id || '').slice(-5)),
+    ...(isGeoTable ? [
+      el('td', { class: 'c' },
+        hasXY(r)
+          ? el('button', {
+              class: 'btn-map', title: 'Show this point on OSM map',
+              onclick: () => {
+                mapTargetItem = { ...r, table: cur };
+                view = 'map';
+                render();
+              }
+            }, '🗺️')
+          : el('span', { style: 'color:var(--mute);font-size:11px' }, '—')
+      )
+    ] : []),
     t.cols.map(c => {
       let inp;
       if (c.type === 'boolean') {
@@ -496,9 +646,10 @@ function drawHome(main) {
   main.append(
     el('div', { class: 'bar' },
       el('button', { class: 'menu-btn', onclick: () => toggleMobileNav(true) }, '☰'),
-      el('h2', {}, 'Studio Overview'),
+      el('h2', {}, '📊 Studio Dashboard Overview'),
       el('span', { class: 'sp' }),
-      el('button', { class: 'pri', onclick: resetAllTables }, '🔄 Reload Real Demo Data'),
+      el('button', { class: 'pri', onclick: () => { view = 'map'; render(); } }, '🗺️ Open OSM Leaflet Map'),
+      el('button', { onclick: resetAllTables }, '🔄 Reload Real Demo Data'),
       el('button', { onclick: relDlg }, 'Relations'),
       el('button', { onclick: syncDlg }, 'GitHub sync')
     ),
@@ -510,20 +661,174 @@ function drawHome(main) {
         stat(localStorage.getItem('mybase_last') || 'Local Ready', 'Last GitHub Backup')
       ),
       el('h3', {},
-        el('span', {}, 'Database Tables'),
+        el('span', {}, 'Database Tables by Category'),
         el('button', { style: 'font-size:12px;font-weight:normal', onclick: newTableDlg }, '+ New Table')
       ),
-      el('div', { class: 'cards' }, names.map(n => el('div', {
-        class: 'card', tabindex: 0,
-        onclick: () => open(n),
-        onkeydown: e => e.key === 'Enter' && open(n)
-      },
-        el('b', {}, n, el('span', { class: 'tag-badge' }, n.includes('hazard') || n.includes('amenity') || n.includes('subm') ? 'Crowdsourced' : n.includes('pincode') || n.includes('village') || n.includes('state') ? 'Cloudflare D1' : 'Directory')),
-        el('span', {}, db.tables[n].rows.length + ' rows, ' + db.tables[n].cols.length + ' columns'),
-        el('div', { class: 'meter' }, el('i', { style: 'width:' + Math.round(db.tables[n].rows.length / max * 100) + '%' }))
-      )))
+      el('div', { class: 'cards' }, names.map(n => {
+        const icon = TABLE_ICONS[n] || '📄';
+        return el('div', {
+          class: 'card', tabindex: 0,
+          onclick: () => open(n),
+          onkeydown: e => e.key === 'Enter' && open(n)
+        },
+          el('b', {},
+            el('span', {}, icon + ' ' + n),
+            el('span', { class: 'tag-badge' }, n.includes('hazard') || n.includes('amenity') || n.includes('subm') ? 'Crowdsourced' : n.includes('pincode') || n.includes('village') || n.includes('state') ? 'Cloudflare D1' : 'Directory')
+          ),
+          el('span', { class: 'desc' }, db.tables[n].rows.length + ' rows · ' + db.tables[n].cols.length + ' columns'),
+          el('div', { class: 'meter' }, el('i', { style: 'width:' + Math.round(db.tables[n].rows.length / max * 100) + '%' }))
+        );
+      }))
     )
   );
+}
+
+/* ---------- Leaflet OpenStreetMap Explorer View ---------- */
+function drawMap(main) {
+  const bar = el('div', { class: 'bar' },
+    el('button', { class: 'menu-btn', onclick: () => toggleMobileNav(true) }, '☰'),
+    el('h2', {}, '🗺️ Spatial Vault OSM Leaflet Map'),
+    el('span', { class: 'sp' }),
+    el('button', { onclick: () => { view = 'home'; render(); } }, '📊 Back to Dashboard')
+  );
+
+  const container = el('div', { id: 'map-container' });
+  const mapEl = el('div', { id: 'leaflet-map' });
+
+  // Floating controls overlay
+  const filterChips = el('div', { class: 'map-floating-bar' },
+    el('strong', { style: 'font-size:12px' }, 'Show:'),
+    el('button', { class: 'map-chip' + (activeMapFilter === 'all' ? ' active' : ''), onclick: () => { activeMapFilter = 'all'; renderMapMarkers(); } }, 'All Layers (35+)'),
+    el('button', { class: 'map-chip' + (activeMapFilter === 'businesses' ? ' active' : ''), onclick: () => { activeMapFilter = 'businesses'; renderMapMarkers(); } }, '🏢 Businesses'),
+    el('button', { class: 'map-chip' + (activeMapFilter === 'crowdsourced_hazards' ? ' active' : ''), onclick: () => { activeMapFilter = 'crowdsourced_hazards'; renderMapMarkers(); } }, '🚨 Crowdsourced Hazards'),
+    el('button', { class: 'map-chip' + (activeMapFilter === 'villages' ? ' active' : ''), onclick: () => { activeMapFilter = 'villages'; renderMapMarkers(); } }, '🏡 Villages & Amenities'),
+    el('button', { class: 'map-chip' + (activeMapFilter === 'places' ? ' active' : ''), onclick: () => { activeMapFilter = 'places'; renderMapMarkers(); } }, '📍 Core Places'),
+    el('span', { class: 'sp' }),
+    el('button', { class: 'map-chip', onclick: () => flyTo([28.6328, 77.2195], 13) }, 'Delhi NCR'),
+    el('button', { class: 'map-chip', onclick: () => flyTo([31.6253, 74.8765], 13) }, 'Amritsar'),
+    el('button', { class: 'map-chip', onclick: () => flyTo([30.8921, 75.8114], 13) }, 'Ludhiana'),
+    el('button', { class: 'map-chip', onclick: () => flyTo([12.9719, 77.6412], 13) }, 'Bengaluru'),
+    el('button', { class: 'map-chip', onclick: () => flyTo([19.0596, 72.8295], 13) }, 'Mumbai'),
+    el('button', { class: 'map-chip', onclick: () => flyTo([22.5, 79], 5) }, '🇮🇳 Pan-India')
+  );
+
+  container.append(filterChips, mapEl);
+  main.append(bar, container);
+
+  setTimeout(initLeafletMap, 50);
+}
+
+let activeLeafletMap = null;
+let leafletMarkersLayer = null;
+
+function flyTo(latlng, zoom) {
+  if (activeLeafletMap) activeLeafletMap.flyTo(latlng, zoom, { duration: 1 });
+}
+
+function initLeafletMap() {
+  const box = $('#leaflet-map');
+  if (!box || !window.L) return;
+
+  if (activeLeafletMap) {
+    activeLeafletMap.remove();
+    activeLeafletMap = null;
+  }
+
+  const map = L.map(box).setView([22.5, 79], 5);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors · Spatial Vault Studio'
+  }).addTo(map);
+
+  activeLeafletMap = map;
+  leafletMarkersLayer = L.layerGroup().addTo(map);
+
+  renderMapMarkers();
+
+  // If user clicked from a table row, fly directly to it and open its popup!
+  if (mapTargetItem && hasXY(mapTargetItem)) {
+    const target = mapTargetItem;
+    mapTargetItem = null;
+    map.setView([+target.lat, +target.lng], 15);
+  }
+}
+
+function renderMapMarkers() {
+  if (!activeLeafletMap || !leafletMarkersLayer) return;
+  leafletMarkersLayer.clearLayers();
+
+  const geoTables = ['businesses', 'crowdsourced_hazards', 'villages', 'places', 'ref_pincode', 'cities'];
+  const tablesToRender = activeMapFilter === 'all'
+    ? geoTables
+    : [activeMapFilter];
+
+  let count = 0;
+
+  tablesToRender.forEach(tableName => {
+    const t = db.tables[tableName];
+    if (!t) return;
+
+    t.rows.forEach(r => {
+      if (!hasXY(r)) return;
+      count++;
+
+      let iconColor = '#10b981'; // Green for businesses
+      let emoji = '🏢';
+      let title = r.name || r.office_name || r.address || 'Point';
+      let category = r.category || r.niche || tableName;
+
+      if (tableName === 'crowdsourced_hazards') {
+        iconColor = '#ef4444'; // Red
+        emoji = '🚨';
+        title = r.threat_kind + ' (' + r.slot + ')';
+        category = 'Threat Severity ' + (r.severity || '3') + '/5';
+      } else if (tableName === 'villages') {
+        iconColor = '#3b82f6'; // Blue
+        emoji = '🏡';
+        category = 'Village · Pop ' + (r.population || '');
+      } else if (tableName === 'ref_pincode') {
+        iconColor = '#f59e0b'; // Amber
+        emoji = '📮';
+        category = 'PIN: ' + r.pincode;
+      } else if (tableName === 'cities') {
+        iconColor = '#8b5cf6'; // Purple
+        emoji = '🏙️';
+      }
+
+      // Marker html
+      const customIcon = L.divIcon({
+        className: 'custom-map-pin',
+        html: `<div style="background:${iconColor};color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3);border:2px solid #fff;font-size:14px">${emoji}</div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -15]
+      });
+
+      const m = L.marker([+r.lat, +r.lng], { icon: customIcon });
+
+      // Rich popup content
+      let popupHtml = `
+        <div class="popup-title">${title}</div>
+        <div class="popup-pill" style="background:${iconColor}22;color:${iconColor}">${category}</div>
+        ${r.address ? `<div class="popup-meta">📍 <strong>Address:</strong> ${r.address}</div>` : ''}
+        ${r.pincode ? `<div class="popup-meta">📮 <strong>PIN:</strong> ${r.pincode}</div>` : ''}
+        ${r.phone ? `<div class="popup-meta">📞 <strong>Phone:</strong> ${r.phone}</div>` : ''}
+        ${r.avg_rating ? `<div class="popup-meta">⭐ <strong>Rating:</strong> ${r.avg_rating} / 5 (${r.review_count || 0} reviews)</div>` : ''}
+        ${r.description ? `<div class="popup-meta">📝 ${r.description}</div>` : ''}
+        ${r.digipin ? `<div class="popup-meta">🏷️ <strong>DIGIPIN:</strong> <code>${r.digipin}</code></div>` : ''}
+        <div class="popup-meta" style="font-size:11px;color:#94a3b8">Coords: ${(+r.lat).toFixed(4)}, ${(+r.lng).toFixed(4)}</div>
+        <a class="popup-btn" onclick="cur='${tableName}';view='table';search='${(r.name || r.pincode || '').replace(/'/g, "\\'")}';render()">Open in Table</a>
+      `;
+
+      m.bindPopup(popupHtml);
+      leafletMarkersLayer.addLayer(m);
+    });
+  });
+
+  const chip = $('.map-chip.active');
+  if (chip && activeMapFilter !== 'all') {
+    chip.textContent = activeMapFilter.replace('_', ' ') + ` (${count})`;
+  }
 }
 
 /* ---------- Table CRUD ---------- */
@@ -647,7 +952,7 @@ function relDlg() {
     '🏢 businesses.niche  ↔  📂 niches.slug',
     '⭐ reviews.business_name  ↔  🏢 businesses.name',
     '💼 leads.business_name  ↔  🏢 businesses.name',
-    '⚠️ crowdsourced_hazards.pincode  ↔  📮 ref_pincode.pincode',
+    '🚨 crowdsourced_hazards.pincode  ↔  📮 ref_pincode.pincode',
     '🚰 amenity_contributions.census_code  ↔  🏡 villages.census_code',
     '🏡 villages.census_code  ↔  🛠️ village_amenities.census_code',
     '🏡 villages.pincode  ↔  📮 ref_pincode.pincode',
@@ -664,7 +969,7 @@ function relDlg() {
   ], 'Close', () => dlg.close());
 }
 
-/* ---------- Leaflet Pin Fixer ---------- */
+/* ---------- Leaflet Pin Fixer Modal ---------- */
 function pinDlg() {
   const target = db.tables[cur];
   const box = el('div', { style: 'height:60vh;border-radius:8px;margin-top:10px' });
@@ -673,14 +978,7 @@ function pinDlg() {
   dlg.onclose = () => { dlg.style.width = ''; drawMain(); };
   openDlg('Interactive Pin Fixer', [msg, box], 'Close', () => dlg.close());
   
-  new Promise(ok => {
-    if (window.L) return ok();
-    document.head.append(el('link', { rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' }));
-    const sc = el('script', { src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' });
-    sc.onload = ok;
-    sc.onerror = () => { msg.textContent = 'Could not load Leaflet map. Requires internet.'; };
-    document.head.append(sc);
-  }).then(() => {
+  setTimeout(() => {
     const map = L.map(box).setView([22.5, 79], 5);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
     setTimeout(() => map.invalidateSize(), 200);
@@ -717,7 +1015,7 @@ function pinDlg() {
       add(r);
       say();
     });
-  });
+  }, 100);
 }
 
 /* ---------- Submissions Promotion ---------- */

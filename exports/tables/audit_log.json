@@ -18,5 +18,25 @@
     "before_json": null,
     "after_json": "{\"address\":\"12, Main Market, Gorakhpur\"}",
     "at": "2026-10-13T11:03:02.409Z"
+  },
+  {
+    "id": 3,
+    "actor": "excel-editor",
+    "action": "update-cell",
+    "table_name": "place_category_map",
+    "row_pk": "M4NF0WCR1G",
+    "before_json": null,
+    "after_json": "{\"category_id\":\"1\"}",
+    "at": "2026-10-13T11:36:33.960Z"
+  },
+  {
+    "id": 4,
+    "actor": "excel-editor",
+    "action": "update-cell",
+    "table_name": "places",
+    "row_pk": "M4NF62ZMM0",
+    "before_json": null,
+    "after_json": "{\"digipin_source\":\"spatial-vault/reference-v1\"}",
+    "at": "2026-10-13T12:20:56.619Z"
   }
 ]

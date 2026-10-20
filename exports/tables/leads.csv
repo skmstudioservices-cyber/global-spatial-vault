@@ -1,0 +1,5 @@
+id,business_id,business_name,customer_name,phone,email,message,plan,status,source_page,created_at
+1,1,Kesar Da Dhaba,Simranjit Kaur,+91 98888 12345,simran.k@yahoo.co.in,Inquiring about bulk catering delivery for 60 guests wedding lunch in Amritsar this Sunday.,premium,contacted,/niche/dhabanearme/kesar-da-dhaba,2026-10-20 13:08:12
+2,2,Wenger's Deli & Bakery,Vivek Singhania,+91 98110 54321,v.singhania@corp.in,Need custom tiered anniversary cake and 100 savory snack boxes for corporate office celebration.,featured,new,/niche/bakerynearme/wengers-deli-bakery,2026-10-20 13:08:12
+3,5,Bosch Car Service Ludhiana,Baldev Dhillon,+91 98720 99887,dhillon.farms@gmail.com,"Requesting quote for full 60,000 km periodic service & brake overhaul for Toyota Fortuner.",featured,converted,/niche/carrepairsnearme/bosch-car-service-ludhiana,2026-10-20 13:08:12
+4,7,Raymond Custom Tailoring Studio,Arjun Kapoor,+91 99100 77665,arjun.kapoor@techstart.io,Looking to schedule master tailor measurement session for 3 bespoke suits and 1 bandhgala.,featured,new,/niche/tailorshopnearme/raymond-tailoring-delhi,2026-10-20 13:08:12

@@ -1,0 +1,7 @@
+id,sub_district_id,name,slug,pincode,census_code,lgd_code,population,households,lat,lon,digipin,ai_description
+1,1,Attari,attari,143108,037812,LGD-0378,8420,1540,31.6035,74.6048,489FP23K8M,Historic border village known for the Attari-Wagah ceremonial border and trade terminal.
+2,2,Kila Raipur,kila-raipur,141201,038945,LGD-0389,5890,1120,30.7612,75.8234,489FP88T1K,"Famous for the annual Rural Olympics showcasing traditional sports, cart races, and athletics."
+3,4,Chhatarpur,chhatarpur,110074,063821,LGD-0638,21450,4820,28.5023,77.1782,492FJT6M7C,"Heritage locality housing ancient temples, green belts, and agricultural farmhouses."
+4,5,Marol Village,marol-village,400059,092831,LGD-0928,34200,7890,19.1176,72.8791,387KT44M9P,"Urban gaothan locality surrounded by modern hospitality, IT parks, and metro lines."
+5,7,Gottigere,gottigere,560083,112940,LGD-1129,18900,4210,12.8598,77.5899,284HP92L4R,Growing suburban village hub along Bannerghatta Road near the National Park sanctuary.
+6,8,Surajpur,surajpur,201306,084721,LGD-0847,14200,3110,28.5132,77.4921,492FKM8P3X,Scenic wetland bird sanctuary perimeter with bustling rural commercial marketplace.

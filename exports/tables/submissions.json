@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "id": 1,
+    "niche_id": 5,
+    "place_uid": null,
+    "payload_json": "{\"name\":\"Pal Da Dhaba\",\"category\":\"Restaurants\",\"niche\":\"dhabanearme\",\"address\":\"Near Bus Stand, G.T. Road, Phagwara\",\"pincode\":\"144401\",\"phone\":\"+91 1825 260123\",\"description\":\"Famous highway stop for butter chicken and tandoori roti.\"}",
+    "submitted_by": "kuldeep@gmail.com",
+    "ip_hash": null,
+    "user_agent": null,
+    "status": "pending",
+    "reviewer": null,
+    "review_note": null,
+    "reviewed_at": null,
+    "remote_id": "SUBM-2026-001",
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 2,
+    "niche_id": 8,
+    "place_uid": null,
+    "payload_json": "{\"name\":\"Ahdoo's Bakery\",\"category\":\"Bakery\",\"niche\":\"bakerynearme\",\"address\":\"Residency Road, Srinagar\",\"pincode\":\"190001\",\"phone\":\"+91 194 2472593\",\"description\":\"Oldest bakery in Kashmir famed for walnut fudge, almond macaroons and patties.\"}",
+    "submitted_by": "tariq.srinagar@gmail.com",
+    "ip_hash": null,
+    "user_agent": null,
+    "status": "approved",
+    "reviewer": null,
+    "review_note": null,
+    "reviewed_at": null,
+    "remote_id": "SUBM-2026-002",
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 3,
+    "niche_id": 3,
+    "place_uid": null,
+    "payload_json": "{\"name\":\"Glenary's Bakery & Cafe\",\"category\":\"Cafes\",\"niche\":\"cafenearme\",\"address\":\"Nehru Road, Darjeeling\",\"pincode\":\"734101\",\"phone\":\"+91 354 2254322\",\"description\":\"Colonial hill station bakery and cafe with Himalayan views and Darjeeling first flush tea.\"}",
+    "submitted_by": "sunita.tamang@darj.in",
+    "ip_hash": null,
+    "user_agent": null,
+    "status": "approved",
+    "reviewer": null,
+    "review_note": null,
+    "reviewed_at": null,
+    "remote_id": "SUBM-2026-003",
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 4,
+    "niche_id": 7,
+    "place_uid": null,
+    "payload_json": "{\"name\":\"Punjab Auto Electrical Works\",\"category\":\"Auto Services\",\"niche\":\"carrepairsnearme\",\"address\":\"Shop 12, Transport Nagar, Ludhiana\",\"pincode\":\"141003\",\"phone\":\"+91 98150 44556\",\"description\":\"Specialist in heavy vehicle alternators, starter motors, and commercial truck wiring.\"}",
+    "submitted_by": "surjit.singh@yahoo.com",
+    "ip_hash": null,
+    "user_agent": null,
+    "status": "pending",
+    "reviewer": null,
+    "review_note": null,
+    "reviewed_at": null,
+    "remote_id": "SUBM-2026-004",
+    "created_at": "2026-10-20 13:08:12"
+  }
+]

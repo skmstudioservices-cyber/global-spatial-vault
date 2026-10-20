@@ -1,0 +1,9 @@
+id,district_id,code,name,slug
+1,1,SUB-ASR1,Amritsar-I,amritsar-1
+2,2,SUB-LDHW,Ludhiana West,ludhiana-west
+3,3,SUB-CP,Connaught Place,connaught-place
+4,4,SUB-HK,Hauz Khas,hauz-khas
+5,5,SUB-AND,Andheri,andheri
+6,6,SUB-HAV,Haveli,haveli
+7,7,SUB-BLRS,Bangalore South,bangalore-south
+8,8,SUB-DAD,Dadri,dadri

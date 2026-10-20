@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "business_id": 1,
+    "business_name": "Kesar Da Dhaba",
+    "user_name": "Harpreet Singh Sandhu",
+    "user_email": "harpreet.sandhu@gmail.com",
+    "rating": 5,
+    "title": "Unmatched Dal Makhani in the heart of Amritsar",
+    "body": "Visited with family during our Golden Temple trip. The slow-simmered dal cooked in ghee for 24 hours has no equal. Absolutely authentic atmosphere!",
+    "is_verified": 1,
+    "helpful_count": 38,
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 2,
+    "business_id": 2,
+    "business_name": "Wenger's Deli & Bakery",
+    "user_name": "Ananya Sharma",
+    "user_email": "ananya.s@outlook.com",
+    "rating": 5,
+    "title": "Best shammi kebabs and chocolate mousse in Delhi",
+    "body": "My grandfather used to buy bread here, and 50 years later the quality has not dropped one bit. The mutton puff is flaky perfection.",
+    "is_verified": 1,
+    "helpful_count": 24,
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 3,
+    "business_id": 4,
+    "business_name": "Blue Tokai Coffee Roasters",
+    "user_name": "Rohit Malhotra",
+    "user_email": "rohit.m@zomato.in",
+    "rating": 5,
+    "title": "Perfect remote work spot with artisanal coffee",
+    "body": "Excellent flat white made with Attikan Estate beans. The seating is comfortable, WiFi is ultra fast, and staff knows their coffee notes.",
+    "is_verified": 1,
+    "helpful_count": 19,
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 4,
+    "business_id": 5,
+    "business_name": "Bosch Car Service Ludhiana",
+    "user_name": "Jaswinder Grewal",
+    "user_email": "jassi.grewal@yahoo.com",
+    "rating": 5,
+    "title": "Transparent diagnosis, no unnecessary parts billed",
+    "body": "Had an electrical issue in my Hyundai Creta that two local garages failed to fix. Bosch engineers diagnosed a faulty sensor in 20 minutes.",
+    "is_verified": 1,
+    "helpful_count": 15,
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 5,
+    "business_id": 6,
+    "business_name": "Apollo White Dental Clinic",
+    "user_name": "Dr. Meera Nambiar",
+    "user_email": "meera.nambiar@aiims.edu",
+    "rating": 5,
+    "title": "Painless root canal treatment",
+    "body": "Top tier hygiene and modern imaging machines. Dr. Priya explained every step on the monitor before beginning.",
+    "is_verified": 1,
+    "helpful_count": 12,
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 6,
+    "business_id": 9,
+    "business_name": "Kayani Bakery",
+    "user_name": "Firoze Batliwala",
+    "user_email": "firoze.b@gmail.com",
+    "rating": 5,
+    "title": "The real Shrewsbury biscuits of Pune",
+    "body": "Queue starts at 7 AM for a reason! Nothing beats their freshly packed warm biscuits with afternoon tea.",
+    "is_verified": 1,
+    "helpful_count": 45,
+    "created_at": "2026-10-20 13:08:12"
+  }
+]

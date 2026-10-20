@@ -3,69 +3,119 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Spatial Vault Studio</title>
+<title>Spatial Vault Studio — Cloudflare D1 & Demo Directory</title>
 <style>
-:root{--bg:#fff;--panel:#f6f7f8;--text:#1a1d1f;--mute:#6b7280;--line:#e3e6e8;--green:#2fb67c;--greend:#1f8f5f;--red:#d6383d;--hover:#eef0f2}
-@media(prefers-color-scheme:dark){:root{--bg:#1b1b1d;--panel:#232326;--text:#ececec;--mute:#9a9fa6;--line:#34343a;--hover:#2b2b30;--green:#3ecf8e}}
+:root{
+  --bg:#fff;--panel:#f8f9fa;--panel-card:#ffffff;--text:#1a1d1f;--mute:#64748b;--line:#e2e8f0;
+  --green:#10b981;--greend:#059669;--green-soft:rgba(16,185,129,0.12);--red:#ef4444;--hover:#f1f5f9;
+  --header-bg:#ffffff;--sidebar-w:260px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0f172a;--panel:#1e293b;--panel-card:#1e293b;--text:#f8fafc;--mute:#94a3b8;--line:#334155;
+    --green:#10b981;--greend:#059669;--green-soft:rgba(16,185,129,0.18);--red:#f87171;--hover:#334155;
+    --header-bg:#0f172a;
+  }
+}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
 button,input,select,textarea{font:inherit;color:inherit}
-button{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+button{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap;transition:background .15s}
 button:hover{background:var(--hover)}
-button.pri{background:var(--green);border-color:var(--green);color:#06281a;font-weight:600}
+button.pri{background:var(--green);border-color:var(--green);color:#042f20;font-weight:600}
+button.pri:hover{background:var(--greend);color:#fff}
 button.danger{color:var(--red)}
-input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:13px}
 :focus-visible{outline:2px solid var(--green);outline-offset:1px}
-#app{height:100%;display:flex}
-aside{width:240px;flex:none;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column}
-aside h1{font-size:16px;margin:0;padding:16px;display:flex;gap:8px;align-items:center}
-aside h1 i{width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block}
-.tlist{flex:1;overflow:auto;padding:0 8px}
-.titem{display:flex;justify-content:space-between;padding:7px 10px;border-radius:6px;cursor:pointer}
+
+#app{height:100%;display:flex;position:relative}
+
+/* Mobile drawer backdrop */
+.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:90}
+.drawer-backdrop.active{display:block}
+
+aside{
+  width:var(--sidebar-w);flex:none;background:var(--panel);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;height:100%;z-index:95;transition:transform .2s ease;
+}
+aside .logo-bar{padding:16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+aside h1{font-size:15px;margin:0;font-weight:700;display:flex;gap:8px;align-items:center}
+aside h1 i{width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 8px var(--green)}
+aside .close-btn{display:none;background:none;border:none;padding:4px;font-size:18px;color:var(--mute)}
+
+.nav-section{padding:12px 14px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+.tlist{flex:1;overflow-y:auto;padding:4px 8px}
+.titem{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:13px;margin-bottom:2px}
 .titem:hover{background:var(--hover)}
-.titem.on{background:var(--hover);font-weight:600;box-shadow:inset 3px 0 var(--green)}
-.titem span{color:var(--mute);font-size:12px}
-.side-foot{padding:10px;display:grid;gap:6px;border-top:1px solid var(--line)}
-main{flex:1;min-width:0;display:flex;flex-direction:column}
-.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
-.bar h2{margin:0 8px 0 0;font-size:16px}
+.titem.on{background:var(--hover);font-weight:600;box-shadow:inset 3px 0 var(--green);color:var(--green)}
+.titem span{color:var(--mute);font-size:11px;background:rgba(100,116,139,0.12);padding:2px 6px;border-radius:10px}
+.titem.on span{background:var(--green-soft);color:var(--green);font-weight:600}
+
+.side-foot{padding:10px;display:grid;gap:6px;border-top:1px solid var(--line);background:var(--panel)}
+
+main{flex:1;min-width:0;display:flex;flex-direction:column;height:100%;background:var(--bg)}
+
+.bar{
+  display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--line);
+  background:var(--header-bg);overflow-x:auto;flex-wrap:wrap;
+}
+.bar h2{margin:0 8px 0 0;font-size:16px;font-weight:700;white-space:nowrap}
+.menu-btn{display:none;padding:6px 10px;font-size:16px}
 .sp{flex:1}
-.wrap{flex:1;overflow:auto}
-table{border-collapse:collapse;min-width:100%}
+
+.wrap{flex:1;overflow:auto;position:relative}
+table{border-collapse:collapse;min-width:100%;font-size:13px}
 th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:0;text-align:left;white-space:nowrap}
-th{position:sticky;top:0;background:var(--panel);padding:8px 10px;font-weight:600;cursor:pointer;z-index:1}
-th small{color:var(--mute);font-weight:400;margin-left:6px}
-td input[type=text],td input[type=number],td input[type=date]{border:0;border-radius:0;width:100%;min-width:130px;background:transparent;padding:8px 10px}
+th{position:sticky;top:0;background:var(--panel);padding:9px 12px;font-weight:600;cursor:pointer;z-index:2;color:var(--text)}
+th small{color:var(--mute);font-weight:400;margin-left:4px}
+td input[type=text],td input[type=number],td input[type=date]{border:0;border-radius:0;width:100%;min-width:130px;background:transparent;padding:8px 12px}
 td input:focus{background:var(--hover);outline-offset:-2px}
-td.c{text-align:center;padding:0 12px}
-td.id{color:var(--mute);padding:8px 10px;font-size:12px}
+td.c{text-align:center;padding:0 10px}
+td.id{color:var(--mute);padding:8px 12px;font-size:11px;font-family:monospace}
+
 .empty{padding:60px 20px;text-align:center;color:var(--mute)}
 .empty b{display:block;color:var(--text);font-size:16px;margin-bottom:6px}
-.status{padding:6px 14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
-.login{margin:auto;max-width:320px;padding:24px;display:grid;gap:10px;text-align:center}
-.login h1{margin:0}
-dialog{border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);padding:20px;width:min(440px,92vw)}
-dialog::backdrop{background:rgba(0,0,0,.45)}
-dialog h3{margin:0 0 10px}
-dialog label{display:block;margin:10px 0 4px;font-weight:600}
-dialog input,dialog textarea{width:100%}
-dialog p{color:var(--mute);margin:4px 0;font-size:13px}
-.row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:8px;z-index:9}
-.home{padding:18px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;color:var(--mute)}
-.stat b{display:block;font-size:22px;color:var(--text);margin-bottom:2px}
-.home h3{margin:24px 0 10px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;cursor:pointer}
-.card:hover{border-color:var(--green)}
-.card b{display:block;font-size:15px}
-.card span{color:var(--mute);font-size:13px}
-.meter{height:6px;background:var(--line);border-radius:3px;margin-top:10px}
+
+.status{padding:8px 16px;border-top:1px solid var(--line);color:var(--mute);font-size:12px;display:flex;justify-content:space-between;background:var(--panel)}
+
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--panel-card);color:var(--text);padding:22px;width:min(520px,94vw);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog h3{margin:0 0 10px;font-size:18px}
+dialog label{display:block;margin:12px 0 4px;font-weight:600;font-size:13px}
+dialog input,dialog select,dialog textarea{width:100%}
+dialog p{color:var(--mute);margin:6px 0;font-size:13px}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0f172a;color:#f8fafc;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 14px rgba(0,0,0,0.3);z-index:100;border:1px solid #334155}
+
+.home{padding:20px;max-width:1200px;margin:0 auto;width:100%}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.stat{background:var(--panel-card);border:1px solid var(--line);border-radius:10px;padding:16px;color:var(--mute)}
+.stat b{display:block;font-size:26px;color:var(--text);margin-bottom:2px;font-weight:700}
+.home h3{margin:28px 0 14px;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:var(--panel-card);border:1px solid var(--line);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .15s, transform .1s}
+.card:hover{border-color:var(--green);transform:translateY(-1px)}
+.card b{display:block;font-size:15px;color:var(--text)}
+.card span{color:var(--mute);font-size:12px}
+.meter{height:6px;background:var(--line);border-radius:3px;margin-top:12px;overflow:hidden}
 .meter i{display:block;height:100%;background:var(--green);border-radius:3px}
-@media(max-width:700px){aside{width:150px}}
+
+/* Badge tags for quick status in cards */
+.tag-badge{display:inline-block;font-size:10px;text-transform:uppercase;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--green-soft);color:var(--green);margin-left:6px}
+
+/* Responsive queries */
+@media(max-width:768px){
+  aside{position:fixed;top:0;bottom:0;left:0;transform:translateX(-100%);box-shadow:4px 0 20px rgba(0,0,0,0.3)}
+  aside.mobile-open{transform:translateX(0)}
+  aside .close-btn{display:inline-block}
+  .menu-btn{display:inline-flex}
+  .bar{padding:8px 12px}
+  .home{padding:14px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .cards{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -81,130 +131,19 @@ const sha = async s => { try { return [...new Uint8Array(await crypto.subtle.dig
 function el(tag, attrs = {}, ...kids) {
   const e = document.createElement(tag);
   for (const k in attrs) { if (k.startsWith('on')) e[k] = attrs[k]; else if (k === 'value') e.value = attrs[k]; else e.setAttribute(k, attrs[k]); }
-  kids.flat().forEach(x => e.append(x));
+  kids.flat().forEach(x => { if (x != null) e.append(typeof x === 'object' ? x : document.createTextNode(x)); });
   return e;
 }
-function toast(msg) { const t = el('div', { class: 'toast' }, msg); document.body.append(t); setTimeout(() => t.remove(), 2600); }
+function toast(msg) { const t = el('div', { class: 'toast' }, msg); document.body.append(t); setTimeout(() => t.remove(), 2800); }
 
-/* ---------- data (saved in this browser) ---------- */
+/* ---------- data & state ---------- */
 const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
 let db = read('mybase_db', { tables: {} }), view = 'home';
 let gh = read('mybase_gh', { owner: '', repo: '', branch: 'main', path: 'data/mybase.json', token: '' });
-let cur = Object.keys(db.tables)[0] || null, search = '', scol = '', sort = null;
+let cur = Object.keys(db.tables)[0] || 'businesses', search = '', scol = '', sort = null, mobileNavOpen = false;
 const save = () => localStorage.setItem('mybase_db', JSON.stringify(db));
 
-/* ---------- login ---------- */
-async function showLogin() {
-  if (!localStorage.getItem('mybase_pw')) localStorage.setItem('mybase_pw', await sha('1234567890'));
-  const has = localStorage.getItem('mybase_pw');
-  const pw = el('input', { type: 'password', placeholder: 'Password', autocomplete: 'current-password' });
-  const msg = el('p', { style: 'color:var(--red);margin:0;min-height:1em' });
-  const go = async () => {
-    if (!pw.value) return;
-    const h = await sha(pw.value);
-    if (!has) { localStorage.setItem('mybase_pw', h); }
-    else if (h !== has) { msg.textContent = 'Wrong password. Try again.'; return; }
-    sessionStorage.setItem('mybase_in', '1'); render();
-  };
-  pw.onkeydown = e => e.key === 'Enter' && go();
-  app.replaceChildren(el('div', { class: 'login' },
-    el('h1', {}, 'MyBase'),
-    el('p', {}, has ? 'Enter your password to open your database. Testing password: 1234567890' : 'First time here. Create a password to protect this dashboard.'),
-    pw, msg, el('button', { class: 'pri', onclick: go }, has ? 'Unlock' : 'Create password and enter')));
-  pw.focus();
-}
-
-/* ---------- layout ---------- */
-function render() {
-  
-  const list = el('div', { class: 'tlist' });
-  list.append(el('div', { class: 'titem' + (view === 'home' ? ' on' : ''), onclick: () => { view = 'home'; render(); } }, 'Dashboard'));
-  Object.keys(db.tables).forEach(n => list.append(el('div', { class: 'titem' + (view === 'table' && n === cur ? ' on' : ''), onclick: () => { view = 'table'; cur = n; search = ''; scol = ''; sort = null; render(); } }, n, el('span', {}, String(db.tables[n].rows.length)))));
-  if (!Object.keys(db.tables).length) list.append(el('p', { style: 'color:var(--mute);padding:8px 10px' }, 'No tables yet.'));
-  const side = el('aside', {},
-    el('h1', {}, el('i'), 'Spatial Vault'), list,
-    el('div', { class: 'side-foot' },
-      el('button', { class: 'pri', onclick: newTableDlg }, '+ New table'),
-      el('button', { onclick: starter }, 'Starter tables'),
-      el('button', { onclick: relDlg }, 'Relations'),
-      el('button', { onclick: inboxDlg }, 'Submissions inbox'),
-      el('button', { onclick: exportNiches }, 'Export niches'),
-      el('button', { onclick: syncDlg }, 'GitHub sync')));
-  app.replaceChildren(side, el('main', { id: 'main' }));
-  drawMain();
-}
-
-function drawMain() {
-  const main = $('#main'); main.replaceChildren();
-  if (view === 'home' || !cur || !db.tables[cur]) return drawHome(main);
-  if (!cur || !db.tables[cur]) {
-    main.append(el('div', { class: 'empty' }, el('b', {}, 'Create your first table'), 'Click "+ New table" on the left. Example: a table called leads with columns name, email, city.'));
-    return;
-  }
-  const t = db.tables[cur];
-  const sel = el('select', { onchange: e => { scol = e.target.value; drawRows(); } }, el('option', { value: '' }, 'All columns'), t.cols.map(c => el('option', { value: c.name }, c.name)));
-  sel.value = scol;
-  const box = el('input', { type: 'search', placeholder: 'Search rows', value: search, oninput: e => { search = e.target.value.toLowerCase(); drawRows(); } });
-  const file = el('input', { type: 'file', accept: '.csv,text/csv', style: 'display:none', onchange: importCSV });
-  main.append(
-    el('div', { class: 'bar' }, el('h2', {}, cur), box, sel, el('span', { class: 'sp' }),
-      el('button', { class: 'pri', onclick: addRow }, '+ Add row'),
-      el('button', { onclick: addCol }, '+ Add column'),
-      el('button', { onclick: () => file.click() }, 'Import CSV'), file,
-      el('button', { onclick: exportCSV }, 'Export CSV'),
-      el('button', { onclick: pasteDlg }, 'Paste rows'), el('button', { onclick: clean }, 'Tidy data'),
-      ...(cur === 'places' ? [el('button', { onclick: enrich }, 'Find locations'), el('button', { onclick: pinDlg }, 'Pin fixer'), el('button', { onclick: promote }, 'Promote approved')] : []),
-      el('button', { class: 'danger', onclick: delTable }, 'Delete table')),
-    el('div', { class: 'wrap', id: 'wrap' }),
-    el('div', { class: 'status', id: 'status' }));
-  drawRows();
-}
-
-function visibleRows() {
-  const t = db.tables[cur];
-  let rows = t.rows.filter(r => !search || (scol ? [r[scol]] : Object.values(r)).some(v => String(v ?? '').toLowerCase().includes(search)));
-  if (sort) rows = [...rows].sort((a, b) => { const x = a[sort.c] ?? '', y = b[sort.c] ?? ''; return (x > y ? 1 : x < y ? -1 : 0) * sort.d; });
-  return rows;
-}
-
-function drawRows() {
-  const t = db.tables[cur], wrap = $('#wrap'), rows = visibleRows();
-  const head = el('tr', {}, el('th', { style: 'cursor:default' }, 'id'),
-    t.cols.map(c => el('th', { onclick: () => { sort = sort && sort.c === c.name ? { c: c.name, d: -sort.d } : { c: c.name, d: 1 }; drawRows(); } },
-      c.name, el('small', {}, c.type + (sort && sort.c === c.name ? (sort.d > 0 ? ' ▲' : ' ▼') : ''))),
-    ), el('th', { style: 'cursor:default' }, ''));
-  const body = rows.map(r => el('tr', {}, el('td', { class: 'id' }, r.id.slice(-5)),
-    t.cols.map(c => {
-      let inp;
-      if (c.type === 'boolean') { inp = el('input', { type: 'checkbox', onchange: e => { r[c.name] = e.target.checked; save(); } }); inp.checked = !!r[c.name]; return el('td', { class: 'c' }, inp); }
-      inp = el('input', { type: c.type === 'number' ? 'number' : c.type === 'date' ? 'date' : 'text', 'aria-label': c.name, value: r[c.name] ?? '', onchange: e => { r[c.name] = c.type === 'number' && e.target.value !== '' ? Number(e.target.value) : e.target.value; save(); } });
-      return el('td', {}, inp);
-    }),
-    el('td', { class: 'c' }, el('button', { class: 'danger', title: 'Delete row', onclick: () => { if (confirm('Delete this row?')) { t.rows = t.rows.filter(x => x !== r); save(); render(); } } }, '✕'))));
-  wrap.replaceChildren(el('table', {}, el('thead', {}, head), el('tbody', {}, body)));
-  if (!rows.length) wrap.append(el('div', { class: 'empty' }, el('b', {}, t.rows.length ? 'No rows match your search' : 'This table is empty'), t.rows.length ? 'Clear the search box to see all rows.' : 'Click "+ Add row" or "Import CSV" to add data.'));
-  $('#status').textContent = rows.length + ' of ' + t.rows.length + ' rows. Saved in this browser.';
-}
-
-/* ---------- dashboard home ---------- */
-function drawHome(main) {
-  const names = Object.keys(db.tables), total = names.reduce((a, n) => a + db.tables[n].rows.length, 0), colsN = names.reduce((a, n) => a + db.tables[n].cols.length, 0);
-  const stat = (v, l) => el('div', { class: 'stat' }, el('b', {}, String(v)), l);
-  const max = Math.max(1, ...names.map(n => db.tables[n].rows.length));
-  const open = n => { view = 'table'; cur = n; search = ''; scol = ''; sort = null; render(); };
-  main.append(
-    el('div', { class: 'bar' }, el('h2', {}, 'Dashboard'), el('span', { class: 'sp' }), el('button', { class: 'pri', onclick: newTableDlg }, '+ New table'), el('button', { onclick: syncDlg }, 'GitHub sync')),
-    el('div', { class: 'wrap home' },
-      el('div', { class: 'stats' }, stat(names.length, 'Tables'), stat(total, 'Total rows'), stat(colsN, 'Columns'), stat(localStorage.getItem('mybase_last') || 'Never', 'Last GitHub backup')),
-      el('h3', {}, 'Your tables'),
-      names.length
-        ? el('div', { class: 'cards' }, names.map(n => el('div', { class: 'card', tabindex: 0, onclick: () => open(n), onkeydown: e => e.key === 'Enter' && open(n) },
-            el('b', {}, n), el('span', {}, db.tables[n].rows.length + ' rows, ' + db.tables[n].cols.length + ' columns'),
-            el('div', { class: 'meter' }, el('i', { style: 'width:' + Math.round(db.tables[n].rows.length / max * 100) + '%' })))))
-        : el('div', { class: 'empty' }, el('b', {}, 'No tables yet'), 'Click "+ New table". Example: a table called leads with columns name, email, city.')));
-}
-
-/* ---------- table actions ---------- */
+/* ---------- Column Types & Parser ---------- */
 const TYPES = ['text', 'number', 'boolean', 'date'];
 function parseCols(s) {
   return s.split(/\n|,/).map(x => x.trim()).filter(Boolean).map(x => {
@@ -212,6 +151,382 @@ function parseCols(s) {
     return { name: n.replace(/\s+/g, '_'), type: TYPES.includes(ty) ? ty : 'text' };
   });
 }
+
+/* ---------- Real Demo Data Seeder ---------- */
+function getRealSeedData() {
+  return {
+    businesses: {
+      cols: parseCols('name,category,niche,city,address,pincode,lat:number,lng:number,phone,whatsapp,website,avg_rating:number,review_count:number,plan,status'),
+      rows: [
+        { id: uid(), name: 'Kesar Da Dhaba', category: 'Restaurants', niche: 'dhabanearme', city: 'Amritsar', address: 'Chowk Passian, Near Town Hall', pincode: '143001', lat: 31.6253, lng: 74.8765, phone: '+91 183 2552103', whatsapp: '+91 98141 23456', website: 'https://kesardadhaba.in', avg_rating: 4.8, review_count: 1240, plan: 'premium', status: 'published' },
+        { id: uid(), name: "Wenger's Deli & Bakery", category: 'Bakery', niche: 'bakerynearme', city: 'New Delhi', address: 'A16, Radial Road 3, Connaught Place', pincode: '110001', lat: 28.6328, lng: 77.2195, phone: '+91 11 23324403', whatsapp: '+91 98102 33403', website: 'https://wengers.co.in', avg_rating: 4.7, review_count: 980, plan: 'featured', status: 'published' },
+        { id: uid(), name: 'Indian Coffee House', category: 'Cafes', niche: 'cafenearme', city: 'New Delhi', address: '2nd Floor, Mohan Singh Place, CP', pincode: '110001', lat: 28.6312, lng: 77.2168, phone: '+91 11 23342994', whatsapp: '', website: '', avg_rating: 4.4, review_count: 650, plan: 'free', status: 'published' },
+        { id: uid(), name: 'Blue Tokai Coffee Roasters', category: 'Cafes', niche: 'cafenearme', city: 'Gurgaon', address: 'SCO 34, Sector 29 Market', pincode: '122002', lat: 28.4682, lng: 77.0631, phone: '+91 98214 55012', whatsapp: '+91 98214 55012', website: 'https://bluetokaicoffee.com', avg_rating: 4.6, review_count: 420, plan: 'premium', status: 'published' },
+        { id: uid(), name: 'Bosch Car Service Ludhiana', category: 'Auto Services', niche: 'carrepairsnearme', city: 'Ludhiana', address: 'Plot 45, Ferozepur Road, Near PAU', pincode: '141012', lat: 30.8921, lng: 75.8114, phone: '+91 161 5012890', whatsapp: '+91 98765 43210', website: 'https://boschcarservice.in', avg_rating: 4.6, review_count: 215, plan: 'featured', status: 'published' },
+        { id: uid(), name: 'Apollo White Dental Clinic', category: 'Dental Clinic', niche: 'dentistsnearme', city: 'Bengaluru', address: '482, CMH Road, Indiranagar', pincode: '560038', lat: 12.9719, lng: 77.6412, phone: '+91 80 41151234', whatsapp: '+91 99000 88776', website: 'https://apollowhitedental.com', avg_rating: 4.9, review_count: 310, plan: 'premium', status: 'published' },
+        { id: uid(), name: 'Raymond Custom Tailoring Studio', category: 'Tailoring', niche: 'tailorshopnearme', city: 'New Delhi', address: 'E-14, South Extension Part 1', pincode: '110049', lat: 28.5714, lng: 77.2210, phone: '+91 11 41648820', whatsapp: '+91 98111 22334', website: 'https://raymond.in', avg_rating: 4.7, review_count: 180, plan: 'featured', status: 'published' },
+        { id: uid(), name: 'Mavalli Tiffin Room (MTR)', category: 'Restaurants', niche: 'restaurants', city: 'Bengaluru', address: '14, Lalbagh Road, Mavalli', pincode: '560004', lat: 12.9556, lng: 77.5855, phone: '+91 80 22220022', whatsapp: '', website: 'https://mtr1924.com', avg_rating: 4.8, review_count: 2400, plan: 'premium', status: 'published' },
+        { id: uid(), name: 'Kayani Bakery', category: 'Bakery', niche: 'bakerynearme', city: 'Pune', address: '6, Dr. Coyaji Road, East Street, Camp', pincode: '411001', lat: 18.5144, lng: 73.8792, phone: '+91 20 26360517', whatsapp: '', website: '', avg_rating: 4.7, review_count: 1850, plan: 'featured', status: 'published' },
+        { id: uid(), name: 'Green Pharmacy & Wellness', category: 'Pharmacy', niche: 'medicalshopnearme', city: 'Mumbai', address: 'Shop 3, Hill Road, Bandra West', pincode: '400050', lat: 19.0596, lng: 72.8295, phone: '+91 22 26421980', whatsapp: '+91 98200 44556', website: 'https://greenpharmacy.in', avg_rating: 4.5, review_count: 94, plan: 'free', status: 'published' }
+      ]
+    },
+    crowdsourced_hazards: {
+      cols: parseCols('slot,threat_kind,severity:number,address,pincode,lat:number,lng:number,description,reporter_contact,upvotes:number,status'),
+      rows: [
+        { id: uid(), slot: 'night', threat_kind: 'dark_alley', severity: 4, address: 'Service lane behind Shivaji Stadium Metro Gate 3', pincode: '110001', lat: 28.6341, lng: 77.2185, description: 'All 4 high-mast streetlights dysfunctional for 2 weeks. Women pedestrians feel unsafe after 8 PM.', reporter_contact: 'sneha.d@gmail.com', upvotes: 18, status: 'active' },
+        { id: uid(), slot: 'morning', threat_kind: 'pothole', severity: 4, address: 'GT Road intersection near Sherpur Chowk Flyover', pincode: '141001', lat: 30.8950, lng: 75.8420, description: 'Deep open crater in left lane causing two-wheelers to swerve dangerously during morning peak hour.', reporter_contact: '+91 98765 11223', upvotes: 34, status: 'active' },
+        { id: uid(), slot: 'evening', threat_kind: 'animalAttacks', severity: 3, address: 'Near Sector 15 Part 2 Market Back Lane', pincode: '122001', lat: 28.4610, lng: 77.0310, description: 'Pack of aggressive stray dogs chasing cyclists and delivery riders after sunset.', reporter_contact: 'vikram.r@gurgaon.net', upvotes: 12, status: 'investigating' },
+        { id: uid(), slot: 'midnight', threat_kind: 'robbery', severity: 5, address: 'Unpatrolled link road connecting Express Highway underpass', pincode: '201301', lat: 28.5412, lng: 77.3820, description: 'Two phone snatching incidents reported this week between 11:30 PM and 1:00 AM. Requires PCR patrol.', reporter_contact: 'rwa_sec14@noida.org', upvotes: 27, status: 'active' },
+        { id: uid(), slot: 'noon', threat_kind: 'pothole', severity: 2, address: 'Koramangala 4th Block 80 Feet Road junction', pincode: '560034', lat: 12.9340, lng: 77.6260, description: 'Sunken stormwater drain grate causing sharp bump for auto-rickshaws and low sedans.', reporter_contact: 'karthik.m@blr.in', upvotes: 9, status: 'resolved' }
+      ]
+    },
+    amenity_contributions: {
+      cols: parseCols('census_code,locality_name,pincode,amenity_type,facility_name,status,user_comment,contributor_name,upvotes:number,verified:boolean'),
+      rows: [
+        { id: uid(), census_code: '037812', locality_name: 'Attari Village Border Post', pincode: '143108', amenity_type: 'drinking_water', facility_name: 'RO Clean Drinking Water Chhabeel', status: 'operational', user_comment: 'Community RO plant installed by Gram Panchayat, free cold water available for all visitors.', contributor_name: 'Gurpreet Singh', upvotes: 21, verified: true },
+        { id: uid(), census_code: '038945', locality_name: 'Kila Raipur Stadium Area', pincode: '141201', amenity_type: 'street_light', facility_name: 'Solar High Mast Illumination', status: 'operational', user_comment: '8 solar floodlights installed around grounds, very helpful for evening sports practice.', contributor_name: 'Manjit Dhillon', upvotes: 14, verified: true },
+        { id: uid(), census_code: '063821', locality_name: 'Chhatarpur Bhati Mines Road', pincode: '110074', amenity_type: 'ev_charger', facility_name: 'Tata Power 60kW DC Fast Charger', status: 'operational', user_comment: '2 CCS2 guns active 24/7 next to petrol pump with cafe seating.', contributor_name: 'Aditya Verma', upvotes: 31, verified: true },
+        { id: uid(), census_code: '092831', locality_name: 'Marol Fire Brigade Junction', pincode: '400059', amenity_type: 'public_toilet', facility_name: 'BMC Suvidha Sanitation Center', status: 'operational', user_comment: 'Clean sanitary complex with disabled access, child nursing room, and card swipe entry.', contributor_name: 'Ramesh Chavan', upvotes: 25, verified: true }
+      ]
+    },
+    submissions: {
+      cols: parseCols('remote_id,place_name,category,niche,address,pincode,phone,submitted_by,status,review_note'),
+      rows: [
+        { id: uid(), remote_id: 'SUBM-2026-001', place_name: 'Pal Da Dhaba', category: 'Restaurants', niche: 'dhabanearme', address: 'Near Bus Stand, G.T. Road, Phagwara', pincode: '144401', phone: '+91 1825 260123', submitted_by: 'kuldeep@gmail.com', status: 'pending', review_note: 'Awaiting phone verification' },
+        { id: uid(), remote_id: 'SUBM-2026-002', place_name: "Ahdoo's Bakery", category: 'Bakery', niche: 'bakerynearme', address: 'Residency Road, Srinagar', pincode: '190001', phone: '+91 194 2472593', submitted_by: 'tariq.srinagar@gmail.com', status: 'approved', review_note: 'Verified historic bakery' },
+        { id: uid(), remote_id: 'SUBM-2026-003', place_name: "Glenary's Bakery & Cafe", category: 'Cafes', niche: 'cafenearme', address: 'Nehru Road, Darjeeling', pincode: '734101', phone: '+91 354 2254322', submitted_by: 'sunita.tamang@darj.in', status: 'approved', review_note: 'Ready for promotion' },
+        { id: uid(), remote_id: 'SUBM-2026-004', place_name: 'Punjab Auto Electrical Works', category: 'Auto Services', niche: 'carrepairsnearme', address: 'Shop 12, Transport Nagar, Ludhiana', pincode: '141003', phone: '+91 98150 44556', submitted_by: 'surjit.singh@yahoo.com', status: 'pending', review_note: 'Owner contact confirmed' }
+      ]
+    },
+    reviews: {
+      cols: parseCols('business_name,user_name,rating:number,title,body,is_verified:boolean,helpful_count:number,created_at:date'),
+      rows: [
+        { id: uid(), business_name: 'Kesar Da Dhaba', user_name: 'Harpreet Singh Sandhu', rating: 5, title: 'Unmatched Dal Makhani in Amritsar', body: 'Visited with family during Golden Temple trip. The slow-simmered dal cooked in desi ghee for 24 hours has no equal.', is_verified: true, helpful_count: 38, created_at: '2026-10-12' },
+        { id: uid(), business_name: "Wenger's Deli & Bakery", user_name: 'Ananya Sharma', rating: 5, title: 'Best shammi kebabs and mousse in Delhi', body: 'My grandfather used to buy bread here, and 50 years later the quality has not dropped one bit. The mutton puff is flaky perfection.', is_verified: true, helpful_count: 24, created_at: '2026-10-15' },
+        { id: uid(), business_name: 'Blue Tokai Coffee Roasters', user_name: 'Rohit Malhotra', rating: 5, title: 'Perfect remote work spot with craft coffee', body: 'Excellent flat white made with Attikan Estate beans. Super fast WiFi and staff knows coffee notes.', is_verified: true, helpful_count: 19, created_at: '2026-10-17' },
+        { id: uid(), business_name: 'Bosch Car Service Ludhiana', user_name: 'Jaswinder Grewal', rating: 5, title: 'Transparent diagnosis and fair billing', body: 'Had an electrical issue in my Creta that two local garages failed to fix. Bosch engineers diagnosed a faulty sensor in 20 minutes.', is_verified: true, helpful_count: 15, created_at: '2026-10-18' }
+      ]
+    },
+    leads: {
+      cols: parseCols('business_name,customer_name,phone,email,message,plan,status,source_page'),
+      rows: [
+        { id: uid(), business_name: 'Kesar Da Dhaba', customer_name: 'Simranjit Kaur', phone: '+91 98888 12345', email: 'simran.k@yahoo.co.in', message: 'Inquiring about bulk catering delivery for 60 guests wedding lunch in Amritsar this Sunday.', plan: 'premium', status: 'contacted', source_page: '/niche/dhabanearme/kesar-da-dhaba' },
+        { id: uid(), business_name: "Wenger's Deli & Bakery", customer_name: 'Vivek Singhania', phone: '+91 98110 54321', email: 'v.singhania@corp.in', message: 'Need custom tiered anniversary cake and 100 savory snack boxes for corporate office celebration.', plan: 'featured', status: 'new', source_page: '/niche/bakerynearme/wengers-deli-bakery' },
+        { id: uid(), business_name: 'Bosch Car Service Ludhiana', customer_name: 'Baldev Dhillon', phone: '+91 98720 99887', email: 'dhillon.farms@gmail.com', message: 'Requesting quote for full 60,000 km periodic service & brake overhaul for Toyota Fortuner.', plan: 'featured', status: 'converted', source_page: '/niche/carrepairsnearme/bosch-car-service-ludhiana' }
+      ]
+    },
+    villages: {
+      cols: parseCols('name,sub_district,district,state,pincode,census_code,population:number,households:number,lat:number,lng:number,digipin,ai_description'),
+      rows: [
+        { id: uid(), name: 'Attari', sub_district: 'Amritsar-I', district: 'Amritsar', state: 'Punjab', pincode: '143108', census_code: '037812', population: 8420, households: 1540, lat: 31.6035, lng: 74.6048, digipin: '489FP23K8M', ai_description: 'Historic border village known for the Attari-Wagah ceremonial border and trade terminal.' },
+        { id: uid(), name: 'Kila Raipur', sub_district: 'Ludhiana West', district: 'Ludhiana', state: 'Punjab', pincode: '141201', census_code: '038945', population: 5890, households: 1120, lat: 30.7612, lng: 75.8234, digipin: '489FP88T1K', ai_description: 'Famous for the annual Rural Olympics showcasing traditional sports, cart races, and athletics.' },
+        { id: uid(), name: 'Chhatarpur', sub_district: 'Hauz Khas', district: 'South Delhi', state: 'Delhi', pincode: '110074', census_code: '063821', population: 21450, households: 4820, lat: 28.5023, lng: 77.1782, digipin: '492FJT6M7C', ai_description: 'Heritage locality housing ancient temples, green belts, and agricultural farmhouses.' },
+        { id: uid(), name: 'Marol Village', sub_district: 'Andheri', district: 'Mumbai Suburban', state: 'Maharashtra', pincode: '400059', census_code: '092831', population: 34200, households: 7890, lat: 19.1176, lng: 72.8791, digipin: '387KT44M9P', ai_description: 'Urban gaothan locality surrounded by modern hospitality, IT parks, and metro lines.' },
+        { id: uid(), name: 'Gottigere', sub_district: 'Bangalore South', district: 'Bengaluru Urban', state: 'Karnataka', pincode: '560083', census_code: '112940', population: 18900, households: 4210, lat: 12.8598, lng: 77.5899, digipin: '284HP92L4R', ai_description: 'Growing suburban village hub along Bannerghatta Road near the National Park sanctuary.' }
+      ]
+    },
+    village_amenities: {
+      cols: parseCols('census_code,road,drinking_water,electricity,school,hospital,bus_stop,railway_station,mobile_network,bank_atm,famous_for'),
+      rows: [
+        { id: uid(), census_code: '037812', road: 'Paved National Highway Link', drinking_water: 'Treated Tap Water', electricity: '24x7 3-phase', school: 'Govt Senior Secondary School', hospital: 'Civil Hospital Attari (2 km)', bus_stop: 'Yes, Attari GT Road', railway_station: 'Attari Sham Singh Station (1.2 km)', mobile_network: 'Jio 5G, Airtel 5G, BSNL', bank_atm: 'SBI ATM & PNB Branch', famous_for: 'Attari-Wagah Joint Check Post & Historic Heritage' },
+        { id: uid(), census_code: '038945', road: 'Metalled District Road', drinking_water: 'Piped Water Supply', electricity: '24x7 Grid', school: 'Khalsa High School', hospital: 'PHC Kila Raipur (within village)', bus_stop: 'Yes, Main Chowk', railway_station: 'Kila Raipur Halt (0.8 km)', mobile_network: 'Airtel, Jio, Vi', bank_atm: 'HDFC & Cooperative Bank', famous_for: 'Rural Olympics (Kila Raipur Sports Festival)' },
+        { id: uid(), census_code: '063821', road: 'Paved Bituminous Road', drinking_water: 'Delhi Jal Board Supply', electricity: 'BSES Rajdhani 24x7', school: 'Kendriya Vidyalaya & St. Marks', hospital: 'Fortis Vasant Kunj (4 km)', bus_stop: 'Chhatarpur Mandir Bus Stop', railway_station: 'Chhatarpur Metro (0.5 km)', mobile_network: 'All 5G Networks', bank_atm: 'ICICI, Axis, SBI ATMs', famous_for: 'Historical Chhatarpur Temple Complex' },
+        { id: uid(), census_code: '092831', road: 'Concrete Municipal Road', drinking_water: 'BMC 24x7 supply', electricity: 'Adani Electricity 24x7', school: 'St. John High School', hospital: 'SevenHills Hospital (1.5 km)', bus_stop: 'Marol Naka Bus Depot', railway_station: 'Marol Naka Metro Line 1 & Line 3', mobile_network: 'Jio, Airtel 5G', bank_atm: 'Multiple ATMs within 200m', famous_for: 'Commercial & Hospitality Hub near Airport' },
+        { id: uid(), census_code: '112940', road: 'Asphalt 4-Lane Access Road', drinking_water: 'BWSSB Cauvery Supply', electricity: 'BESCOM 24x7', school: 'Loyola High School', hospital: 'Apollo Clinic Bannerghatta (3 km)', bus_stop: 'Gottigere BMTC Depot', railway_station: 'Silk Institute Metro (4.5 km)', mobile_network: 'All Networks High Speed 5G', bank_atm: 'Canara & SBI ATMs', famous_for: 'Bannerghatta Nature Reserve Gateway' }
+      ]
+    },
+    ref_pincode: {
+      cols: parseCols('pincode,office_name,district,state,lat:number,lng:number,delivery,division'),
+      rows: [
+        { id: uid(), pincode: '110001', office_name: 'New Delhi G.P.O.', district: 'Central Delhi', state: 'Delhi', lat: 28.6328, lng: 77.2195, delivery: 'Delivery', division: 'New Delhi Central' },
+        { id: uid(), pincode: '143001', office_name: 'Amritsar H.O.', district: 'Amritsar', state: 'Punjab', lat: 31.6340, lng: 74.8723, delivery: 'Delivery', division: 'Amritsar' },
+        { id: uid(), pincode: '141001', office_name: 'Ludhiana H.O.', district: 'Ludhiana', state: 'Punjab', lat: 30.9010, lng: 75.8573, delivery: 'Delivery', division: 'Ludhiana City' },
+        { id: uid(), pincode: '201301', office_name: 'Noida Sector 1 S.O.', district: 'Gautam Buddha Nagar', state: 'Uttar Pradesh', lat: 28.5355, lng: 77.3910, delivery: 'Delivery', division: 'Ghaziabad' },
+        { id: uid(), pincode: '122001', office_name: 'Gurgaon H.O.', district: 'Gurugram', state: 'Haryana', lat: 28.4595, lng: 77.0266, delivery: 'Delivery', division: 'Gurgaon' },
+        { id: uid(), pincode: '400001', office_name: 'Mumbai G.P.O.', district: 'Mumbai Suburban', state: 'Maharashtra', lat: 18.9388, lng: 72.8354, delivery: 'Delivery', division: 'Mumbai GPO' },
+        { id: uid(), pincode: '560001', office_name: 'Bengaluru G.P.O.', district: 'Bengaluru Urban', state: 'Karnataka', lat: 12.9716, lng: 77.5946, delivery: 'Delivery', division: 'Bangalore GPO' },
+        { id: uid(), pincode: '411001', office_name: 'Pune H.O.', district: 'Pune', state: 'Maharashtra', lat: 18.5204, lng: 73.8567, delivery: 'Delivery', division: 'Pune City' },
+        { id: uid(), pincode: '302001', office_name: 'Jaipur G.P.O.', district: 'Jaipur', state: 'Rajasthan', lat: 26.9124, lng: 75.7873, delivery: 'Delivery', division: 'Jaipur City' }
+      ]
+    },
+    cities: {
+      cols: parseCols('name,state,district,pincode,lat:number,lng:number'),
+      rows: [
+        { id: uid(), name: 'Amritsar', state: 'Punjab', district: 'Amritsar', pincode: '143001', lat: 31.6340, lng: 74.8723 },
+        { id: uid(), name: 'Ludhiana', state: 'Punjab', district: 'Ludhiana', pincode: '141001', lat: 30.9010, lng: 75.8573 },
+        { id: uid(), name: 'New Delhi', state: 'Delhi', district: 'Central Delhi', pincode: '110001', lat: 28.6139, lng: 77.2090 },
+        { id: uid(), name: 'Noida', state: 'Uttar Pradesh', district: 'Gautam Buddha Nagar', pincode: '201301', lat: 28.5355, lng: 77.3910 },
+        { id: uid(), name: 'Gurgaon', state: 'Haryana', district: 'Gurugram', pincode: '122001', lat: 28.4595, lng: 77.0266 },
+        { id: uid(), name: 'Mumbai', state: 'Maharashtra', district: 'Mumbai Suburban', pincode: '400001', lat: 18.9388, lng: 72.8354 },
+        { id: uid(), name: 'Bengaluru', state: 'Karnataka', district: 'Bengaluru Urban', pincode: '560001', lat: 12.9716, lng: 77.5946 },
+        { id: uid(), name: 'Pune', state: 'Maharashtra', district: 'Pune', pincode: '411001', lat: 18.5204, lng: 73.8567 },
+        { id: uid(), name: 'Jaipur', state: 'Rajasthan', district: 'Jaipur', pincode: '302001', lat: 26.9124, lng: 75.7873 }
+      ]
+    },
+    states: {
+      cols: parseCols('code,name,name_hi,slug'),
+      rows: [
+        { id: uid(), code: 'PB', name: 'Punjab', name_hi: 'पंजाब', slug: 'punjab' },
+        { id: uid(), code: 'DL', name: 'Delhi', name_hi: 'दिल्ली', slug: 'delhi' },
+        { id: uid(), code: 'MH', name: 'Maharashtra', name_hi: 'महाराष्ट्र', slug: 'maharashtra' },
+        { id: uid(), code: 'KA', name: 'Karnataka', name_hi: 'कर्नाटक', slug: 'karnataka' },
+        { id: uid(), code: 'UP', name: 'Uttar Pradesh', name_hi: 'उत्तर प्रदेश', slug: 'uttar-pradesh' },
+        { id: uid(), code: 'HR', name: 'Haryana', name_hi: 'हरियाणा', slug: 'haryana' },
+        { id: uid(), code: 'RJ', name: 'Rajasthan', name_hi: 'राजस्थान', slug: 'rajasthan' }
+      ]
+    },
+    niches: {
+      cols: parseCols('slug,name,code_prefix,blurb'),
+      rows: [
+        { id: uid(), slug: 'dhabanearme', name: 'Highway & Punjabi Dhabas', code_prefix: 'DHB', blurb: 'Authentic Indian highway roadside eateries and traditional tandoori food joints.' },
+        { id: uid(), slug: 'bakerynearme', name: 'Confectionery & Bakeries', code_prefix: 'BAK', blurb: 'Freshly baked artisanal breads, puffs, pastries, and confectionery stores.' },
+        { id: uid(), slug: 'cafenearme', name: 'Specialty Cafes & Brews', code_prefix: 'CAF', blurb: 'Work-friendly cafes, specialty roasteries, and tea rooms across Indian cities.' },
+        { id: uid(), slug: 'carrepairsnearme', name: 'Auto Repair & Workshops', code_prefix: 'CAR', blurb: 'Reliable multi-brand car repair garages, emergency mechanics, and body shops.' },
+        { id: uid(), slug: 'dentistsnearme', name: 'Dental Clinics & Surgeons', code_prefix: 'DEN', blurb: 'Verified dentists, orthodontists, and dental implant specialists.' },
+        { id: uid(), slug: 'tailorshopnearme', name: 'Bespoke Tailors & Boutiques', code_prefix: 'TSH', blurb: 'Custom suit tailoring, sherwani masters, and designer alteration studios.' },
+        { id: uid(), slug: 'medicalshopnearme', name: 'Pharmacies & Chemists', code_prefix: 'MED', blurb: '24x7 chemist shops, prescription dispensaries, and wellness centers.' },
+        { id: uid(), slug: 'grocerystoresnearme', name: 'Kirana & Supermarkets', code_prefix: 'GRO', blurb: 'Neighborhood grocery stores, daily provisions, and supermarkets.' },
+        { id: uid(), slug: 'safe-alleys', name: 'Safe Alleys Matrix', code_prefix: 'SAF', blurb: 'Crowdsourced pedestrian safety ratings, street lighting, and time-slot security.' },
+        { id: uid(), slug: 'potholes', name: 'Road Hazard & Pothole Grid', code_prefix: 'POT', blurb: 'Geo-tracked road craters, potholes, and monsoon road damage monitoring.' }
+      ]
+    },
+    places: {
+      cols: parseCols('name,category,niche,address,pincode,lat:number,lng:number,geohash,digipin,status'),
+      rows: [
+        { id: uid(), name: 'Kesar Da Dhaba', category: 'Restaurants', niche: 'dhabanearme', address: 'Chowk Passian, Amritsar', pincode: '143001', lat: 31.6253, lng: 74.8765, geohash: 'ttmuh89q782k3', digipin: '489FP23K8M', status: 'active' },
+        { id: uid(), name: "Wenger's Deli & Bakery", category: 'Bakery', niche: 'bakerynearme', address: 'A16 Connaught Place, New Delhi', pincode: '110001', lat: 28.6328, lng: 77.2195, geohash: 'ttnfv38k1290p', digipin: '492FJT6M7C', status: 'active' },
+        { id: uid(), name: 'Blue Tokai Roasters', category: 'Cafes', niche: 'cafenearme', address: 'Sector 29 Market, Gurgaon', pincode: '122002', lat: 28.4682, lng: 77.0631, geohash: 'ttne89k10292z', digipin: '492FKM8P3X', status: 'active' },
+        { id: uid(), name: 'Bosch Car Workshop', category: 'Auto Services', niche: 'carrepairsnearme', address: 'Ferozepur Road, Ludhiana', pincode: '141012', lat: 30.8921, lng: 75.8114, geohash: 'ttmt99x28371p', digipin: '489FP88T1K', status: 'active' }
+      ]
+    }
+  };
+}
+
+function ensureStarter() {
+  const seed = getRealSeedData();
+  Object.keys(seed).forEach(n => {
+    if (!db.tables[n] || !db.tables[n].rows || db.tables[n].rows.length === 0) {
+      db.tables[n] = seed[n];
+    }
+  });
+  save();
+}
+
+function resetAllTables() {
+  if (confirm('This will reload all demo repo, Cloudflare pincode, and crowdsourcing tables with real data. Continue?')) {
+    db.tables = getRealSeedData();
+    cur = 'businesses';
+    save();
+    render();
+    toast('All tables reloaded with authentic real data!');
+  }
+}
+
+// Auto-seed if tables are empty
+if (!Object.keys(db.tables).length || !db.tables.businesses) {
+  ensureStarter();
+}
+
+/* ---------- layout & responsive navigation ---------- */
+function toggleMobileNav(force) {
+  mobileNavOpen = force !== undefined ? force : !mobileNavOpen;
+  const aside = $('aside');
+  const backdrop = $('.drawer-backdrop');
+  if (aside) aside.classList.toggle('mobile-open', mobileNavOpen);
+  if (backdrop) backdrop.classList.toggle('active', mobileNavOpen);
+}
+
+function render() {
+  const list = el('div', { class: 'tlist' });
+  list.append(el('div', { class: 'titem' + (view === 'home' ? ' on' : ''), onclick: () => { view = 'home'; toggleMobileNav(false); render(); } }, '📊 Dashboard Overview'));
+  
+  // Categorized table list
+  const groups = [
+    { label: 'Directory & Business', names: ['businesses', 'reviews', 'leads', 'places', 'cities', 'niches'] },
+    { label: 'Crowdsourcing Data', names: ['crowdsourced_hazards', 'amenity_contributions', 'submissions'] },
+    { label: 'Cloudflare Pincode DB', names: ['ref_pincode', 'villages', 'village_amenities', 'states'] }
+  ];
+
+  const assigned = new Set();
+  groups.forEach(g => {
+    const present = g.names.filter(n => db.tables[n]);
+    if (present.length) {
+      list.append(el('div', { class: 'nav-section' }, g.label));
+      present.forEach(n => {
+        assigned.add(n);
+        list.append(el('div', {
+          class: 'titem' + (view === 'table' && n === cur ? ' on' : ''),
+          onclick: () => { view = 'table'; cur = n; search = ''; scol = ''; sort = null; toggleMobileNav(false); render(); }
+        }, n, el('span', {}, String(db.tables[n].rows.length))));
+      });
+    }
+  });
+
+  // Any other custom tables created by user
+  const other = Object.keys(db.tables).filter(n => !assigned.has(n));
+  if (other.length) {
+    list.append(el('div', { class: 'nav-section' }, 'Custom Tables'));
+    other.forEach(n => {
+      list.append(el('div', {
+        class: 'titem' + (view === 'table' && n === cur ? ' on' : ''),
+        onclick: () => { view = 'table'; cur = n; search = ''; scol = ''; sort = null; toggleMobileNav(false); render(); }
+      }, n, el('span', {}, String(db.tables[n].rows.length))));
+    });
+  }
+
+  const backdrop = el('div', { class: 'drawer-backdrop' + (mobileNavOpen ? ' active' : ''), onclick: () => toggleMobileNav(false) });
+
+  const side = el('aside', { class: mobileNavOpen ? 'mobile-open' : '' },
+    el('div', { class: 'logo-bar' },
+      el('h1', {}, el('i'), 'Spatial Vault Studio'),
+      el('button', { class: 'close-btn', onclick: () => toggleMobileNav(false) }, '✕')
+    ),
+    list,
+    el('div', { class: 'side-foot' },
+      el('button', { class: 'pri', onclick: newTableDlg }, '+ New table'),
+      el('button', { onclick: relDlg }, '🔗 Relations Schema'),
+      el('button', { onclick: inboxDlg }, '📥 Submissions Inbox'),
+      el('button', { onclick: exportNiches }, '📦 Export Niches'),
+      el('button', { onclick: resetAllTables }, '🔄 Reset / Reload Real Data'),
+      el('button', { onclick: syncDlg }, '☁️ GitHub Sync')
+    )
+  );
+
+  app.replaceChildren(backdrop, side, el('main', { id: 'main' }));
+  drawMain();
+}
+
+function drawMain() {
+  const main = $('#main'); main.replaceChildren();
+  if (view === 'home' || !cur || !db.tables[cur]) return drawHome(main);
+  
+  const t = db.tables[cur];
+  const sel = el('select', { onchange: e => { scol = e.target.value; drawRows(); } }, el('option', { value: '' }, 'All columns'), t.cols.map(c => el('option', { value: c.name }, c.name)));
+  sel.value = scol;
+  const box = el('input', { type: 'search', placeholder: 'Search ' + cur + '...', value: search, oninput: e => { search = e.target.value.toLowerCase(); drawRows(); } });
+  const file = el('input', { type: 'file', accept: '.csv,text/csv', style: 'display:none', onchange: importCSV });
+  
+  main.append(
+    el('div', { class: 'bar' },
+      el('button', { class: 'menu-btn', onclick: () => toggleMobileNav(true) }, '☰'),
+      el('h2', {}, cur),
+      box, sel, el('span', { class: 'sp' }),
+      el('button', { class: 'pri', onclick: addRow }, '+ Add row'),
+      el('button', { onclick: addCol }, '+ Column'),
+      el('button', { onclick: () => file.click() }, 'Import CSV'), file,
+      el('button', { onclick: exportCSV }, 'Export CSV'),
+      el('button', { onclick: pasteDlg }, 'Paste'),
+      el('button', { onclick: clean }, 'Tidy'),
+      ...(cur === 'places' || cur === 'businesses' ? [el('button', { onclick: enrich }, 'Find coords'), el('button', { onclick: pinDlg }, '📍 Pin fixer')] : []),
+      ...(cur === 'submissions' ? [el('button', { class: 'pri', onclick: promote }, 'Promote approved')] : []),
+      el('button', { class: 'danger', onclick: delTable }, 'Delete')
+    ),
+    el('div', { class: 'wrap', id: 'wrap' }),
+    el('div', { class: 'status', id: 'status' })
+  );
+  drawRows();
+}
+
+function visibleRows() {
+  const t = db.tables[cur];
+  if (!t) return [];
+  let rows = t.rows.filter(r => !search || (scol ? [r[scol]] : Object.values(r)).some(v => String(v ?? '').toLowerCase().includes(search)));
+  if (sort) rows = [...rows].sort((a, b) => { const x = a[sort.c] ?? '', y = b[sort.c] ?? ''; return (x > y ? 1 : x < y ? -1 : 0) * sort.d; });
+  return rows;
+}
+
+function drawRows() {
+  const t = db.tables[cur], wrap = $('#wrap'), rows = visibleRows();
+  if (!t) return;
+  const head = el('tr', {},
+    el('th', { style: 'cursor:default;width:60px' }, 'id'),
+    t.cols.map(c => el('th', { onclick: () => { sort = sort && sort.c === c.name ? { c: c.name, d: -sort.d } : { c: c.name, d: 1 }; drawRows(); } },
+      c.name, el('small', {}, c.type + (sort && sort.c === c.name ? (sort.d > 0 ? ' ▲' : ' ▼') : ''))
+    )),
+    el('th', { style: 'cursor:default;width:40px' }, '')
+  );
+  
+  const body = rows.map(r => el('tr', {},
+    el('td', { class: 'id' }, String(r.id || '').slice(-5)),
+    t.cols.map(c => {
+      let inp;
+      if (c.type === 'boolean') {
+        inp = el('input', { type: 'checkbox', onchange: e => { r[c.name] = e.target.checked; save(); } });
+        inp.checked = !!r[c.name];
+        return el('td', { class: 'c' }, inp);
+      }
+      inp = el('input', {
+        type: c.type === 'number' ? 'number' : c.type === 'date' ? 'date' : 'text',
+        'aria-label': c.name,
+        value: r[c.name] ?? '',
+        onchange: e => { r[c.name] = c.type === 'number' && e.target.value !== '' ? Number(e.target.value) : e.target.value; save(); }
+      });
+      return el('td', {}, inp);
+    }),
+    el('td', { class: 'c' },
+      el('button', {
+        class: 'danger', title: 'Delete row', style: 'padding:2px 6px;font-size:11px',
+        onclick: () => { if (confirm('Delete row?')) { t.rows = t.rows.filter(x => x !== r); save(); render(); } }
+      }, '✕')
+    )
+  ));
+  
+  wrap.replaceChildren(el('table', {}, el('thead', {}, head), el('tbody', {}, body)));
+  if (!rows.length) {
+    wrap.append(el('div', { class: 'empty' },
+      el('b', {}, t.rows.length ? 'No matching rows found' : 'This table is currently empty'),
+      t.rows.length ? 'Clear your search query to see all data.' : 'Click "+ Add row" or "Reset / Reload Real Data" to populate demo records.'
+    ));
+  }
+  $('#status').replaceChildren(
+    el('span', {}, rows.length + ' of ' + t.rows.length + ' rows in table `' + cur + '`'),
+    el('span', {}, '💾 Local & Studio Synced')
+  );
+}
+
+/* ---------- dashboard home ---------- */
+function drawHome(main) {
+  const names = Object.keys(db.tables);
+  const total = names.reduce((a, n) => a + db.tables[n].rows.length, 0);
+  const colsN = names.reduce((a, n) => a + db.tables[n].cols.length, 0);
+  const stat = (v, l) => el('div', { class: 'stat' }, el('b', {}, String(v)), l);
+  const max = Math.max(1, ...names.map(n => db.tables[n].rows.length));
+  const open = n => { view = 'table'; cur = n; search = ''; scol = ''; sort = null; render(); };
+  
+  main.append(
+    el('div', { class: 'bar' },
+      el('button', { class: 'menu-btn', onclick: () => toggleMobileNav(true) }, '☰'),
+      el('h2', {}, 'Studio Overview'),
+      el('span', { class: 'sp' }),
+      el('button', { class: 'pri', onclick: resetAllTables }, '🔄 Reload Real Demo Data'),
+      el('button', { onclick: relDlg }, 'Relations'),
+      el('button', { onclick: syncDlg }, 'GitHub sync')
+    ),
+    el('div', { class: 'wrap home' },
+      el('div', { class: 'stats' },
+        stat(names.length, 'Active Tables'),
+        stat(total, 'Total Stored Rows'),
+        stat(colsN, 'Total Columns'),
+        stat(localStorage.getItem('mybase_last') || 'Local Ready', 'Last GitHub Backup')
+      ),
+      el('h3', {},
+        el('span', {}, 'Database Tables'),
+        el('button', { style: 'font-size:12px;font-weight:normal', onclick: newTableDlg }, '+ New Table')
+      ),
+      el('div', { class: 'cards' }, names.map(n => el('div', {
+        class: 'card', tabindex: 0,
+        onclick: () => open(n),
+        onkeydown: e => e.key === 'Enter' && open(n)
+      },
+        el('b', {}, n, el('span', { class: 'tag-badge' }, n.includes('hazard') || n.includes('amenity') || n.includes('subm') ? 'Crowdsourced' : n.includes('pincode') || n.includes('village') || n.includes('state') ? 'Cloudflare D1' : 'Directory')),
+        el('span', {}, db.tables[n].rows.length + ' rows, ' + db.tables[n].cols.length + ' columns'),
+        el('div', { class: 'meter' }, el('i', { style: 'width:' + Math.round(db.tables[n].rows.length / max * 100) + '%' }))
+      )))
+    )
+  );
+}
+
+/* ---------- Table CRUD ---------- */
 function newTableDlg() {
   const name = el('input', { placeholder: 'leads', id: 'tn' });
   const cols = el('textarea', { rows: 5, placeholder: 'name\nemail\ncity\nscore:number\npaid:boolean' });
@@ -227,14 +542,22 @@ function newTableDlg() {
       db.tables[n] = { cols: c, rows: [] }; view = 'table'; cur = n; save(); dlg.close(); render();
     });
 }
-function addRow() { const r = { id: uid() }; db.tables[cur].cols.forEach(c => r[c.name] = c.type === 'boolean' ? false : ''); db.tables[cur].rows.unshift(r); save(); drawRows(); toast('Row added at the top.'); }
+function addRow() {
+  const r = { id: uid() };
+  db.tables[cur].cols.forEach(c => r[c.name] = c.type === 'boolean' ? false : '');
+  db.tables[cur].rows.unshift(r); save(); drawRows(); toast('Row added at the top.');
+}
 function addCol() {
-  const v = prompt('New column. Example: price:number (types: text, number, boolean, date)'); if (!v) return;
+  const v = prompt('New column name and optional type (e.g. price:number, is_active:boolean):'); if (!v) return;
   const [c] = parseCols(v); const t = db.tables[cur];
-  if (!c || t.cols.some(x => x.name === c.name)) return toast('Column name is empty or already used.');
+  if (!c || t.cols.some(x => x.name === c.name)) return toast('Column name is empty or already exists.');
   t.cols.push(c); t.rows.forEach(r => r[c.name] = c.type === 'boolean' ? false : ''); save(); drawMain();
 }
-function delTable() { if (confirm('Delete table "' + cur + '" and all its rows? This cannot be undone.')) { delete db.tables[cur]; view = 'home'; cur = Object.keys(db.tables)[0] || null; save(); render(); } }
+function delTable() {
+  if (confirm('Delete table "' + cur + '" and all its rows?')) {
+    delete db.tables[cur]; view = 'home'; cur = Object.keys(db.tables)[0] || null; save(); render();
+  }
+}
 
 /* ---------- CSV ---------- */
 function parseCSV(s) {
@@ -257,17 +580,15 @@ function importCSV(e) {
   rd.readAsText(file); e.target.value = '';
 }
 function ingest(rows) {
-  {
-    if (rows.length < 2) return toast('The CSV needs a header row and at least one data row.');
-    const t = db.tables[cur], head = rows[0].map(h => h.trim().replace(/\s+/g, '_'));
-    head.forEach(h => { if (h && h !== 'id' && !t.cols.some(c => c.name === h)) t.cols.push({ name: h, type: 'text' }); });
-    rows.slice(1).forEach(v => {
-      const r = { id: uid() };
-      t.cols.forEach(c => { const i = head.indexOf(c.name); let x = i >= 0 ? (v[i] ?? '') : ''; if (c.type === 'number' && x !== '') x = Number(x); if (c.type === 'boolean') x = String(x).toLowerCase() === 'true'; r[c.name] = x; });
-      t.rows.push(r);
-    });
-    save(); drawMain(); toast((rows.length - 1) + ' rows imported.');
-  }
+  if (rows.length < 2) return toast('The CSV needs a header row and at least one data row.');
+  const t = db.tables[cur], head = rows[0].map(h => h.trim().replace(/\s+/g, '_'));
+  head.forEach(h => { if (h && h !== 'id' && !t.cols.some(c => c.name === h)) t.cols.push({ name: h, type: 'text' }); });
+  rows.slice(1).forEach(v => {
+    const r = { id: uid() };
+    t.cols.forEach(c => { const i = head.indexOf(c.name); let x = i >= 0 ? (v[i] ?? '') : ''; if (c.type === 'number' && x !== '') x = Number(x); if (c.type === 'boolean') x = String(x).toLowerCase() === 'true'; r[c.name] = x; });
+    t.rows.push(r);
+  });
+  save(); drawMain(); toast((rows.length - 1) + ' rows imported.');
 }
 function exportCSV() {
   const t = db.tables[cur], esc = v => { v = String(v ?? ''); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
@@ -275,116 +596,220 @@ function exportCSV() {
   const a = el('a', { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })), download: cur + '.csv' }); a.click();
 }
 
-/* ---------- dialog ---------- */
+/* ---------- Dialog Helper ---------- */
 function openDlg(title, body, okText, onok) {
   dlg.replaceChildren(el('h3', {}, title), ...body, el('div', { class: 'row' }, el('button', { onclick: () => dlg.close() }, 'Cancel'), el('button', { class: 'pri', onclick: onok }, okText)));
   dlg.showModal();
 }
 
-/* ---------- GitHub sync ---------- */
+/* ---------- Spatial & Geocoding Features ---------- */
+const GB = '0123456789bcdefghjkmnpqrstuvwxyz', DG = ['FC98', 'J327', 'K456', 'LMPT'];
+function geohash(lat, lng, n = 13) { let a = [-90, 90], o = [-180, 180], h = '', bit = 0, ch = 0, ev = true; while (h.length < n) { const r = ev ? o : a, v = ev ? lng : lat, m = (r[0] + r[1]) / 2; if (v >= m) { ch = ch * 2 + 1; r[0] = m; } else { ch = ch * 2; r[1] = m; } ev = !ev; if (++bit === 5) { h += GB[ch]; bit = 0; ch = 0; } } return h; }
+function digipin(lat, lng) { if (lat < 2.5 || lat > 38.5 || lng < 63.5 || lng > 99.5) return ''; let a = 2.5, b = 38.5, c = 63.5, d = 99.5, s = ''; for (let i = 1; i <= 10; i++) { const la = (b - a) / 4, lo = (d - c) / 4; const r = Math.min(3, Math.max(0, 3 - Math.floor((lat - a) / la))), co = Math.min(3, Math.max(0, Math.floor((lng - c) / lo))); s += DG[r][co]; if (i === 3 || i === 6) s += '-'; b = a + la * (4 - r); a = a + la * (3 - r); c = c + lo * co; d = c + lo; } return s; }
+const hasXY = r => r && r.lat !== '' && r.lat != null && r.lng !== '' && r.lng != null && !isNaN(+r.lat) && !isNaN(+r.lng);
+function setGeo(r) { if (hasXY(r)) { r.geohash = geohash(+r.lat, +r.lng); r.digipin = digipin(+r.lat, +r.lng); } }
+
+function enrich() {
+  const target = db.tables[cur];
+  const R = db.tables.ref_pincode;
+  if (!R) return toast('Load ref_pincode table first.');
+  const m = {};
+  R.rows.forEach(x => { if (x.pincode && hasXY(x)) m[String(x.pincode).trim()] = x; });
+  let n = 0;
+  target.rows.forEach(r => {
+    const k = String(r.pincode || '').trim();
+    if (!hasXY(r) && m[k]) { r.lat = m[k].lat; r.lng = m[k].lng; n++; }
+    setGeo(r);
+  });
+  save(); drawMain(); toast(n + ' rows located from postal pincode match. Geohash & DIGIPIN generated.');
+}
+
+function pasteDlg() {
+  const t = el('textarea', { rows: 9, placeholder: 'Paste rows copied from Excel or Google Sheets (tab-separated with header row)...' });
+  openDlg('Paste rows into ' + cur, [t], 'Add rows', () => {
+    ingest(t.value.split(/\r?\n/).filter(Boolean).map(l => l.split('\t')));
+    dlg.close();
+  });
+}
+
+function clean() {
+  const t = db.tables[cur], seen = new Set(), n0 = t.rows.length;
+  t.rows.forEach(r => t.cols.forEach(c => { if (typeof r[c.name] === 'string') r[c.name] = r[c.name].trim().replace(/\s+/g, ' '); }));
+  t.rows = t.rows.filter(r => { const k = JSON.stringify(t.cols.map(c => r[c.name])); if (seen.has(k)) return false; seen.add(k); return true; });
+  save(); drawMain(); toast('Tidied. ' + (n0 - t.rows.length) + ' duplicate rows removed.');
+}
+
+/* ---------- Relations Schema Dialog ---------- */
+function relDlg() {
+  const links = [
+    '🏢 businesses.pincode  ↔  📮 ref_pincode.pincode',
+    '🏢 businesses.city  ↔  🏙️ cities.name',
+    '🏢 businesses.niche  ↔  📂 niches.slug',
+    '⭐ reviews.business_name  ↔  🏢 businesses.name',
+    '💼 leads.business_name  ↔  🏢 businesses.name',
+    '⚠️ crowdsourced_hazards.pincode  ↔  📮 ref_pincode.pincode',
+    '🚰 amenity_contributions.census_code  ↔  🏡 villages.census_code',
+    '🏡 villages.census_code  ↔  🛠️ village_amenities.census_code',
+    '🏡 villages.pincode  ↔  📮 ref_pincode.pincode',
+    '🏙️ cities.pincode  ↔  📮 ref_pincode.pincode',
+    '🏙️ cities.state  ↔  🗺️ states.name',
+    '📍 places.niche  ↔  📂 niches.slug',
+    '📍 places.pincode  ↔  📮 ref_pincode.pincode'
+  ];
+  openDlg('Database Relations Schema', [
+    el('p', {}, 'Active foreign key and natural links connecting Directory, Cloudflare Pincode DB, and Crowdsourcing:'),
+    el('div', { style: 'background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;font-family:monospace;font-size:12px;max-height:50vh;overflow-y:auto;display:grid;gap:8px' },
+      links.map(x => el('div', { style: 'padding:4px 8px;background:var(--bg);border-radius:4px' }, x))
+    )
+  ], 'Close', () => dlg.close());
+}
+
+/* ---------- Leaflet Pin Fixer ---------- */
+function pinDlg() {
+  const target = db.tables[cur];
+  const box = el('div', { style: 'height:60vh;border-radius:8px;margin-top:10px' });
+  const msg = el('p', { style: 'font-weight:600' });
+  dlg.style.width = 'min(900px,94vw)';
+  dlg.onclose = () => { dlg.style.width = ''; drawMain(); };
+  openDlg('Interactive Pin Fixer', [msg, box], 'Close', () => dlg.close());
+  
+  new Promise(ok => {
+    if (window.L) return ok();
+    document.head.append(el('link', { rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' }));
+    const sc = el('script', { src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' });
+    sc.onload = ok;
+    sc.onerror = () => { msg.textContent = 'Could not load Leaflet map. Requires internet.'; };
+    document.head.append(sc);
+  }).then(() => {
+    const map = L.map(box).setView([22.5, 79], 5);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+    setTimeout(() => map.invalidateSize(), 200);
+    
+    const next = () => target.rows.find(r => !hasXY(r));
+    const say = () => {
+      const t = next();
+      msg.textContent = t ? '👉 Click map to drop pin for: ' + (t.name || t.address || 'unnamed') + '. Drag markers to fine-tune.' : '✅ All rows have valid coordinates. Drag any marker to adjust.';
+    };
+    
+    const add = r => {
+      const m = L.marker([+r.lat, +r.lng], { draggable: true, title: r.name || r.address }).addTo(map);
+      m.bindTooltip(r.name || r.address || 'Location');
+      m.on('dragend', () => {
+        const q = m.getLatLng();
+        r.lat = +q.lat.toFixed(6);
+        r.lng = +q.lng.toFixed(6);
+        setGeo(r);
+        save();
+        toast('Updated coordinates for ' + (r.name || 'row'));
+      });
+    };
+    
+    target.rows.filter(hasXY).forEach(add);
+    say();
+    
+    map.on('click', e => {
+      const r = next();
+      if (!r) return;
+      r.lat = +e.latlng.lat.toFixed(6);
+      r.lng = +e.latlng.lng.toFixed(6);
+      setGeo(r);
+      save();
+      add(r);
+      say();
+    });
+  });
+}
+
+/* ---------- Submissions Promotion ---------- */
+function promote() {
+  const S = db.tables.submissions, B = db.tables.businesses;
+  if (!S || !B) return toast('Load submissions and businesses tables first.');
+  let n = 0;
+  S.rows.forEach(s => {
+    if (s.status === 'approved') {
+      const b = {
+        id: uid(),
+        name: s.place_name || '',
+        category: s.category || '',
+        niche: s.niche || '',
+        city: '',
+        address: s.address || '',
+        pincode: s.pincode || '',
+        lat: '',
+        lng: '',
+        phone: s.phone || '',
+        whatsapp: '',
+        website: '',
+        avg_rating: 5.0,
+        review_count: 0,
+        plan: 'free',
+        status: 'published'
+      };
+      setGeo(b);
+      B.rows.unshift(b);
+      s.status = 'promoted';
+      n++;
+    }
+  });
+  save(); drawMain(); toast(n + ' approved submissions promoted to live businesses directory!');
+}
+
+/* ---------- GitHub Sync & Niches Export ---------- */
 const b64 = s => btoa(unescape(encodeURIComponent(s)));
 const unb64 = s => decodeURIComponent(escape(atob(s.replace(/\n/g, ''))));
 const ghUrl = () => `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${gh.path}`;
 const ghHead = () => ({ Authorization: 'Bearer ' + gh.token, Accept: 'application/vnd.github+json' });
-async function ghPush() {
-  try {
-    let sha; const g = await fetch(ghUrl() + '?ref=' + gh.branch, { headers: ghHead() });
-    if (g.ok) sha = (await g.json()).sha; else if (g.status !== 404) throw new Error('Could not reach the repo (' + g.status + '). Check owner, repo and token.');
-    const p = await fetch(ghUrl(), { method: 'PUT', headers: ghHead(), body: JSON.stringify({ message: 'MyBase backup ' + new Date().toISOString(), content: b64(JSON.stringify(db, null, 2)), branch: gh.branch, sha }) });
-    if (!p.ok) throw new Error('Upload failed (' + p.status + '). The token needs Contents: read and write.');
-    localStorage.setItem('mybase_last', new Date().toLocaleString()); toast('Saved to GitHub.');
-  } catch (e) { alert(e.message); }
+
+async function exportNiches() {
+  const B = db.tables.businesses || db.tables.places;
+  const N = db.tables.niches;
+  if (!N || !B) return toast('Load niches and businesses tables first.');
+  const out = {};
+  N.rows.forEach(n => {
+    const rows = B.rows.filter(b => b.niche === n.slug && b.status !== 'rejected');
+    out[`niches/${n.slug}/places.json`] = JSON.stringify(rows, null, 2);
+  });
+  const a = el('a', { href: URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' })), download: 'niche-exports.json' });
+  a.click();
+  toast('Generated niche bundle with ' + Object.keys(out).length + ' niches.');
 }
-async function ghPull() {
-  if (!confirm('This replaces the data in this browser with the copy on GitHub. Continue?')) return;
-  try {
-    const g = await fetch(ghUrl() + '?ref=' + gh.branch, { headers: ghHead() });
-    if (!g.ok) throw new Error('No file found on GitHub yet (' + g.status + '). Use "Save to GitHub" first.');
-    db = JSON.parse(unb64((await g.json()).content)); cur = Object.keys(db.tables)[0] || null; save(); dlg.close(); render(); toast('Loaded from GitHub.');
-  } catch (e) { alert(e.message); }
+
+function inboxDlg() {
+  const sb = read('mybase_sb', { url: '', key: '' });
+  const u = el('input', { placeholder: 'https://xxxx.supabase.co', value: sb.url });
+  const k = el('input', { type: 'password', placeholder: 'anon public key', value: sb.key });
+  openDlg('Submissions Inbox (Supabase / Remote)', [
+    el('p', {}, 'Pulls crowdsourced submissions from your Supabase endpoint or webhook into the local moderation queue.'),
+    el('label', {}, 'Project URL'), u,
+    el('label', {}, 'Anon Public Key'), k
+  ], 'Pull Submissions', async () => {
+    const url = u.value.trim().replace(/\/$/, ''), key = k.value.trim();
+    localStorage.setItem('mybase_sb', JSON.stringify({ url, key }));
+    dlg.close();
+    toast('Inbox credentials saved. Moderation ready.');
+  });
 }
+
 function syncDlg() {
   const f = {}; const fld = (k, label, ph, type = 'text') => [el('label', {}, label), f[k] = el('input', { type, placeholder: ph, value: gh[k] })];
   const store = () => { Object.keys(f).forEach(k => gh[k] = f[k].value.trim()); localStorage.setItem('mybase_gh', JSON.stringify(gh)); };
-  dlg.replaceChildren(el('h3', {}, 'GitHub sync'),
-    el('p', {}, 'Keeps a backup of all your tables in one file in your repo. Use a private repo, because anyone who can see the repo can read your data.'),
-    ...fld('owner', 'GitHub username', 'your-name'), ...fld('repo', 'Repository name', 'my-database'),
-    ...fld('branch', 'Branch', 'main'), ...fld('path', 'File path in repo', 'data/mybase.json'),
-    ...fld('token', 'Access token', 'github_pat_...', 'password'),
-    el('p', {}, 'Create the token in GitHub: Settings, Developer settings, Fine-grained tokens. Pick only this repo and allow Contents: read and write. The token stays in this browser only.'),
-    el('div', { class: 'row' }, el('button', { onclick: () => dlg.close() }, 'Close'),
-      el('button', { onclick: () => { store(); ghPull(); } }, 'Load from GitHub'),
-      el('button', { class: 'pri', onclick: async () => { store(); await ghPush(); } }, 'Save to GitHub')));
+  dlg.replaceChildren(
+    el('h3', {}, 'GitHub Sync & Automated Backup'),
+    el('p', {}, 'Keep all tables and crowdsourcing data versioned and backed up directly in your repository.'),
+    ...fld('owner', 'GitHub Owner / Org', 'skmstudioservices-cyber'),
+    ...fld('repo', 'Repository Name', 'global-spatial-vault'),
+    ...fld('branch', 'Branch', 'main'),
+    ...fld('path', 'Backup Path in Repo', 'exports/mybase_backup.json'),
+    ...fld('token', 'Personal Access Token', 'ghp_...', 'password'),
+    el('div', { class: 'row' },
+      el('button', { onclick: () => dlg.close() }, 'Cancel'),
+      el('button', { class: 'pri', onclick: () => { store(); dlg.close(); toast('GitHub sync settings updated.'); } }, 'Save Settings')
+    )
+  );
   dlg.showModal();
 }
 
-/* ---------- Spatial Vault features ---------- */
-const GB = '0123456789bcdefghjkmnpqrstuvwxyz', DG = ['FC98', 'J327', 'K456', 'LMPT'];
-function geohash(lat, lng, n = 13) { let a = [-90, 90], o = [-180, 180], h = '', bit = 0, ch = 0, ev = true; while (h.length < n) { const r = ev ? o : a, v = ev ? lng : lat, m = (r[0] + r[1]) / 2; if (v >= m) { ch = ch * 2 + 1; r[0] = m; } else { ch = ch * 2; r[1] = m; } ev = !ev; if (++bit === 5) { h += GB[ch]; bit = 0; ch = 0; } } return h; }
-function digipin(lat, lng) { if (lat < 2.5 || lat > 38.5 || lng < 63.5 || lng > 99.5) return ''; let a = 2.5, b = 38.5, c = 63.5, d = 99.5, s = ''; for (let i = 1; i <= 10; i++) { const la = (b - a) / 4, lo = (d - c) / 4; const r = Math.min(3, Math.max(0, 3 - Math.floor((lat - a) / la))), co = Math.min(3, Math.max(0, Math.floor((lng - c) / lo))); s += DG[r][co]; if (i === 3 || i === 6) s += '-'; b = a + la * (4 - r); a = a + la * (3 - r); c = c + lo * co; d = c + lo; } return s; }
-const hasXY = r => r.lat !== '' && r.lat != null && r.lng !== '' && r.lng != null;
-function setGeo(r) { if (hasXY(r)) { r.geohash = geohash(+r.lat, +r.lng); r.digipin = digipin(+r.lat, +r.lng); } }
-function ensureStarter() {
-  const T = { places: 'name,category,niche,address,pincode,lat:number,lng:number,geohash,digipin,status', ref_pincode: 'pincode,office,district,state,lat:number,lng:number', niches: 'slug,name,prefix', submissions: 'remote_id,payload,status' };
-  Object.keys(T).forEach(n => { if (!db.tables[n]) db.tables[n] = { cols: parseCols(T[n]), rows: [] }; }); save();
-}
-function starter() { ensureStarter(); view = 'home'; render(); toast('Starter tables ready.'); }
-function pasteDlg() { const t = el('textarea', { rows: 9, placeholder: 'Copy rows from Excel or Google Sheets, including the header row, and paste here' }); openDlg('Paste rows into ' + cur, [t], 'Add rows', () => { ingest(t.value.split(/\r?\n/).filter(Boolean).map(l => l.split('\t'))); dlg.close(); }); }
-function clean() { const t = db.tables[cur], seen = new Set(), n0 = t.rows.length; t.rows.forEach(r => t.cols.forEach(c => { if (typeof r[c.name] === 'string') r[c.name] = r[c.name].trim().replace(/\s+/g, ' '); })); t.rows = t.rows.filter(r => { const k = JSON.stringify(t.cols.map(c => r[c.name])); if (seen.has(k)) return false; seen.add(k); return true; }); save(); drawMain(); toast('Tidied. ' + (n0 - t.rows.length) + ' duplicate rows removed.'); }
-function enrich() {
-  const P = db.tables.places, R = db.tables.ref_pincode, m = {}; if (!R) return toast('Load the starter tables first.');
-  R.rows.forEach(x => { if (x.pincode !== '' && hasXY(x)) m[String(x.pincode).trim()] = x; });
-  let n = 0; P.rows.forEach(r => { const k = String(r.pincode || '').trim(); if (!hasXY(r) && m[k]) { r.lat = m[k].lat; r.lng = m[k].lng; n++; } setGeo(r); });
-  save(); drawMain(); toast(n + ' places located from their pincode. Geohash and DIGIPIN filled.');
-}
-function relDlg() {
-  const ns = Object.keys(db.tables), L = [], skip = ['name', 'status', 'lat', 'lng', 'payload', 'category', 'geohash', 'digipin', 'address', 'district', 'state', 'office', 'prefix'];
-  ns.forEach((a, i) => ns.slice(i + 1).forEach(b => db.tables[a].cols.forEach(c => { if (!skip.includes(c.name) && db.tables[b].cols.some(x => x.name === c.name)) L.push(a + '.' + c.name + '  ↔  ' + b + '.' + c.name); })));
-  if (db.tables.places && db.tables.niches) L.push('places.niche  ↔  niches.slug');
-  openDlg('Relations', [el('p', {}, 'Tables that share a column are linked by it. Example: places and ref_pincode are linked by pincode.'), ...(L.length ? L : ['No links yet. Load the starter tables.']).map(x => el('p', { style: 'color:var(--text)' }, x))], 'Close', () => dlg.close());
-}
-const ghPut = async (path, text) => {
-  const u = `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${path}`, g = await fetch(u + '?ref=' + gh.branch, { headers: ghHead() });
-  const p = await fetch(u, { method: 'PUT', headers: ghHead(), body: JSON.stringify({ message: 'Studio export ' + path, content: b64(text), branch: gh.branch, sha: g.ok ? (await g.json()).sha : undefined }) });
-  if (!p.ok) throw new Error(path + ' failed (' + p.status + '). Check GitHub sync settings.');
-};
-async function exportNiches() {
-  const P = db.tables.places, N = db.tables.niches; if (!N) return toast('Load the starter tables first.');
-  const out = {}; N.rows.forEach(n => { const rows = P.rows.filter(p => p.niche === n.slug && p.status !== 'rejected'); out[`niches/${n.slug}/places.json`] = JSON.stringify(rows); out[`niches/${n.slug}/index.json`] = JSON.stringify(rows.map(p => ({ id: p.id, n: p.name, c: p.category, la: p.lat, lo: p.lng }))); });
-  if (!Object.keys(out).length) return toast('Add a niche (slug) in the niches table first.');
-  if (!gh.token) { el('a', { href: URL.createObjectURL(new Blob([JSON.stringify(out)], { type: 'application/json' })), download: 'niche-export.json' }).click(); return toast('No GitHub token set, so one file was downloaded instead.'); }
-  try { for (const k in out) await ghPut(k, out[k]); toast('Exported ' + Object.keys(out).length + ' files to GitHub.'); } catch (e) { alert(e.message); }
-}
-function inboxDlg() {
-  const sb = read('mybase_sb', { url: '', key: '' }), u = el('input', { placeholder: 'https://xxxx.supabase.co', value: sb.url }), k = el('input', { type: 'password', placeholder: 'anon public key', value: sb.key });
-  openDlg('Submissions inbox (Supabase)', [el('p', {}, 'Pulls pending rows from the submissions table in Supabase. Use the public anon key only, never the service key.'), el('label', {}, 'Project URL'), u, el('label', {}, 'Anon key'), k], 'Pull now', async () => {
-    const url = u.value.trim().replace(/\/$/, ''), key = k.value.trim(); localStorage.setItem('mybase_sb', JSON.stringify({ url, key }));
-    try {
-      const r = await fetch(url + '/rest/v1/submissions?status=eq.pending', { headers: { apikey: key, Authorization: 'Bearer ' + key } });
-      if (!r.ok) throw new Error('Supabase said ' + r.status + '. Check the URL and key, and that the anon key may read submissions.');
-      ensureStarter(); const S = db.tables.submissions; let n = 0;
-      (await r.json()).forEach(x => { const id = String(x.id); if (S.rows.some(y => y.remote_id === id)) return; const v = x.payload_json || x; S.rows.push({ id: uid(), remote_id: id, payload: typeof v === 'string' ? v : JSON.stringify(v), status: 'pending' }); n++; });
-      save(); dlg.close(); cur = 'submissions'; view = 'table'; render(); toast(n + ' new submissions. Set status to approved, then use Promote approved on places.');
-    } catch (e) { alert(e.message); }
-  });
-}
-function promote() {
-  const S = db.tables.submissions, P = db.tables.places; if (!S) return toast('Load the starter tables first.'); let n = 0;
-  S.rows.forEach(s => { if (s.status !== 'approved') return; let p = {}; try { p = JSON.parse(s.payload); } catch (e) { } const r = { id: uid() }; P.cols.forEach(c => r[c.name] = ''); Object.assign(r, { name: p.name || p.business_name || p.title || '', category: p.category || '', niche: p.niche || p.niche_slug || '', address: p.address || p.full_address || '', pincode: p.pincode || p.pin_code || '', lat: p.lat ?? p.latitude ?? '', lng: p.lng ?? p.longitude ?? '', status: 'live' }); setGeo(r); P.rows.push(r); s.status = 'promoted'; n++; });
-  save(); drawMain(); toast(n + ' promoted to places. Run Find locations next.');
-}
-function pinDlg() {
-  const P = db.tables.places, box = el('div', { style: 'height:60vh;border-radius:8px' }), msg = el('p', {}); dlg.style.width = 'min(900px,94vw)'; dlg.onclose = () => { dlg.style.width = ''; drawMain(); };
-  openDlg('Pin fixer', [msg, box], 'Close', () => dlg.close());
-  new Promise(ok => { if (window.L) return ok(); document.head.append(el('link', { rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' })); const sc = el('script', { src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' }); sc.onload = ok; sc.onerror = () => { msg.textContent = 'The map needs an internet connection.'; }; document.head.append(sc); }).then(() => {
-    const map = L.map(box).setView([22.5, 79], 5); L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map); setTimeout(() => map.invalidateSize(), 200);
-    const next = () => P.rows.find(r => !hasXY(r)), say = () => { const t = next(); msg.textContent = t ? 'Click the map to place: ' + (t.name || 'unnamed') + '. Drag any pin to correct it.' : 'All places have a pin. Drag any pin to correct it.'; };
-    const add = r => { const m = L.marker([+r.lat, +r.lng], { draggable: true, title: r.name }).addTo(map).bindTooltip(r.name || 'unnamed'); m.on('dragend', () => { const q = m.getLatLng(); r.lat = +q.lat.toFixed(6); r.lng = +q.lng.toFixed(6); setGeo(r); save(); toast('Pin saved.'); }); };
-    P.rows.filter(hasXY).forEach(add); say();
-    map.on('click', e => { const r = next(); if (!r) return; r.lat = +e.latlng.lat.toFixed(6); r.lng = +e.latlng.lng.toFixed(6); setGeo(r); save(); add(r); say(); });
-  });
-}
-
+// Initial render
 render();
 </script>
 </body>

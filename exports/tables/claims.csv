@@ -1,0 +1,4 @@
+id,business_id,business_name,claimant_name,claimant_phone,claimant_email,business_role,id_proof_url,status,created_at
+1,1,Kesar Da Dhaba,Navpreet Singh,+91 98141 23456,navpreet@kesardadhaba.in,Owner (4th Generation),https://storage.vault.local/claims/gst_kesar.pdf,verified,2026-10-20 13:08:12
+2,2,Wenger's Deli & Bakery,Charanjeet Singh,+91 98102 33403,mgmt@wengers.co.in,General Manager,https://storage.vault.local/claims/wengers_auth.pdf,verified,2026-10-20 13:08:12
+3,4,Blue Tokai Coffee Roasters,Tarun Nayyar,+91 98214 55012,tarun@bluetokaicoffee.com,Regional Operations Lead,https://storage.vault.local/claims/bt_emp_id.pdf,pending,2026-10-20 13:08:12

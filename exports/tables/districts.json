@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "state_id": 1,
+    "code": "PB-ASR",
+    "name": "Amritsar",
+    "slug": "amritsar"
+  },
+  {
+    "id": 2,
+    "state_id": 1,
+    "code": "PB-LDH",
+    "name": "Ludhiana",
+    "slug": "ludhiana"
+  },
+  {
+    "id": 3,
+    "state_id": 2,
+    "code": "DL-CD",
+    "name": "Central Delhi",
+    "slug": "central-delhi"
+  },
+  {
+    "id": 4,
+    "state_id": 2,
+    "code": "DL-SD",
+    "name": "South Delhi",
+    "slug": "south-delhi"
+  },
+  {
+    "id": 5,
+    "state_id": 3,
+    "code": "MH-MUM",
+    "name": "Mumbai Suburban",
+    "slug": "mumbai-suburban"
+  },
+  {
+    "id": 6,
+    "state_id": 3,
+    "code": "MH-PUN",
+    "name": "Pune",
+    "slug": "pune"
+  },
+  {
+    "id": 7,
+    "state_id": 4,
+    "code": "KA-BLR",
+    "name": "Bengaluru Urban",
+    "slug": "bengaluru-urban"
+  },
+  {
+    "id": 8,
+    "state_id": 5,
+    "code": "UP-GBN",
+    "name": "Gautam Buddha Nagar",
+    "slug": "gautam-buddha-nagar"
+  },
+  {
+    "id": 9,
+    "state_id": 7,
+    "code": "HR-GUR",
+    "name": "Gurugram",
+    "slug": "gurugram"
+  },
+  {
+    "id": 10,
+    "state_id": 8,
+    "code": "RJ-JAI",
+    "name": "Jaipur",
+    "slug": "jaipur"
+  }
+]

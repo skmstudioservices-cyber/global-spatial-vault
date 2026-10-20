@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "business_id": 1,
+    "business_name": "Kesar Da Dhaba",
+    "customer_name": "Simranjit Kaur",
+    "phone": "+91 98888 12345",
+    "email": "simran.k@yahoo.co.in",
+    "message": "Inquiring about bulk catering delivery for 60 guests wedding lunch in Amritsar this Sunday.",
+    "plan": "premium",
+    "status": "contacted",
+    "source_page": "/niche/dhabanearme/kesar-da-dhaba",
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 2,
+    "business_id": 2,
+    "business_name": "Wenger's Deli & Bakery",
+    "customer_name": "Vivek Singhania",
+    "phone": "+91 98110 54321",
+    "email": "v.singhania@corp.in",
+    "message": "Need custom tiered anniversary cake and 100 savory snack boxes for corporate office celebration.",
+    "plan": "featured",
+    "status": "new",
+    "source_page": "/niche/bakerynearme/wengers-deli-bakery",
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 3,
+    "business_id": 5,
+    "business_name": "Bosch Car Service Ludhiana",
+    "customer_name": "Baldev Dhillon",
+    "phone": "+91 98720 99887",
+    "email": "dhillon.farms@gmail.com",
+    "message": "Requesting quote for full 60,000 km periodic service & brake overhaul for Toyota Fortuner.",
+    "plan": "featured",
+    "status": "converted",
+    "source_page": "/niche/carrepairsnearme/bosch-car-service-ludhiana",
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 4,
+    "business_id": 7,
+    "business_name": "Raymond Custom Tailoring Studio",
+    "customer_name": "Arjun Kapoor",
+    "phone": "+91 99100 77665",
+    "email": "arjun.kapoor@techstart.io",
+    "message": "Looking to schedule master tailor measurement session for 3 bespoke suits and 1 bandhgala.",
+    "plan": "featured",
+    "status": "new",
+    "source_page": "/niche/tailorshopnearme/raymond-tailoring-delhi",
+    "created_at": "2026-10-20 13:08:12"
+  }
+]

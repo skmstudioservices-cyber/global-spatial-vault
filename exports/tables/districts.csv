@@ -1,0 +1,11 @@
+id,state_id,code,name,slug
+1,1,PB-ASR,Amritsar,amritsar
+2,1,PB-LDH,Ludhiana,ludhiana
+3,2,DL-CD,Central Delhi,central-delhi
+4,2,DL-SD,South Delhi,south-delhi
+5,3,MH-MUM,Mumbai Suburban,mumbai-suburban
+6,3,MH-PUN,Pune,pune
+7,4,KA-BLR,Bengaluru Urban,bengaluru-urban
+8,5,UP-GBN,Gautam Buddha Nagar,gautam-buddha-nagar
+9,7,HR-GUR,Gurugram,gurugram
+10,8,RJ-JAI,Jaipur,jaipur

@@ -1,0 +1,10 @@
+id,name,slug,state,district,pincode,lat,lng,created_at
+1,Amritsar,amritsar,Punjab,Amritsar,143001,31.634,74.8723,2026-10-20 13:08:12
+2,Ludhiana,ludhiana,Punjab,Ludhiana,141001,30.901,75.8573,2026-10-20 13:08:12
+3,New Delhi,new-delhi,Delhi,Central Delhi,110001,28.6139,77.209,2026-10-20 13:08:12
+4,Noida,noida,Uttar Pradesh,Gautam Buddha Nagar,201301,28.5355,77.391,2026-10-20 13:08:12
+5,Gurgaon,gurgaon,Haryana,Gurugram,122001,28.4595,77.0266,2026-10-20 13:08:12
+6,Mumbai,mumbai,Maharashtra,Mumbai Suburban,400001,18.9388,72.8354,2026-10-20 13:08:12
+7,Bengaluru,bengaluru,Karnataka,Bengaluru Urban,560001,12.9716,77.5946,2026-10-20 13:08:12
+8,Pune,pune,Maharashtra,Pune,411001,18.5204,73.8567,2026-10-20 13:08:12
+9,Jaipur,jaipur,Rajasthan,Jaipur,302001,26.9124,75.7873,2026-10-20 13:08:12

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "business_id": 1,
+    "business_name": "Kesar Da Dhaba",
+    "claimant_name": "Navpreet Singh",
+    "claimant_phone": "+91 98141 23456",
+    "claimant_email": "navpreet@kesardadhaba.in",
+    "business_role": "Owner (4th Generation)",
+    "id_proof_url": "https://storage.vault.local/claims/gst_kesar.pdf",
+    "status": "verified",
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 2,
+    "business_id": 2,
+    "business_name": "Wenger's Deli & Bakery",
+    "claimant_name": "Charanjeet Singh",
+    "claimant_phone": "+91 98102 33403",
+    "claimant_email": "mgmt@wengers.co.in",
+    "business_role": "General Manager",
+    "id_proof_url": "https://storage.vault.local/claims/wengers_auth.pdf",
+    "status": "verified",
+    "created_at": "2026-10-20 13:08:12"
+  },
+  {
+    "id": 3,
+    "business_id": 4,
+    "business_name": "Blue Tokai Coffee Roasters",
+    "claimant_name": "Tarun Nayyar",
+    "claimant_phone": "+91 98214 55012",
+    "claimant_email": "tarun@bluetokaicoffee.com",
+    "business_role": "Regional Operations Lead",
+    "id_proof_url": "https://storage.vault.local/claims/bt_emp_id.pdf",
+    "status": "pending",
+    "created_at": "2026-10-20 13:08:12"
+  }
+]

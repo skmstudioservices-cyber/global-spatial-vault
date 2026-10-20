@@ -13,5 +13,10 @@
     "version": "003",
     "name": "003_export.sql",
     "applied_at": "2026-10-11T12:38:57.915Z"
+  },
+  {
+    "version": "004",
+    "name": "004_demo_and_crowdsource.sql",
+    "applied_at": "2026-10-20T13:06:17.413Z"
   }
 ]

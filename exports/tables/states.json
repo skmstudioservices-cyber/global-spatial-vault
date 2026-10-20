@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "code": "PB",
+    "name": "Punjab",
+    "name_hi": "पंजाब",
+    "slug": "punjab"
+  },
+  {
+    "id": 2,
+    "code": "DL",
+    "name": "Delhi",
+    "name_hi": "दिल्ली",
+    "slug": "delhi"
+  },
+  {
+    "id": 3,
+    "code": "MH",
+    "name": "Maharashtra",
+    "name_hi": "महाराष्ट्र",
+    "slug": "maharashtra"
+  },
+  {
+    "id": 4,
+    "code": "KA",
+    "name": "Karnataka",
+    "name_hi": "कर्नाटक",
+    "slug": "karnataka"
+  },
+  {
+    "id": 5,
+    "code": "UP",
+    "name": "Uttar Pradesh",
+    "name_hi": "उत्तर प्रदेश",
+    "slug": "uttar-pradesh"
+  },
+  {
+    "id": 6,
+    "code": "TN",
+    "name": "Tamil Nadu",
+    "name_hi": "तमिलनाडु",
+    "slug": "tamil-nadu"
+  },
+  {
+    "id": 7,
+    "code": "HR",
+    "name": "Haryana",
+    "name_hi": "हरियाणा",
+    "slug": "haryana"
+  },
+  {
+    "id": 8,
+    "code": "RJ",
+    "name": "Rajasthan",
+    "name_hi": "राजस्थान",
+    "slug": "rajasthan"
+  }
+]

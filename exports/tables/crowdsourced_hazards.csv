@@ -1,0 +1,6 @@
+id,slot,threat_kind,severity,address,pincode,lat,lng,description,reporter_contact,upvotes,status,created_at
+1,night,dark_alley,4,Service lane behind Shivaji Stadium Metro Gate 3,110001,28.6341,77.2185,All 4 high-mast streetlights dysfunctional for 2 weeks. Women pedestrians feel unsafe after 8 PM.,sneha.d@gmail.com,18,active,2026-10-20 13:08:12
+2,morning,pothole,4,GT Road intersection near Sherpur Chowk Flyover,141001,30.895,75.842,Deep open crater in left lane causing two-wheelers to swerve dangerously during morning peak hour.,+91 98765 11223,34,active,2026-10-20 13:08:12
+3,evening,animalAttacks,3,Near Sector 15 Part 2 Market Back Lane,122001,28.461,77.031,Pack of aggressive stray dogs chasing cyclists and delivery riders after sunset.,vikram.r@gurgaon.net,12,investigating,2026-10-20 13:08:12
+4,midnight,robbery,5,Unpatrolled link road connecting Express Highway underpass,201301,28.5412,77.382,Two phone snatching incidents reported this week between 11:30 PM and 1:00 AM. Requires PCR patrol.,rwa_sec14@noida.org,27,active,2026-10-20 13:08:12
+5,noon,pothole,2,Koramangala 4th Block 80 Feet Road junction near Sony World,560034,12.934,77.626,Sunken stormwater drain grate causing sharp bump for auto-rickshaws and low sedans.,karthik.m@blr.in,9,resolved,2026-10-20 13:08:12

@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "district_id": 1,
+    "code": "SUB-ASR1",
+    "name": "Amritsar-I",
+    "slug": "amritsar-1"
+  },
+  {
+    "id": 2,
+    "district_id": 2,
+    "code": "SUB-LDHW",
+    "name": "Ludhiana West",
+    "slug": "ludhiana-west"
+  },
+  {
+    "id": 3,
+    "district_id": 3,
+    "code": "SUB-CP",
+    "name": "Connaught Place",
+    "slug": "connaught-place"
+  },
+  {
+    "id": 4,
+    "district_id": 4,
+    "code": "SUB-HK",
+    "name": "Hauz Khas",
+    "slug": "hauz-khas"
+  },
+  {
+    "id": 5,
+    "district_id": 5,
+    "code": "SUB-AND",
+    "name": "Andheri",
+    "slug": "andheri"
+  },
+  {
+    "id": 6,
+    "district_id": 6,
+    "code": "SUB-HAV",
+    "name": "Haveli",
+    "slug": "haveli"
+  },
+  {
+    "id": 7,
+    "district_id": 7,
+    "code": "SUB-BLRS",
+    "name": "Bangalore South",
+    "slug": "bangalore-south"
+  },
+  {
+    "id": 8,
+    "district_id": 8,
+    "code": "SUB-DAD",
+    "name": "Dadri",
+    "slug": "dadri"
+  }
+]

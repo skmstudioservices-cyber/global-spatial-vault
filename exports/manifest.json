@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-13T11:35:49.374Z",
+  "generatedAt": "2026-10-20T13:11:59.110Z",
   "outDir": "C:\\global-spatial-vault\\exports",
   "formats": [
     "schema",
@@ -12,18 +12,30 @@
   "artefacts": {
     "schema": {
       "file": "schema.sql",
-      "objects": 50,
-      "bytes": 11512
+      "objects": 76,
+      "bytes": 18985
     },
     "tables": {
-      "count": 22,
-      "rows": 91,
+      "count": 36,
+      "rows": 178,
       "files": [
         {
+          "table": "amenity_contributions",
+          "rows": 4,
+          "jsonBytes": 2293,
+          "csvBytes": 1251
+        },
+        {
           "table": "audit_log",
-          "rows": 2,
-          "jsonBytes": 583,
-          "csvBytes": 348
+          "rows": 4,
+          "jsonBytes": 1109,
+          "csvBytes": 582
+        },
+        {
+          "table": "businesses",
+          "rows": 11,
+          "jsonBytes": 10795,
+          "csvBytes": 5064
         },
         {
           "table": "categories",
@@ -32,10 +44,40 @@
           "csvBytes": 194
         },
         {
+          "table": "cities",
+          "rows": 9,
+          "jsonBytes": 2060,
+          "csvBytes": 789
+        },
+        {
+          "table": "claims",
+          "rows": 3,
+          "jsonBytes": 1209,
+          "csvBytes": 658
+        },
+        {
+          "table": "crowdsourced_hazards",
+          "rows": 5,
+          "jsonBytes": 2363,
+          "csvBytes": 1288
+        },
+        {
+          "table": "districts",
+          "rows": 10,
+          "jsonBytes": 1156,
+          "csvBytes": 370
+        },
+        {
           "table": "export_recipes",
           "rows": 1,
           "jsonBytes": 168,
           "csvBytes": 109
+        },
+        {
+          "table": "feedback_messages",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 92
         },
         {
           "table": "import_batches",
@@ -48,6 +90,18 @@
           "rows": 2,
           "jsonBytes": 1208,
           "csvBytes": 970
+        },
+        {
+          "table": "leads",
+          "rows": 4,
+          "jsonBytes": 1865,
+          "csvBytes": 1114
+        },
+        {
+          "table": "lgd_panchayats",
+          "rows": 0,
+          "jsonBytes": 3,
+          "csvBytes": 225
         },
         {
           "table": "niche_fields",
@@ -122,6 +176,12 @@
           "csvBytes": 987
         },
         {
+          "table": "reviews",
+          "rows": 6,
+          "jsonBytes": 2865,
+          "csvBytes": 1695
+        },
+        {
           "table": "risk_reports",
           "rows": 0,
           "jsonBytes": 3,
@@ -135,9 +195,9 @@
         },
         {
           "table": "schema_migrations",
-          "rows": 3,
-          "jsonBytes": 319,
-          "csvBytes": 154
+          "rows": 4,
+          "jsonBytes": 439,
+          "csvBytes": 212
         },
         {
           "table": "sites",
@@ -146,17 +206,41 @@
           "csvBytes": 1591
         },
         {
+          "table": "states",
+          "rows": 8,
+          "jsonBytes": 1050,
+          "csvBytes": 417
+        },
+        {
+          "table": "sub_districts",
+          "rows": 8,
+          "jsonBytes": 948,
+          "csvBytes": 303
+        },
+        {
           "table": "submissions",
-          "rows": 0,
-          "jsonBytes": 3,
-          "csvBytes": 128
+          "rows": 4,
+          "jsonBytes": 2543,
+          "csvBytes": 1580
+        },
+        {
+          "table": "village_amenities",
+          "rows": 6,
+          "jsonBytes": 3296,
+          "csvBytes": 1786
+        },
+        {
+          "table": "villages",
+          "rows": 6,
+          "jsonBytes": 2463,
+          "csvBytes": 1155
         }
       ]
     },
     "dump": {
       "file": "dump.sql",
-      "rows": 91,
-      "bytes": 37630
+      "rows": 178,
+      "bytes": 71629
     },
     "niches": {
       "count": 8,
@@ -355,7 +439,7 @@
     }
   },
   "totals": {
-    "files": 79,
-    "bytes": 128471
+    "files": 107,
+    "bytes": 223449
   }
 }

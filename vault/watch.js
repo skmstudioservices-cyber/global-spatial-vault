@@ -336,7 +336,29 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, { ok: true, deleted: pkValue });
     }
 
+    // 5g. Add Column to an existing table
+    if (pathname.startsWith('/api/table/') && pathname.endsWith('/add-column') && req.method === 'POST') {
+      const tableName = decodeURIComponent(pathname.replace('/api/table/', '').replace('/add-column', ''));
+      const body = await parseBody(req);
+      let { name: colName, type: colType, default: colDefault } = body;
+      // Sanitise
+      colName = (colName || '').replace(/[^a-zA-Z0-9_]/g, '');
+      colType = ['TEXT','INTEGER','REAL','BOOLEAN'].includes(colType) ? colType : 'TEXT';
+      if (!colName) return sendJson(res, { ok: false, error: 'Column name is required' }, 400);
+      const d = getDb();
+      // Check if column already exists
+      const existing = d.prepare(`PRAGMA table_info("${tableName}")`).all().map(c => c.name);
+      if (existing.includes(colName)) {
+        return sendJson(res, { ok: false, error: `Column "${colName}" already exists` }, 409);
+      }
+      const defaultClause = colDefault != null && colDefault !== '' ? ` DEFAULT '${String(colDefault).replace(/'/g,"''")}'` : '';
+      d.exec(`ALTER TABLE "${tableName}" ADD COLUMN "${colName}" ${colType}${defaultClause}`);
+      status.info(`Added column "${colName}" (${colType}) to "${tableName}"`);
+      return sendJson(res, { ok: true, table: tableName, column: colName, type: colType });
+    }
+
     // 5f. Batch / Paste Import (from Excel / CSV / Sheets)
+
     if ((pathname.startsWith('/api/table/') && pathname.endsWith('/batch') && req.method === 'POST') ||
         (pathname === '/api/upload-import' && req.method === 'POST')) {
       const body = await parseBody(req);

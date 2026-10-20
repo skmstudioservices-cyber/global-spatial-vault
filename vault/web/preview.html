@@ -96,7 +96,8 @@
     * { box-sizing: border-box; }
     body {
       margin: 0; background: var(--bg); color: var(--text);
-      font: 13.5px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; letter-spacing: 0.01em;
       height: 100vh; display: flex; flex-direction: column; overflow: hidden;
       transition: background .2s ease, color .2s ease;
     }
@@ -128,6 +129,11 @@
     }
     .conn-dot { width: 7px; height: 7px; border-radius: 50%; background: #64748b; }
     .conn-dot.live { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+
+    /* Zoom controls */
+    .zoom-wrap { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+    .zoom-wrap input[type=range] { width: 72px; accent-color: var(--accent); cursor: pointer; }
+    #zoomLabel { min-width: 30px; font-weight: 600; color: var(--text); }
 
     /* Main Container */
     main { flex: 1; position: relative; overflow: hidden; }
@@ -333,6 +339,12 @@
     </div>
 
     <div class="header-right">
+      <!-- Zoom Controls -->
+      <div class="zoom-wrap" title="Zoom UI in/out">
+        🔍 <input type="range" id="zoomSlider" min="70" max="130" value="100" step="5" oninput="applyZoom(this.value)" />
+        <span id="zoomLabel">100%</span>
+      </div>
+
       <!-- Theme Switcher -->
       <select class="theme-select" id="themeSelect" onchange="setTheme(this.value)">
         <option value="supabase">🎨 Supabase Dark</option>
@@ -363,6 +375,8 @@
           <button class="btn btn-primary" onclick="openNewRowModal()">➕ New Row</button>
           <button class="btn" onclick="openPasteModal()">📋 Paste from Excel / CSV</button>
           <button class="btn" onclick="openUploadModal()">📁 Upload File</button>
+          <button class="btn" onclick="openAddColModal()" title="Add a new column to this table">＋ Add Column</button>
+          <button class="btn" onclick="exportTableCSV()" title="Download current table as CSV">⬇ Export CSV</button>
 
           <input type="text" class="inp" id="tableSearch" placeholder="Filter cells…" oninput="filterGrid()" style="width:180px;" />
 
@@ -619,6 +633,44 @@
     </div>
   </div>
 
+  <!-- 4. Add Column Modal -->
+  <div class="modal-overlay" id="addColModal">
+    <div class="modal-dialog" style="max-width:460px;">
+      <div class="modal-head">
+        <strong>＋ Add Column to <span id="addColTableName"></span></strong>
+        <button class="btn btn-sm" onclick="closeModal('addColModal')">✕</button>
+      </div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:14px;">
+        <div>
+          <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:4px;">Column Name</label>
+          <input type="text" class="inp" id="addColName" placeholder="e.g. opening_hours, rating, website" style="width:100%;" />
+        </div>
+        <div>
+          <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:4px;">Column Type</label>
+          <select class="inp" id="addColType" style="width:100%;">
+            <option value="TEXT">TEXT (default)</option>
+            <option value="INTEGER">INTEGER (whole number)</option>
+            <option value="REAL">REAL (decimal)</option>
+            <option value="BOOLEAN">BOOLEAN (0/1)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:4px;">Default Value (optional)</label>
+          <input type="text" class="inp" id="addColDefault" placeholder="Leave blank for NULL" style="width:100%;" />
+        </div>
+        <!-- Niche-aware suggestions -->
+        <div id="addColSuggestions" style="display:none;">
+          <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">💡 Suggested for this niche:</label>
+          <div id="addColSuggestionChips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeModal('addColModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitAddColumn()">Add Column</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <!-- LEAFLET & LOGIC SCRIPT -->
@@ -655,6 +707,98 @@
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+
+    /* ── ZOOM ─────────────────────────────────────────────────────────────── */
+    function applyZoom(val) {
+      document.getElementById('zoomLabel').textContent = val + '%';
+      document.querySelector('main').style.zoom = (val / 100);
+      localStorage.setItem('sv_zoom', val);
+    }
+    (function initZoom() {
+      const saved = localStorage.getItem('sv_zoom') || '100';
+      document.getElementById('zoomSlider').value = saved;
+      applyZoom(saved);
+    })();
+
+    /* ── NICHE TAG SUGGESTIONS ────────────────────────────────────────────── */
+    const NICHE_SUGGESTIONS = {
+      bakery:        ['opening_hours','rating','specialty_bread','is_vegan','delivery'],
+      cafe:          ['opening_hours','rating','has_wifi','seating_type','serves_alcohol'],
+      restaurant:    ['opening_hours','rating','cuisine_type','seating_capacity','accepts_reservations'],
+      dhaba:         ['opening_hours','rating','pure_veg','highway_facing','truck_parking'],
+      grocerystore:  ['opening_hours','rating','home_delivery','accepts_upi','organic_section'],
+      medicalshop:   ['opening_hours','24hr_open','pharmacist_name','license_no','home_delivery'],
+      dentist:       ['opening_hours','rating','specialization','accepts_insurance','appointment_only'],
+      carrepair:     ['opening_hours','rating','specializes_in','pickup_dropoff','accepts_insurance'],
+      tailor:        ['opening_hours','rating','specializes_in','home_pickup','turnaround_days'],
+      places:        ['opening_hours','rating','website','phone','tags','category','description'],
+    };
+
+    function openAddColModal() {
+      document.getElementById('addColName').value = '';
+      document.getElementById('addColDefault').value = '';
+      document.getElementById('addColType').value = 'TEXT';
+      document.getElementById('addColTableName').textContent = currentTable;
+
+      // Show niche suggestions
+      const niche = Object.keys(NICHE_SUGGESTIONS).find(k => currentTable.toLowerCase().includes(k));
+      const sugBox = document.getElementById('addColSuggestions');
+      const chips  = document.getElementById('addColSuggestionChips');
+      if (niche) {
+        chips.innerHTML = NICHE_SUGGESTIONS[niche].map(s =>
+          `<span onclick="document.getElementById('addColName').value='${s}'" style="
+            cursor:pointer; background:var(--accent-soft); color:var(--accent);
+            border:1px solid var(--border); border-radius:4px; padding:3px 9px;
+            font-size:12px;">${s}</span>`
+        ).join('');
+        sugBox.style.display = 'block';
+      } else {
+        sugBox.style.display = 'none';
+      }
+      openModal('addColModal');
+    }
+
+    async function submitAddColumn() {
+      const name     = document.getElementById('addColName').value.trim();
+      const type     = document.getElementById('addColType').value;
+      const defVal   = document.getElementById('addColDefault').value.trim();
+      if (!name) { toast('⚠️ Column name is required'); return; }
+      try {
+        const res = await fetch(`/api/table/${currentTable}/add-column`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, type, default: defVal || null }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          toast(`✅ Column "${name}" added`);
+          closeModal('addColModal');
+          refreshCurrentTable();
+        } else {
+          toast('❌ ' + (data.error || 'Failed to add column'));
+        }
+      } catch (e) { toast('❌ Network error'); }
+    }
+
+    /* ── EXPORT CSV ───────────────────────────────────────────────────────── */
+    function exportTableCSV() {
+      if (!tableCols.length) { toast('No data to export'); return; }
+      const header = tableCols.join(',');
+      const rows   = tableRows.map(r =>
+        tableCols.map(c => {
+          const v = r[c] == null ? '' : String(r[c]);
+          return v.includes(',') || v.includes('"') || v.includes('\n')
+            ? `"${v.replace(/"/g, '""')}"` : v;
+        }).join(',')
+      );
+      const csv  = [header, ...rows].join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = `${currentTable}.csv`; a.click();
+      URL.revokeObjectURL(url);
+      toast(`⬇ Exported ${tableRows.length} rows as CSV`);
+    }
 
     /* =========================================================================
        TAB 1: EXCEL-STYLE GRID

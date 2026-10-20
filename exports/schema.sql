@@ -1,5 +1,5 @@
 -- Spatial Vault schema
--- generated 2026-10-13T09:42:27.752Z
+-- generated 2026-10-13T11:35:49.381Z
 
 PRAGMA foreign_keys = ON;
 

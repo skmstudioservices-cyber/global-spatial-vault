@@ -206,7 +206,7 @@
     if (!map) throw new Error('renderRecords: Leaflet map instance is required');
 
     var slot = opts.timeSlot || currentTimeSlot();
-    var layer = L.layerGroup();
+    var layer = L.featureGroup();
     for (var i = 0; i < records.length; i++) {
       var record = records[i];
       var color = riskColorFor(record, slot);

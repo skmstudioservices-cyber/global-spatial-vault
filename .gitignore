@@ -5,3 +5,4 @@ data/*
 !data/.gitkeep
 !data/*.csv
 !data/*.xlsx
+*.png

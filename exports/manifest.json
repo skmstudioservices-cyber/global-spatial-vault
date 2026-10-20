@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-13T09:42:27.744Z",
+  "generatedAt": "2026-10-13T11:35:49.374Z",
   "outDir": "C:\\global-spatial-vault\\exports",
   "formats": [
     "schema",
@@ -17,13 +17,13 @@
     },
     "tables": {
       "count": 22,
-      "rows": 88,
+      "rows": 91,
       "files": [
         {
           "table": "audit_log",
-          "rows": 0,
-          "jsonBytes": 3,
-          "csvBytes": 60
+          "rows": 2,
+          "jsonBytes": 583,
+          "csvBytes": 348
         },
         {
           "table": "categories",
@@ -105,9 +105,9 @@
         },
         {
           "table": "places",
-          "rows": 13,
-          "jsonBytes": 17271,
-          "csvBytes": 8041
+          "rows": 14,
+          "jsonBytes": 18261,
+          "csvBytes": 8275
         },
         {
           "table": "ref_admin",
@@ -155,8 +155,8 @@
     },
     "dump": {
       "file": "dump.sql",
-      "rows": 88,
-      "bytes": 36187
+      "rows": 91,
+      "bytes": 37630
     },
     "niches": {
       "count": 8,
@@ -173,11 +173,11 @@
             },
             {
               "file": "niches\\bakerynearme\\places.json",
-              "bytes": 1002
+              "bytes": 1004
             },
             {
               "file": "niches\\bakerynearme\\places.geojson",
-              "bytes": 1003
+              "bytes": 1005
             },
             {
               "file": "niches\\bakerynearme\\site.json",
@@ -349,13 +349,13 @@
       ]
     },
     "tiles": {
-      "recordCount": 10,
+      "recordCount": 11,
       "tileCount": 0,
       "tiles": []
     }
   },
   "totals": {
     "files": 79,
-    "bytes": 124932
+    "bytes": 128471
   }
 }

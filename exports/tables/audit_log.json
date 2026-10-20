@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "id": 1,
+    "actor": "web-portal",
+    "action": "update-coords",
+    "table_name": "places",
+    "row_pk": "M4NFCZ0N6R",
+    "before_json": null,
+    "after_json": "{\"lat\":26.760555,\"lng\":83.373166,\"geohash13\":\"tug21pw7x942t\",\"digipin\":\"2F2K79UV77\"}",
+    "at": "2026-10-13T10:09:24.342Z"
+  },
+  {
+    "id": 2,
+    "actor": "excel-editor",
+    "action": "update-cell",
+    "table_name": "places",
+    "row_pk": "M4NFCZ0N6R",
+    "before_json": null,
+    "after_json": "{\"address\":\"12, Main Market, Gorakhpur\"}",
+    "at": "2026-10-13T11:03:02.409Z"
+  }
+]

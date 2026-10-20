@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spatial Vault Studio</title>
+<style>
+:root{--bg:#fff;--panel:#f6f7f8;--text:#1a1d1f;--mute:#6b7280;--line:#e3e6e8;--green:#2fb67c;--greend:#1f8f5f;--red:#d6383d;--hover:#eef0f2}
+@media(prefers-color-scheme:dark){:root{--bg:#1b1b1d;--panel:#232326;--text:#ececec;--mute:#9a9fa6;--line:#34343a;--hover:#2b2b30;--green:#3ecf8e}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+button:hover{background:var(--hover)}
+button.pri{background:var(--green);border-color:var(--green);color:#06281a;font-weight:600}
+button.danger{color:var(--red)}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+:focus-visible{outline:2px solid var(--green);outline-offset:1px}
+#app{height:100%;display:flex}
+aside{width:240px;flex:none;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column}
+aside h1{font-size:16px;margin:0;padding:16px;display:flex;gap:8px;align-items:center}
+aside h1 i{width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block}
+.tlist{flex:1;overflow:auto;padding:0 8px}
+.titem{display:flex;justify-content:space-between;padding:7px 10px;border-radius:6px;cursor:pointer}
+.titem:hover{background:var(--hover)}
+.titem.on{background:var(--hover);font-weight:600;box-shadow:inset 3px 0 var(--green)}
+.titem span{color:var(--mute);font-size:12px}
+.side-foot{padding:10px;display:grid;gap:6px;border-top:1px solid var(--line)}
+main{flex:1;min-width:0;display:flex;flex-direction:column}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+.bar h2{margin:0 8px 0 0;font-size:16px}
+.sp{flex:1}
+.wrap{flex:1;overflow:auto}
+table{border-collapse:collapse;min-width:100%}
+th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:0;text-align:left;white-space:nowrap}
+th{position:sticky;top:0;background:var(--panel);padding:8px 10px;font-weight:600;cursor:pointer;z-index:1}
+th small{color:var(--mute);font-weight:400;margin-left:6px}
+td input[type=text],td input[type=number],td input[type=date]{border:0;border-radius:0;width:100%;min-width:130px;background:transparent;padding:8px 10px}
+td input:focus{background:var(--hover);outline-offset:-2px}
+td.c{text-align:center;padding:0 12px}
+td.id{color:var(--mute);padding:8px 10px;font-size:12px}
+.empty{padding:60px 20px;text-align:center;color:var(--mute)}
+.empty b{display:block;color:var(--text);font-size:16px;margin-bottom:6px}
+.status{padding:6px 14px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+.login{margin:auto;max-width:320px;padding:24px;display:grid;gap:10px;text-align:center}
+.login h1{margin:0}
+dialog{border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);padding:20px;width:min(440px,92vw)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog h3{margin:0 0 10px}
+dialog label{display:block;margin:10px 0 4px;font-weight:600}
+dialog input,dialog textarea{width:100%}
+dialog p{color:var(--mute);margin:4px 0;font-size:13px}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:8px;z-index:9}
+.home{padding:18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;color:var(--mute)}
+.stat b{display:block;font-size:22px;color:var(--text);margin-bottom:2px}
+.home h3{margin:24px 0 10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;cursor:pointer}
+.card:hover{border-color:var(--green)}
+.card b{display:block;font-size:15px}
+.card span{color:var(--mute);font-size:13px}
+.meter{height:6px;background:var(--line);border-radius:3px;margin-top:10px}
+.meter i{display:block;height:100%;background:var(--green);border-radius:3px}
+@media(max-width:700px){aside{width:150px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<dialog id="dlg"></dialog>
+
+<script>
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const app = $('#app'), dlg = $('#dlg');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const sha = async s => { try { return [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join(''); } catch (e) { let h = 5381; for (const c of s) h = ((h << 5) + h + c.charCodeAt(0)) | 0; return 'f' + h; } };
+function el(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const k in attrs) { if (k.startsWith('on')) e[k] = attrs[k]; else if (k === 'value') e.value = attrs[k]; else e.setAttribute(k, attrs[k]); }
+  kids.flat().forEach(x => e.append(x));
+  return e;
+}
+function toast(msg) { const t = el('div', { class: 'toast' }, msg); document.body.append(t); setTimeout(() => t.remove(), 2600); }
+
+/* ---------- data (saved in this browser) ---------- */
+const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
+let db = read('mybase_db', { tables: {} }), view = 'home';
+let gh = read('mybase_gh', { owner: '', repo: '', branch: 'main', path: 'data/mybase.json', token: '' });
+let cur = Object.keys(db.tables)[0] || null, search = '', scol = '', sort = null;
+const save = () => localStorage.setItem('mybase_db', JSON.stringify(db));
+
+/* ---------- login ---------- */
+async function showLogin() {
+  if (!localStorage.getItem('mybase_pw')) localStorage.setItem('mybase_pw', await sha('1234567890'));
+  const has = localStorage.getItem('mybase_pw');
+  const pw = el('input', { type: 'password', placeholder: 'Password', autocomplete: 'current-password' });
+  const msg = el('p', { style: 'color:var(--red);margin:0;min-height:1em' });
+  const go = async () => {
+    if (!pw.value) return;
+    const h = await sha(pw.value);
+    if (!has) { localStorage.setItem('mybase_pw', h); }
+    else if (h !== has) { msg.textContent = 'Wrong password. Try again.'; return; }
+    sessionStorage.setItem('mybase_in', '1'); render();
+  };
+  pw.onkeydown = e => e.key === 'Enter' && go();
+  app.replaceChildren(el('div', { class: 'login' },
+    el('h1', {}, 'MyBase'),
+    el('p', {}, has ? 'Enter your password to open your database. Testing password: 1234567890' : 'First time here. Create a password to protect this dashboard.'),
+    pw, msg, el('button', { class: 'pri', onclick: go }, has ? 'Unlock' : 'Create password and enter')));
+  pw.focus();
+}
+
+/* ---------- layout ---------- */
+function render() {
+  
+  const list = el('div', { class: 'tlist' });
+  list.append(el('div', { class: 'titem' + (view === 'home' ? ' on' : ''), onclick: () => { view = 'home'; render(); } }, 'Dashboard'));
+  Object.keys(db.tables).forEach(n => list.append(el('div', { class: 'titem' + (view === 'table' && n === cur ? ' on' : ''), onclick: () => { view = 'table'; cur = n; search = ''; scol = ''; sort = null; render(); } }, n, el('span', {}, String(db.tables[n].rows.length)))));
+  if (!Object.keys(db.tables).length) list.append(el('p', { style: 'color:var(--mute);padding:8px 10px' }, 'No tables yet.'));
+  const side = el('aside', {},
+    el('h1', {}, el('i'), 'Spatial Vault'), list,
+    el('div', { class: 'side-foot' },
+      el('button', { class: 'pri', onclick: newTableDlg }, '+ New table'),
+      el('button', { onclick: starter }, 'Starter tables'),
+      el('button', { onclick: relDlg }, 'Relations'),
+      el('button', { onclick: inboxDlg }, 'Submissions inbox'),
+      el('button', { onclick: exportNiches }, 'Export niches'),
+      el('button', { onclick: syncDlg }, 'GitHub sync')));
+  app.replaceChildren(side, el('main', { id: 'main' }));
+  drawMain();
+}
+
+function drawMain() {
+  const main = $('#main'); main.replaceChildren();
+  if (view === 'home' || !cur || !db.tables[cur]) return drawHome(main);
+  if (!cur || !db.tables[cur]) {
+    main.append(el('div', { class: 'empty' }, el('b', {}, 'Create your first table'), 'Click "+ New table" on the left. Example: a table called leads with columns name, email, city.'));
+    return;
+  }
+  const t = db.tables[cur];
+  const sel = el('select', { onchange: e => { scol = e.target.value; drawRows(); } }, el('option', { value: '' }, 'All columns'), t.cols.map(c => el('option', { value: c.name }, c.name)));
+  sel.value = scol;
+  const box = el('input', { type: 'search', placeholder: 'Search rows', value: search, oninput: e => { search = e.target.value.toLowerCase(); drawRows(); } });
+  const file = el('input', { type: 'file', accept: '.csv,text/csv', style: 'display:none', onchange: importCSV });
+  main.append(
+    el('div', { class: 'bar' }, el('h2', {}, cur), box, sel, el('span', { class: 'sp' }),
+      el('button', { class: 'pri', onclick: addRow }, '+ Add row'),
+      el('button', { onclick: addCol }, '+ Add column'),
+      el('button', { onclick: () => file.click() }, 'Import CSV'), file,
+      el('button', { onclick: exportCSV }, 'Export CSV'),
+      el('button', { onclick: pasteDlg }, 'Paste rows'), el('button', { onclick: clean }, 'Tidy data'),
+      ...(cur === 'places' ? [el('button', { onclick: enrich }, 'Find locations'), el('button', { onclick: pinDlg }, 'Pin fixer'), el('button', { onclick: promote }, 'Promote approved')] : []),
+      el('button', { class: 'danger', onclick: delTable }, 'Delete table')),
+    el('div', { class: 'wrap', id: 'wrap' }),
+    el('div', { class: 'status', id: 'status' }));
+  drawRows();
+}
+
+function visibleRows() {
+  const t = db.tables[cur];
+  let rows = t.rows.filter(r => !search || (scol ? [r[scol]] : Object.values(r)).some(v => String(v ?? '').toLowerCase().includes(search)));
+  if (sort) rows = [...rows].sort((a, b) => { const x = a[sort.c] ?? '', y = b[sort.c] ?? ''; return (x > y ? 1 : x < y ? -1 : 0) * sort.d; });
+  return rows;
+}
+
+function drawRows() {
+  const t = db.tables[cur], wrap = $('#wrap'), rows = visibleRows();
+  const head = el('tr', {}, el('th', { style: 'cursor:default' }, 'id'),
+    t.cols.map(c => el('th', { onclick: () => { sort = sort && sort.c === c.name ? { c: c.name, d: -sort.d } : { c: c.name, d: 1 }; drawRows(); } },
+      c.name, el('small', {}, c.type + (sort && sort.c === c.name ? (sort.d > 0 ? ' ▲' : ' ▼') : ''))),
+    ), el('th', { style: 'cursor:default' }, ''));
+  const body = rows.map(r => el('tr', {}, el('td', { class: 'id' }, r.id.slice(-5)),
+    t.cols.map(c => {
+      let inp;
+      if (c.type === 'boolean') { inp = el('input', { type: 'checkbox', onchange: e => { r[c.name] = e.target.checked; save(); } }); inp.checked = !!r[c.name]; return el('td', { class: 'c' }, inp); }
+      inp = el('input', { type: c.type === 'number' ? 'number' : c.type === 'date' ? 'date' : 'text', 'aria-label': c.name, value: r[c.name] ?? '', onchange: e => { r[c.name] = c.type === 'number' && e.target.value !== '' ? Number(e.target.value) : e.target.value; save(); } });
+      return el('td', {}, inp);
+    }),
+    el('td', { class: 'c' }, el('button', { class: 'danger', title: 'Delete row', onclick: () => { if (confirm('Delete this row?')) { t.rows = t.rows.filter(x => x !== r); save(); render(); } } }, '✕'))));
+  wrap.replaceChildren(el('table', {}, el('thead', {}, head), el('tbody', {}, body)));
+  if (!rows.length) wrap.append(el('div', { class: 'empty' }, el('b', {}, t.rows.length ? 'No rows match your search' : 'This table is empty'), t.rows.length ? 'Clear the search box to see all rows.' : 'Click "+ Add row" or "Import CSV" to add data.'));
+  $('#status').textContent = rows.length + ' of ' + t.rows.length + ' rows. Saved in this browser.';
+}
+
+/* ---------- dashboard home ---------- */
+function drawHome(main) {
+  const names = Object.keys(db.tables), total = names.reduce((a, n) => a + db.tables[n].rows.length, 0), colsN = names.reduce((a, n) => a + db.tables[n].cols.length, 0);
+  const stat = (v, l) => el('div', { class: 'stat' }, el('b', {}, String(v)), l);
+  const max = Math.max(1, ...names.map(n => db.tables[n].rows.length));
+  const open = n => { view = 'table'; cur = n; search = ''; scol = ''; sort = null; render(); };
+  main.append(
+    el('div', { class: 'bar' }, el('h2', {}, 'Dashboard'), el('span', { class: 'sp' }), el('button', { class: 'pri', onclick: newTableDlg }, '+ New table'), el('button', { onclick: syncDlg }, 'GitHub sync')),
+    el('div', { class: 'wrap home' },
+      el('div', { class: 'stats' }, stat(names.length, 'Tables'), stat(total, 'Total rows'), stat(colsN, 'Columns'), stat(localStorage.getItem('mybase_last') || 'Never', 'Last GitHub backup')),
+      el('h3', {}, 'Your tables'),
+      names.length
+        ? el('div', { class: 'cards' }, names.map(n => el('div', { class: 'card', tabindex: 0, onclick: () => open(n), onkeydown: e => e.key === 'Enter' && open(n) },
+            el('b', {}, n), el('span', {}, db.tables[n].rows.length + ' rows, ' + db.tables[n].cols.length + ' columns'),
+            el('div', { class: 'meter' }, el('i', { style: 'width:' + Math.round(db.tables[n].rows.length / max * 100) + '%' })))))
+        : el('div', { class: 'empty' }, el('b', {}, 'No tables yet'), 'Click "+ New table". Example: a table called leads with columns name, email, city.')));
+}
+
+/* ---------- table actions ---------- */
+const TYPES = ['text', 'number', 'boolean', 'date'];
+function parseCols(s) {
+  return s.split(/\n|,/).map(x => x.trim()).filter(Boolean).map(x => {
+    const [n, ty] = x.split(':').map(y => y.trim());
+    return { name: n.replace(/\s+/g, '_'), type: TYPES.includes(ty) ? ty : 'text' };
+  });
+}
+function newTableDlg() {
+  const name = el('input', { placeholder: 'leads', id: 'tn' });
+  const cols = el('textarea', { rows: 5, placeholder: 'name\nemail\ncity\nscore:number\npaid:boolean' });
+  openDlg('New table', [
+    el('label', {}, 'Table name'), name,
+    el('label', {}, 'Columns (one per line)'), cols,
+    el('p', {}, 'Add :number, :boolean or :date after a name. Everything else is text. An id column is added for you.')],
+    'Create table', () => {
+      const n = name.value.trim().replace(/\s+/g, '_');
+      if (!n) return toast('Give the table a name.');
+      if (db.tables[n]) return toast('That table already exists.');
+      const c = parseCols(cols.value); if (!c.length) return toast('Add at least one column.');
+      db.tables[n] = { cols: c, rows: [] }; view = 'table'; cur = n; save(); dlg.close(); render();
+    });
+}
+function addRow() { const r = { id: uid() }; db.tables[cur].cols.forEach(c => r[c.name] = c.type === 'boolean' ? false : ''); db.tables[cur].rows.unshift(r); save(); drawRows(); toast('Row added at the top.'); }
+function addCol() {
+  const v = prompt('New column. Example: price:number (types: text, number, boolean, date)'); if (!v) return;
+  const [c] = parseCols(v); const t = db.tables[cur];
+  if (!c || t.cols.some(x => x.name === c.name)) return toast('Column name is empty or already used.');
+  t.cols.push(c); t.rows.forEach(r => r[c.name] = c.type === 'boolean' ? false : ''); save(); drawMain();
+}
+function delTable() { if (confirm('Delete table "' + cur + '" and all its rows? This cannot be undone.')) { delete db.tables[cur]; view = 'home'; cur = Object.keys(db.tables)[0] || null; save(); render(); } }
+
+/* ---------- CSV ---------- */
+function parseCSV(s) {
+  const out = []; let r = [], f = '', q = false;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (q) { if (ch === '"') { if (s[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ',') { r.push(f); f = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && s[i + 1] === '\n') i++; r.push(f); f = ''; out.push(r); r = []; }
+    else f += ch;
+  }
+  if (f || r.length) { r.push(f); out.push(r); }
+  return out.filter(x => x.some(y => y !== ''));
+}
+function importCSV(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const rd = new FileReader();
+  rd.onload = () => ingest(parseCSV(String(rd.result).replace(/^\uFEFF/, '')));
+  rd.readAsText(file); e.target.value = '';
+}
+function ingest(rows) {
+  {
+    if (rows.length < 2) return toast('The CSV needs a header row and at least one data row.');
+    const t = db.tables[cur], head = rows[0].map(h => h.trim().replace(/\s+/g, '_'));
+    head.forEach(h => { if (h && h !== 'id' && !t.cols.some(c => c.name === h)) t.cols.push({ name: h, type: 'text' }); });
+    rows.slice(1).forEach(v => {
+      const r = { id: uid() };
+      t.cols.forEach(c => { const i = head.indexOf(c.name); let x = i >= 0 ? (v[i] ?? '') : ''; if (c.type === 'number' && x !== '') x = Number(x); if (c.type === 'boolean') x = String(x).toLowerCase() === 'true'; r[c.name] = x; });
+      t.rows.push(r);
+    });
+    save(); drawMain(); toast((rows.length - 1) + ' rows imported.');
+  }
+}
+function exportCSV() {
+  const t = db.tables[cur], esc = v => { v = String(v ?? ''); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const csv = [['id', ...t.cols.map(c => c.name)].join(',')].concat(visibleRows().map(r => [r.id, ...t.cols.map(c => r[c.name])].map(esc).join(','))).join('\n');
+  const a = el('a', { href: URL.createObjectURL(new Blob([csv], { type: 'text/csv' })), download: cur + '.csv' }); a.click();
+}
+
+/* ---------- dialog ---------- */
+function openDlg(title, body, okText, onok) {
+  dlg.replaceChildren(el('h3', {}, title), ...body, el('div', { class: 'row' }, el('button', { onclick: () => dlg.close() }, 'Cancel'), el('button', { class: 'pri', onclick: onok }, okText)));
+  dlg.showModal();
+}
+
+/* ---------- GitHub sync ---------- */
+const b64 = s => btoa(unescape(encodeURIComponent(s)));
+const unb64 = s => decodeURIComponent(escape(atob(s.replace(/\n/g, ''))));
+const ghUrl = () => `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${gh.path}`;
+const ghHead = () => ({ Authorization: 'Bearer ' + gh.token, Accept: 'application/vnd.github+json' });
+async function ghPush() {
+  try {
+    let sha; const g = await fetch(ghUrl() + '?ref=' + gh.branch, { headers: ghHead() });
+    if (g.ok) sha = (await g.json()).sha; else if (g.status !== 404) throw new Error('Could not reach the repo (' + g.status + '). Check owner, repo and token.');
+    const p = await fetch(ghUrl(), { method: 'PUT', headers: ghHead(), body: JSON.stringify({ message: 'MyBase backup ' + new Date().toISOString(), content: b64(JSON.stringify(db, null, 2)), branch: gh.branch, sha }) });
+    if (!p.ok) throw new Error('Upload failed (' + p.status + '). The token needs Contents: read and write.');
+    localStorage.setItem('mybase_last', new Date().toLocaleString()); toast('Saved to GitHub.');
+  } catch (e) { alert(e.message); }
+}
+async function ghPull() {
+  if (!confirm('This replaces the data in this browser with the copy on GitHub. Continue?')) return;
+  try {
+    const g = await fetch(ghUrl() + '?ref=' + gh.branch, { headers: ghHead() });
+    if (!g.ok) throw new Error('No file found on GitHub yet (' + g.status + '). Use "Save to GitHub" first.');
+    db = JSON.parse(unb64((await g.json()).content)); cur = Object.keys(db.tables)[0] || null; save(); dlg.close(); render(); toast('Loaded from GitHub.');
+  } catch (e) { alert(e.message); }
+}
+function syncDlg() {
+  const f = {}; const fld = (k, label, ph, type = 'text') => [el('label', {}, label), f[k] = el('input', { type, placeholder: ph, value: gh[k] })];
+  const store = () => { Object.keys(f).forEach(k => gh[k] = f[k].value.trim()); localStorage.setItem('mybase_gh', JSON.stringify(gh)); };
+  dlg.replaceChildren(el('h3', {}, 'GitHub sync'),
+    el('p', {}, 'Keeps a backup of all your tables in one file in your repo. Use a private repo, because anyone who can see the repo can read your data.'),
+    ...fld('owner', 'GitHub username', 'your-name'), ...fld('repo', 'Repository name', 'my-database'),
+    ...fld('branch', 'Branch', 'main'), ...fld('path', 'File path in repo', 'data/mybase.json'),
+    ...fld('token', 'Access token', 'github_pat_...', 'password'),
+    el('p', {}, 'Create the token in GitHub: Settings, Developer settings, Fine-grained tokens. Pick only this repo and allow Contents: read and write. The token stays in this browser only.'),
+    el('div', { class: 'row' }, el('button', { onclick: () => dlg.close() }, 'Close'),
+      el('button', { onclick: () => { store(); ghPull(); } }, 'Load from GitHub'),
+      el('button', { class: 'pri', onclick: async () => { store(); await ghPush(); } }, 'Save to GitHub')));
+  dlg.showModal();
+}
+
+/* ---------- Spatial Vault features ---------- */
+const GB = '0123456789bcdefghjkmnpqrstuvwxyz', DG = ['FC98', 'J327', 'K456', 'LMPT'];
+function geohash(lat, lng, n = 13) { let a = [-90, 90], o = [-180, 180], h = '', bit = 0, ch = 0, ev = true; while (h.length < n) { const r = ev ? o : a, v = ev ? lng : lat, m = (r[0] + r[1]) / 2; if (v >= m) { ch = ch * 2 + 1; r[0] = m; } else { ch = ch * 2; r[1] = m; } ev = !ev; if (++bit === 5) { h += GB[ch]; bit = 0; ch = 0; } } return h; }
+function digipin(lat, lng) { if (lat < 2.5 || lat > 38.5 || lng < 63.5 || lng > 99.5) return ''; let a = 2.5, b = 38.5, c = 63.5, d = 99.5, s = ''; for (let i = 1; i <= 10; i++) { const la = (b - a) / 4, lo = (d - c) / 4; const r = Math.min(3, Math.max(0, 3 - Math.floor((lat - a) / la))), co = Math.min(3, Math.max(0, Math.floor((lng - c) / lo))); s += DG[r][co]; if (i === 3 || i === 6) s += '-'; b = a + la * (4 - r); a = a + la * (3 - r); c = c + lo * co; d = c + lo; } return s; }
+const hasXY = r => r.lat !== '' && r.lat != null && r.lng !== '' && r.lng != null;
+function setGeo(r) { if (hasXY(r)) { r.geohash = geohash(+r.lat, +r.lng); r.digipin = digipin(+r.lat, +r.lng); } }
+function ensureStarter() {
+  const T = { places: 'name,category,niche,address,pincode,lat:number,lng:number,geohash,digipin,status', ref_pincode: 'pincode,office,district,state,lat:number,lng:number', niches: 'slug,name,prefix', submissions: 'remote_id,payload,status' };
+  Object.keys(T).forEach(n => { if (!db.tables[n]) db.tables[n] = { cols: parseCols(T[n]), rows: [] }; }); save();
+}
+function starter() { ensureStarter(); view = 'home'; render(); toast('Starter tables ready.'); }
+function pasteDlg() { const t = el('textarea', { rows: 9, placeholder: 'Copy rows from Excel or Google Sheets, including the header row, and paste here' }); openDlg('Paste rows into ' + cur, [t], 'Add rows', () => { ingest(t.value.split(/\r?\n/).filter(Boolean).map(l => l.split('\t'))); dlg.close(); }); }
+function clean() { const t = db.tables[cur], seen = new Set(), n0 = t.rows.length; t.rows.forEach(r => t.cols.forEach(c => { if (typeof r[c.name] === 'string') r[c.name] = r[c.name].trim().replace(/\s+/g, ' '); })); t.rows = t.rows.filter(r => { const k = JSON.stringify(t.cols.map(c => r[c.name])); if (seen.has(k)) return false; seen.add(k); return true; }); save(); drawMain(); toast('Tidied. ' + (n0 - t.rows.length) + ' duplicate rows removed.'); }
+function enrich() {
+  const P = db.tables.places, R = db.tables.ref_pincode, m = {}; if (!R) return toast('Load the starter tables first.');
+  R.rows.forEach(x => { if (x.pincode !== '' && hasXY(x)) m[String(x.pincode).trim()] = x; });
+  let n = 0; P.rows.forEach(r => { const k = String(r.pincode || '').trim(); if (!hasXY(r) && m[k]) { r.lat = m[k].lat; r.lng = m[k].lng; n++; } setGeo(r); });
+  save(); drawMain(); toast(n + ' places located from their pincode. Geohash and DIGIPIN filled.');
+}
+function relDlg() {
+  const ns = Object.keys(db.tables), L = [], skip = ['name', 'status', 'lat', 'lng', 'payload', 'category', 'geohash', 'digipin', 'address', 'district', 'state', 'office', 'prefix'];
+  ns.forEach((a, i) => ns.slice(i + 1).forEach(b => db.tables[a].cols.forEach(c => { if (!skip.includes(c.name) && db.tables[b].cols.some(x => x.name === c.name)) L.push(a + '.' + c.name + '  ↔  ' + b + '.' + c.name); })));
+  if (db.tables.places && db.tables.niches) L.push('places.niche  ↔  niches.slug');
+  openDlg('Relations', [el('p', {}, 'Tables that share a column are linked by it. Example: places and ref_pincode are linked by pincode.'), ...(L.length ? L : ['No links yet. Load the starter tables.']).map(x => el('p', { style: 'color:var(--text)' }, x))], 'Close', () => dlg.close());
+}
+const ghPut = async (path, text) => {
+  const u = `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${path}`, g = await fetch(u + '?ref=' + gh.branch, { headers: ghHead() });
+  const p = await fetch(u, { method: 'PUT', headers: ghHead(), body: JSON.stringify({ message: 'Studio export ' + path, content: b64(text), branch: gh.branch, sha: g.ok ? (await g.json()).sha : undefined }) });
+  if (!p.ok) throw new Error(path + ' failed (' + p.status + '). Check GitHub sync settings.');
+};
+async function exportNiches() {
+  const P = db.tables.places, N = db.tables.niches; if (!N) return toast('Load the starter tables first.');
+  const out = {}; N.rows.forEach(n => { const rows = P.rows.filter(p => p.niche === n.slug && p.status !== 'rejected'); out[`niches/${n.slug}/places.json`] = JSON.stringify(rows); out[`niches/${n.slug}/index.json`] = JSON.stringify(rows.map(p => ({ id: p.id, n: p.name, c: p.category, la: p.lat, lo: p.lng }))); });
+  if (!Object.keys(out).length) return toast('Add a niche (slug) in the niches table first.');
+  if (!gh.token) { el('a', { href: URL.createObjectURL(new Blob([JSON.stringify(out)], { type: 'application/json' })), download: 'niche-export.json' }).click(); return toast('No GitHub token set, so one file was downloaded instead.'); }
+  try { for (const k in out) await ghPut(k, out[k]); toast('Exported ' + Object.keys(out).length + ' files to GitHub.'); } catch (e) { alert(e.message); }
+}
+function inboxDlg() {
+  const sb = read('mybase_sb', { url: '', key: '' }), u = el('input', { placeholder: 'https://xxxx.supabase.co', value: sb.url }), k = el('input', { type: 'password', placeholder: 'anon public key', value: sb.key });
+  openDlg('Submissions inbox (Supabase)', [el('p', {}, 'Pulls pending rows from the submissions table in Supabase. Use the public anon key only, never the service key.'), el('label', {}, 'Project URL'), u, el('label', {}, 'Anon key'), k], 'Pull now', async () => {
+    const url = u.value.trim().replace(/\/$/, ''), key = k.value.trim(); localStorage.setItem('mybase_sb', JSON.stringify({ url, key }));
+    try {
+      const r = await fetch(url + '/rest/v1/submissions?status=eq.pending', { headers: { apikey: key, Authorization: 'Bearer ' + key } });
+      if (!r.ok) throw new Error('Supabase said ' + r.status + '. Check the URL and key, and that the anon key may read submissions.');
+      ensureStarter(); const S = db.tables.submissions; let n = 0;
+      (await r.json()).forEach(x => { const id = String(x.id); if (S.rows.some(y => y.remote_id === id)) return; const v = x.payload_json || x; S.rows.push({ id: uid(), remote_id: id, payload: typeof v === 'string' ? v : JSON.stringify(v), status: 'pending' }); n++; });
+      save(); dlg.close(); cur = 'submissions'; view = 'table'; render(); toast(n + ' new submissions. Set status to approved, then use Promote approved on places.');
+    } catch (e) { alert(e.message); }
+  });
+}
+function promote() {
+  const S = db.tables.submissions, P = db.tables.places; if (!S) return toast('Load the starter tables first.'); let n = 0;
+  S.rows.forEach(s => { if (s.status !== 'approved') return; let p = {}; try { p = JSON.parse(s.payload); } catch (e) { } const r = { id: uid() }; P.cols.forEach(c => r[c.name] = ''); Object.assign(r, { name: p.name || p.business_name || p.title || '', category: p.category || '', niche: p.niche || p.niche_slug || '', address: p.address || p.full_address || '', pincode: p.pincode || p.pin_code || '', lat: p.lat ?? p.latitude ?? '', lng: p.lng ?? p.longitude ?? '', status: 'live' }); setGeo(r); P.rows.push(r); s.status = 'promoted'; n++; });
+  save(); drawMain(); toast(n + ' promoted to places. Run Find locations next.');
+}
+function pinDlg() {
+  const P = db.tables.places, box = el('div', { style: 'height:60vh;border-radius:8px' }), msg = el('p', {}); dlg.style.width = 'min(900px,94vw)'; dlg.onclose = () => { dlg.style.width = ''; drawMain(); };
+  openDlg('Pin fixer', [msg, box], 'Close', () => dlg.close());
+  new Promise(ok => { if (window.L) return ok(); document.head.append(el('link', { rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' })); const sc = el('script', { src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' }); sc.onload = ok; sc.onerror = () => { msg.textContent = 'The map needs an internet connection.'; }; document.head.append(sc); }).then(() => {
+    const map = L.map(box).setView([22.5, 79], 5); L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map); setTimeout(() => map.invalidateSize(), 200);
+    const next = () => P.rows.find(r => !hasXY(r)), say = () => { const t = next(); msg.textContent = t ? 'Click the map to place: ' + (t.name || 'unnamed') + '. Drag any pin to correct it.' : 'All places have a pin. Drag any pin to correct it.'; };
+    const add = r => { const m = L.marker([+r.lat, +r.lng], { draggable: true, title: r.name }).addTo(map).bindTooltip(r.name || 'unnamed'); m.on('dragend', () => { const q = m.getLatLng(); r.lat = +q.lat.toFixed(6); r.lng = +q.lng.toFixed(6); setGeo(r); save(); toast('Pin saved.'); }); };
+    P.rows.filter(hasXY).forEach(add); say();
+    map.on('click', e => { const r = next(); if (!r) return; r.lat = +e.latlng.lat.toFixed(6); r.lng = +e.latlng.lng.toFixed(6); setGeo(r); save(); add(r); say(); });
+  });
+}
+
+render();
+</script>
+</body>
+</html>

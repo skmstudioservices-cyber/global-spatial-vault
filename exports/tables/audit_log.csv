@@ -1,1 +1,3 @@
 id,actor,action,table_name,row_pk,before_json,after_json,at
+1,web-portal,update-coords,places,M4NFCZ0N6R,,"{""lat"":26.760555,""lng"":83.373166,""geohash13"":""tug21pw7x942t"",""digipin"":""2F2K79UV77""}",2026-10-13T10:09:24.342Z
+2,excel-editor,update-cell,places,M4NFCZ0N6R,,"{""address"":""12, Main Market, Gorakhpur""}",2026-10-13T11:03:02.409Z
